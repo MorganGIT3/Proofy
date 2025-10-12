@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "vercel-build": "vite build",
     "dev:full": "concurrently \"npx tsx server/index.ts\" \"npx vite\"",
     "dev:server": "tsx server/index.ts",
     "dev:client": "vite",
