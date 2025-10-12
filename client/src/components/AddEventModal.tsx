@@ -216,3 +216,4 @@ export function AddEventModal({ open, onOpenChange, onEventAdded, selectedDate }
     </Dialog>
   )
 }
+
