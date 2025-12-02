@@ -11,6 +11,7 @@ import { OnboardingPage } from "@/components/OnboardingPage";
 import { AdminDashboard } from "@/components/AdminDashboard";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { signOutUser } from "@/lib/supabase";
+import { ErrorBoundary } from "./ErrorBoundary";
 
 function App() {
   const navigate = useNavigate();
@@ -37,35 +38,37 @@ function App() {
   };
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <ThemeProvider defaultTheme="dark">
-          <Routes>
-            <Route path="/" element={<LandingPage onLogin={handleLogin} />} />
-            <Route path="/landingpage" element={<LandingPage onLogin={handleLogin} />} />
-            <Route 
-              path="/onboarding" 
-              element={
-                <ProtectedRoute>
-                  <OnboardingPage onContinue={handleOnboardingComplete} />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/dashboard" 
-              element={
-                <ProtectedRoute>
-                  <NewDashboardApp onLogout={handleLogout} />
-                </ProtectedRoute>
-              } 
-            />
-            <Route path="/integrations" element={<Integrations />} />
-            <Route path="/admin-dashboard" element={<AdminDashboard />} />
-          </Routes>
-          <Toaster />
-        </ThemeProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <ThemeProvider defaultTheme="dark">
+            <Routes>
+              <Route path="/" element={<LandingPage onLogin={handleLogin} />} />
+              <Route path="/landingpage" element={<LandingPage onLogin={handleLogin} />} />
+              <Route 
+                path="/onboarding" 
+                element={
+                  <ProtectedRoute>
+                    <OnboardingPage onContinue={handleOnboardingComplete} />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/dashboard" 
+                element={
+                  <ProtectedRoute>
+                    <NewDashboardApp onLogout={handleLogout} />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route path="/integrations" element={<Integrations />} />
+              <Route path="/admin-dashboard" element={<AdminDashboard />} />
+            </Routes>
+            <Toaster />
+          </ThemeProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 
