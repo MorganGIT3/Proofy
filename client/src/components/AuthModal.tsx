@@ -76,39 +76,21 @@ export function AuthModal({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
     setError("");
 
     try {
-      console.log('Tentative d\'inscription...');
       const { data, error } = await signUpUser(signupData.email, signupData.password, signupData.name);
       
-      console.log('Réponse inscription:', { data, error });
-      
       if (error) {
-        console.error('❌ ERREUR INSCRIPTION:', error);
-        console.error('   Code:', error.code);
-        console.error('   Message:', error.message);
-        console.error('   User créé:', !!data?.user);
-        
-        // Messages d'erreur plus clairs
+        // Messages d'erreur simples comme dans handleLogin
         let errorMessage = "Erreur lors de la création du compte";
         const errorMsg = error.message?.toLowerCase() || '';
-        const errorCode = error.code || '';
         
-        // Vérifier d'abord si le compte a vraiment été créé
-        const accountCreated = !!data?.user;
-        
-        if (errorMsg.includes('already registered') || errorMsg.includes('already exists') || errorMsg.includes('user already registered')) {
-          errorMessage = "Cet email est déjà utilisé. Connectez-vous ou utilisez un autre email.";
-        } else if (errorMsg.includes('invalid email') || errorCode.includes('invalid_email')) {
-          errorMessage = "Adresse email invalide. Vérifiez votre email.";
-        } else if (errorMsg.includes('password') || errorMsg.includes('weak') || errorCode.includes('password')) {
-          errorMessage = "Mot de passe trop faible. Utilisez au moins 6 caractères.";
-        } else if (errorMsg.includes('rate limit') || errorCode.includes('rate_limit')) {
-          errorMessage = "Trop de tentatives. Veuillez attendre quelques minutes.";
-        } else if (accountCreated) {
-          // SEULEMENT si on est sûr que le compte est créé
-          errorMessage = "Compte créé mais erreur lors de la sauvegarde du profil. Essayez de vous connecter.";
+        if (errorMsg.includes('already registered') || errorMsg.includes('already exists')) {
+          errorMessage = "Cet email est déjà utilisé";
+        } else if (errorMsg.includes('invalid email')) {
+          errorMessage = "Adresse email invalide";
+        } else if (errorMsg.includes('password')) {
+          errorMessage = "Mot de passe trop faible";
         } else {
-          // Si le compte n'est pas créé, afficher l'erreur exacte
-          errorMessage = error.message || "Une erreur est survenue lors de la création du compte. Vérifiez la console pour plus de détails.";
+          errorMessage = error.message || "Une erreur est survenue lors de la création du compte";
         }
         
         setError(errorMessage);
@@ -116,29 +98,9 @@ export function AuthModal({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
       }
 
       if (data?.user) {
-        console.log('✅ Utilisateur créé avec succès dans Supabase Auth');
-        console.log('   User ID:', data.user.id);
-        console.log('   Email:', data.user.email);
-        console.log('   Session active:', !!data.session);
-        
-        // Si une session existe, l'utilisateur est connecté automatiquement
-        if (data.session) {
-          setSuccess("Compte créé avec succès ! Redirection...");
-          setTimeout(() => {
-            onAuthSuccess?.();
-            onOpenChange(false);
-          }, 1000);
-        } else {
-          // Compte créé mais nécessite confirmation email
-          setSuccess("Compte créé avec succès ! Vous pouvez maintenant vous connecter.");
-          setTimeout(() => {
-            onAuthSuccess?.();
-            onOpenChange(false);
-          }, 2000);
-        }
-      } else {
-        console.error('❌ Aucun utilisateur créé');
-        setError("Erreur : aucun utilisateur créé. Veuillez vérifier la console pour plus de détails.");
+        console.log('Inscription réussie:', data.user);
+        onAuthSuccess?.();
+        onOpenChange(false);
       }
     } catch (error) {
       console.error('Erreur d\'inscription:', error);
