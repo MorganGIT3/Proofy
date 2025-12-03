@@ -105,30 +105,24 @@ export function AuthModal({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
       }
 
       if (data?.user) {
-        // Si une session existe, l'utilisateur est déjà connecté
+        // Si une session existe, l'utilisateur est connecté automatiquement
         if (data.session) {
-          setSuccess("Compte créé avec succès !");
-          setTimeout(() => {
-            onAuthSuccess?.();
-            onOpenChange(false);
-          }, 1000);
-        } else if (data.user.email_confirmed_at) {
-          // Email déjà confirmé
-          setSuccess("Compte créé avec succès !");
+          setSuccess("Compte créé avec succès ! Redirection...");
           setTimeout(() => {
             onAuthSuccess?.();
             onOpenChange(false);
           }, 1000);
         } else {
-          // Email nécessite confirmation mais on permet quand même l'accès
-          setSuccess("Compte créé avec succès ! Vous pouvez vous connecter.");
+          // Compte créé mais nécessite confirmation email ou connexion
+          // On permet quand même l'accès pour tester
+          setSuccess("Compte créé avec succès ! Redirection...");
           setTimeout(() => {
             onAuthSuccess?.();
             onOpenChange(false);
-          }, 2000);
+          }, 1500);
         }
       } else {
-        setError("Erreur : aucun utilisateur créé");
+        setError("Erreur : aucun utilisateur créé. Veuillez réessayer.");
       }
     } catch (error) {
       console.error('Erreur d\'inscription:', error);

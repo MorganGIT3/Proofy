@@ -153,84 +153,146 @@ export const logoutAdmin = () => {
   console.log('Session admin fermée')
 }
 
+// Fonction utilitaire pour créer ou mettre à jour le profil utilisateur
+export const ensureUserProfile = async (userId: string, email: string, fullName?: string): Promise<boolean> => {
+  try {
+    // Vérifier si le profil existe
+    const { data: existingProfile, error: checkError } = await supabase
+      .from('user_profiles')
+      .select('id')
+      .eq('user_id', userId)
+      .maybeSingle()
+
+    // Si le profil n'existe pas, le créer
+    if (!existingProfile) {
+      const { error: insertError } = await supabase
+        .from('user_profiles')
+        .insert({
+          user_id: userId,
+          email: email,
+          full_name: fullName || email.split('@')[0] || 'Utilisateur',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+
+      if (insertError) {
+        console.error('⚠️ Erreur lors de la création du profil:', insertError);
+        return false;
+      }
+      
+      console.log('✅ Profil utilisateur créé');
+      return true;
+    }
+    
+    return true;
+  } catch (error: any) {
+    console.error('⚠️ Erreur lors de la vérification/création du profil:', error);
+    return false;
+  }
+}
+
 // Fonction pour créer un utilisateur
 export const signUpUser = async (email: string, password: string, fullName?: string) => {
   try {
+    console.log('🔵 Début de l\'inscription pour:', email);
+    
+    // Créer le compte utilisateur dans Supabase Auth
     const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
+      email: email.trim().toLowerCase(),
+      password: password,
       options: {
         data: {
-          full_name: fullName || ''
+          full_name: fullName?.trim() || ''
         },
         emailRedirectTo: `${window.location.origin}`
       }
     })
     
+    console.log('🔵 Réponse signUp:', { 
+      hasUser: !!data?.user, 
+      hasSession: !!data?.session,
+      error: error?.message 
+    });
+    
     if (error) {
+      console.error('❌ Erreur lors de l\'inscription:', error);
       return { data, error }
     }
     
-    // Si l'utilisateur est créé, créer le profil utilisateur manuellement si nécessaire
-    if (data.user) {
-      try {
-        // Vérifier si le profil existe déjà
-        const { data: existingProfile, error: checkError } = await supabase
-          .from('user_profiles')
-          .select('id')
-          .eq('user_id', data.user.id)
-          .single()
-
-        // Si le profil n'existe pas, le créer manuellement
-        if (!existingProfile && checkError?.code === 'PGRST116') {
-          const { error: insertError } = await supabase
-            .from('user_profiles')
-            .insert({
-              user_id: data.user.id,
-              email: data.user.email || email,
-              full_name: fullName || data.user.user_metadata?.full_name || email.split('@')[0] || 'Utilisateur',
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString()
-            })
-
-          if (insertError) {
-            console.error('Erreur lors de la création du profil utilisateur:', insertError)
-            // Ne pas bloquer l'inscription si le profil ne peut pas être créé
-            // Le trigger SQL devrait le créer automatiquement
-          }
-        }
-      } catch (profileError) {
-        console.error('Erreur lors de la vérification/création du profil:', profileError)
-        // Ne pas bloquer l'inscription
+    // Si l'utilisateur n'a pas été créé, retourner une erreur
+    if (!data?.user) {
+      console.error('❌ Aucun utilisateur créé');
+      return { 
+        data, 
+        error: new Error('Erreur : aucun utilisateur créé') 
       }
     }
     
-    // Si l'utilisateur est créé, se connecter automatiquement si l'email n'a pas besoin de confirmation
-    if (data.user && data.session) {
+    // Si une session existe (email confirmé automatiquement), créer le profil maintenant
+    if (data.session && data.user) {
+      console.log('✅ Session active, création du profil utilisateur...');
+      
+      // Attendre un peu pour que le trigger SQL puisse créer le profil
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Créer le profil si nécessaire
+      await ensureUserProfile(
+        data.user.id,
+        data.user.email || email,
+        fullName?.trim() || data.user.user_metadata?.full_name
+      );
+      
+      console.log('✅ Inscription réussie avec session active');
       return { data, error: null }
     }
     
-    // Si l'email nécessite une confirmation, retourner quand même le succès
+    // Si l'email nécessite une confirmation, retourner le succès quand même
+    // Le profil sera créé par le trigger SQL ou lors de la première connexion
     if (data.user) {
+      console.log('✅ Compte créé, confirmation email requise');
       return { data, error: null }
     }
     
-    return { data, error }
+    return { data, error: new Error('Erreur inattendue lors de l\'inscription') }
   } catch (error: any) {
-    return { data: null, error: error || new Error('Erreur lors de l\'inscription') }
+    console.error('❌ Exception lors de l\'inscription:', error);
+    return { 
+      data: null, 
+      error: error || new Error('Erreur lors de l\'inscription') 
+    }
   }
 }
 
 // Fonction pour connecter un utilisateur
 export const signInUser = async (email: string, password: string) => {
   try {
+    console.log('🔵 Tentative de connexion pour:', email);
+    
     const { data, error } = await supabase.auth.signInWithPassword({
-      email,
+      email: email.trim().toLowerCase(),
       password,
     })
+    
+    if (error) {
+      console.error('❌ Erreur de connexion:', error);
+      return { data, error }
+    }
+    
+    // Si la connexion réussit, s'assurer que le profil utilisateur existe
+    if (data.user && data.session) {
+      console.log('✅ Connexion réussie, vérification du profil utilisateur...');
+      
+      // Créer le profil si nécessaire
+      await ensureUserProfile(
+        data.user.id,
+        data.user.email || email,
+        data.user.user_metadata?.full_name
+      );
+    }
+    
     return { data, error }
   } catch (error) {
-    console.error('Erreur lors de la connexion:', error)
+    console.error('❌ Exception lors de la connexion:', error)
     return { data: null, error }
   }
 }
