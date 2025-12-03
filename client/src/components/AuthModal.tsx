@@ -105,6 +105,11 @@ export function AuthModal({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
       }
 
       if (data?.user) {
+        console.log('✅ Utilisateur créé avec succès dans Supabase Auth');
+        console.log('   User ID:', data.user.id);
+        console.log('   Email:', data.user.email);
+        console.log('   Session active:', !!data.session);
+        
         // Si une session existe, l'utilisateur est connecté automatiquement
         if (data.session) {
           setSuccess("Compte créé avec succès ! Redirection...");
@@ -113,16 +118,16 @@ export function AuthModal({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
             onOpenChange(false);
           }, 1000);
         } else {
-          // Compte créé mais nécessite confirmation email ou connexion
-          // On permet quand même l'accès pour tester
-          setSuccess("Compte créé avec succès ! Redirection...");
+          // Compte créé mais nécessite confirmation email
+          setSuccess("Compte créé avec succès ! Vous pouvez maintenant vous connecter.");
           setTimeout(() => {
             onAuthSuccess?.();
             onOpenChange(false);
-          }, 1500);
+          }, 2000);
         }
       } else {
-        setError("Erreur : aucun utilisateur créé. Veuillez réessayer.");
+        console.error('❌ Aucun utilisateur créé');
+        setError("Erreur : aucun utilisateur créé. Veuillez vérifier la console pour plus de détails.");
       }
     } catch (error) {
       console.error('Erreur d\'inscription:', error);
