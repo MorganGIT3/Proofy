@@ -266,28 +266,29 @@ export const signUpUser = async (email: string, password: string, fullName?: str
       return { data, error }
     }
     
-    // Si l'inscription réussit, s'assurer que le profil utilisateur existe (comme dans signInUser)
+    // Si l'inscription réussit, créer le profil utilisateur (même sans session)
     if (data.user) {
       console.log('✅ Compte créé dans Supabase Auth');
       console.log('   User ID:', data.user.id);
       console.log('   Email:', data.user.email);
       
+      // Créer le profil utilisateur (même sans session, le compte existe dans Supabase)
+      console.log('📝 Création du profil utilisateur...');
+      try {
+        await ensureUserProfile(
+          data.user.id,
+          data.user.email || cleanEmail,
+          fullName?.trim() || data.user.user_metadata?.full_name
+        );
+        console.log('✅ Profil vérifié/créé');
+      } catch (profileError: any) {
+        console.error('⚠️ Erreur lors de la création du profil:', profileError);
+        // Ne pas bloquer - le compte existe dans Supabase Auth
+        console.log('   Le compte est créé dans Supabase Auth, profil sera créé à la connexion');
+      }
+      
       if (data.session) {
-        console.log('✅ Session active - Création du profil...');
-        
-        // Créer le profil si nécessaire (exactement comme dans signInUser)
-        try {
-          await ensureUserProfile(
-            data.user.id,
-            data.user.email || cleanEmail,
-            fullName?.trim() || data.user.user_metadata?.full_name
-          );
-          console.log('✅ Profil vérifié/créé');
-        } catch (profileError: any) {
-          console.error('❌ Erreur lors de la création du profil:', profileError);
-          // Ne pas bloquer l'inscription si le profil ne peut pas être créé
-          // Le compte est quand même créé dans Supabase Auth
-        }
+        console.log('✅ Session active - Vous êtes connecté');
       } else {
         console.log('⚠️ Pas de session active (email à confirmer peut-être)');
         console.log('   Le compte est créé dans Supabase Auth');
