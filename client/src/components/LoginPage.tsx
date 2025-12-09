@@ -160,20 +160,21 @@ export const LoginPage: React.FC = () => {
 
       {/* Background Glow Effect */}
       <div
-        className="absolute left-1/2 top-1/2 w-full max-w-7xl pointer-events-none z-0 animate-fade-in"
+        className="absolute inset-0 pointer-events-none z-0 flex items-center justify-center animate-fade-in"
         style={{
-          transform: "translate(-50%, -50%)",
           animationDelay: "0.2s",
           opacity: 0
         }}
         aria-hidden="true"
       >
-        <img
-          src="https://i.postimg.cc/Ss6yShGy/glows.png"
-          alt=""
-          className="w-full h-auto"
-          loading="eager"
-        />
+        <div className="relative w-full h-full flex items-center justify-center">
+          <img
+            src="https://i.postimg.cc/Ss6yShGy/glows.png"
+            alt=""
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-auto h-auto max-w-xl max-h-[50vh] object-contain"
+            loading="eager"
+          />
+        </div>
       </div>
       
       <div className="relative z-20 animate-scale-in" style={{ animationDelay: "0.3s", opacity: 0 }}>
