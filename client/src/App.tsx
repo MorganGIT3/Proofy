@@ -1,7 +1,9 @@
 import { Routes, Route } from "react-router-dom";
 import LandingPage from "@/components/LandingPage";
 import LoginPage from "@/components/LoginPage";
+import Dashboard from "@/components/Dashboard";
 import NotFound from "@/components/NotFound";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { ErrorBoundary } from "./ErrorBoundary";
 
 function App() {
@@ -10,6 +12,14 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route 
+          path="/dashboard" 
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } 
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </ErrorBoundary>

@@ -1,281 +1,216 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthForm } from './AuthForm';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
-// Inline Button Component
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "default" | "outline";
-  size?: "default" | "lg";
-  children: React.ReactNode;
-}
-
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = "default", size = "default", className = "", children, ...props }, ref) => {
-    const baseStyles = "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
-    
-    const variants = {
-      default: "bg-white text-black hover:bg-gray-100",
-      outline: "border border-gray-800 bg-transparent hover:bg-gray-800/50 text-white",
-    };
-    
-    const sizes = {
-      default: "h-10 px-4 py-2 text-sm",
-      lg: "h-12 px-8 text-base",
-    };
-    
-    return (
-      <button
-        ref={ref}
-        className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
-        {...props}
-      >
-        {children}
-      </button>
-    );
-  }
+const GoogleIcon = () => (
+  <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+      fill="#4285F4"
+    />
+    <path
+      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+      fill="#34A853"
+    />
+    <path
+      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+      fill="#FBBC05"
+    />
+    <path
+      d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+      fill="#EA4335"
+    />
+  </svg>
 );
 
-Button.displayName = "Button";
-
-// Inline Input Component
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
-
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className = "", ...props }, ref) => {
-    return (
-      <input
-        ref={ref}
-        className={`flex h-10 w-full rounded-md border border-gray-800 bg-black/50 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
-        {...props}
-      />
-    );
-  }
-);
-
-Input.displayName = "Input";
-
-// Inline Label Component
-interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
-  children: React.ReactNode;
-}
-
-const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
-  ({ className = "", children, ...props }, ref) => {
-    return (
-      <label
-        ref={ref}
-        className={`text-sm font-medium text-white ${className}`}
-        {...props}
-      >
-        {children}
-      </label>
-    );
-  }
-);
-
-Label.displayName = "Label";
-
-// Inline Checkbox Component
-interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  checked?: boolean;
-  onCheckedChange?: (checked: boolean) => void;
-}
-
-const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
-  ({ checked = false, onCheckedChange, className = "", ...props }, ref) => {
-    return (
-      <input
-        ref={ref}
-        type="checkbox"
-        checked={checked}
-        onChange={(e) => onCheckedChange?.(e.target.checked)}
-        className={`h-4 w-4 rounded border-gray-800 bg-black/50 text-white focus:ring-2 focus:ring-white/20 ${className}`}
-        {...props}
-      />
-    );
-  }
-);
-
-Checkbox.displayName = "Checkbox";
-
-const ArrowLeft = ({ className = "", size = 16 }: { className?: string; size?: number }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <path d="m12 19-7-7 7-7" />
-    <path d="M19 12H5" />
+const AppleIcon = () => (
+  <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
   </svg>
 );
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = React.useState({
-    email: '',
-    password: '',
-    rememberMe: false,
-  });
+  const { user, loading, signInWithGoogle, signInWithApple } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
+  // Rediriger vers le dashboard si déjà connecté
+  React.useEffect(() => {
+    if (!loading && user) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [user, loading, navigate]);
+
+  const handleGoogleLogin = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      await signInWithGoogle();
+      // La navigation se fera automatiquement via le callback OAuth
+    } catch (err: any) {
+      console.error("Error signing in with Google:", err);
+      setError(err.message || "Erreur lors de la connexion avec Google");
+      setIsLoading(false);
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Login submitted:", formData);
-    // TODO: Add actual login logic here
-    // After successful login, navigate to dashboard or home
-    // navigate('/dashboard');
+  const handleAppleLogin = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      await signInWithApple();
+      // La navigation se fera automatiquement via le callback OAuth
+    } catch (err: any) {
+      console.error("Error signing in with Apple:", err);
+      setError(err.message || "Erreur lors de la connexion avec Apple");
+      setIsLoading(false);
+    }
   };
+
+  const handleEmailLogin = () => {
+    console.log("Email login clicked");
+    // TODO: Navigate to email login form
+  };
+
+  const handleSkip = () => {
+    navigate('/');
+  };
+
+  // Afficher un loader pendant la vérification de l'authentification
+  if (loading) {
+    return (
+      <div className="relative min-h-screen bg-black flex items-center justify-center p-4 overflow-hidden">
+        <div className="text-white text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-gray-400">Chargement...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Ne rien afficher si l'utilisateur est déjà connecté (redirection en cours)
+  if (user) {
+    return null;
+  }
 
   return (
-    <section className="relative min-h-screen w-screen overflow-hidden bg-black">
-      {/* Background Image and Animated Bubbles */}
-      <div
-        className="absolute inset-0 bg-cover bg-center transition-all duration-500 ease-in-out opacity-20"
-        style={{ backgroundImage: `url(https://images.unsplash.com/photo-1742273330004-ef9c9d228530?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHx0b3BpYy1mZWVkfDY0fENEd3V3WEpBYkV3fHxlbnwwfHx8fHw%3D&auto=format&fit=crop&q=60&w=900)` }}
-      >
-        {/* Animated Bubbles */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
-          {Array.from({ length: 15 }).map((_, i) => (
-            <div
-              key={i}
-              className="absolute bg-white/10 rounded-full animate-bubble opacity-0"
-              style={{
-                width: `${Math.random() * 20 + 10}px`,
-                height: `${Math.random() * 20 + 10}px`,
-                left: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 10}s`,
-                animationDuration: `${Math.random() * 20 + 10}s`,
-                top: `${Math.random() * 100}%`,
-              }}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Main Content Overlay */}
-      <div className="relative z-10 flex flex-col items-center justify-center w-full h-full p-4 md:p-8 lg:p-12">
-        {/* Back Button */}
-        <div className="absolute top-4 left-4 md:top-8 md:left-8">
-          <Button
-            variant="outline"
-            onClick={() => navigate('/')}
-            className="flex items-center gap-2"
-          >
-            <ArrowLeft size={16} />
-            Retour
-          </Button>
-        </div>
-
-        {/* Login Form Card */}
-        <div className="w-full max-w-md bg-black/90 backdrop-blur-sm p-6 md:p-8 rounded-lg shadow-xl border border-gray-800">
-          {/* Logo */}
-          <div className="flex items-center justify-center mb-8">
-            <img src="/favicon.png" alt="Proofy" className="h-12 w-12" />
-            <h1 className="text-2xl font-bold text-white ml-3">Proofy</h1>
-          </div>
-
-          <h2 className="text-2xl font-bold text-white mb-2 text-center">Connexion</h2>
-          <p className="text-gray-400 text-sm mb-6 text-center">
-            Connectez-vous pour générer vos preuves visuelles
-          </p>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="votre@email.com"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password">Mot de passe</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="rememberMe"
-                  name="rememberMe"
-                  checked={formData.rememberMe}
-                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, rememberMe: checked }))}
-                />
-                <Label htmlFor="rememberMe" className="text-sm font-normal text-gray-300 cursor-pointer">
-                  Se souvenir de moi
-                </Label>
-              </div>
-              <a href="#forgot-password" className="text-sm text-white/70 hover:text-white hover:underline">
-                Mot de passe oublié ?
-              </a>
-            </div>
-
-            <Button type="submit" variant="default" size="lg" className="w-full">
-              Se connecter
-            </Button>
-
-            <div className="text-center">
-              <p className="text-sm text-gray-400">
-                Pas encore de compte ?{' '}
-                <a href="#signup" className="text-white hover:underline font-medium">
-                  S'inscrire
-                </a>
-              </p>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      {/* CSS for bubble animation */}
+    <div className="relative min-h-screen bg-black flex items-center justify-center p-4 overflow-hidden">
       <style>{`
-        @keyframes bubble {
-          0% {
-            transform: translateY(0) translateX(0) scale(0.5);
+        @keyframes fadeIn {
+          from {
             opacity: 0;
+            transform: translateY(10px);
           }
-          50% {
+          to {
             opacity: 1;
-          }
-          100% {
-            transform: translateY(-100vh) translateX(calc(var(--rand-x-offset) * 10vw)) scale(1.2);
-            opacity: 0;
+            transform: translateY(0);
           }
         }
-        .animate-bubble {
-          animation: bubble var(--animation-duration, 15s) ease-in-out infinite;
-          animation-fill-mode: forwards;
-          --rand-x-offset: ${Math.random() > 0.5 ? 1 : -1};
+        
+        @keyframes slideInFromLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        
+        .animate-fade-in {
+          animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        .animate-slide-in-left {
+          animation: slideInFromLeft 0.5s ease-out forwards;
+        }
+        
+        .animate-scale-in {
+          animation: scaleIn 0.5s ease-out forwards;
         }
       `}</style>
-    </section>
+
+      {/* Back Button */}
+      <div className="absolute top-4 left-4 md:top-8 md:left-8 z-30 animate-slide-in-left">
+        <Button
+          variant="outline"
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2 border-gray-800 text-white hover:bg-gray-800/50"
+        >
+          <ArrowLeft size={16} />
+          Page d'accueil
+        </Button>
+      </div>
+
+      {/* Background Glow Effect */}
+      <div
+        className="absolute left-1/2 top-1/2 w-full max-w-7xl pointer-events-none z-0 animate-fade-in"
+        style={{
+          transform: "translate(-50%, -50%)",
+          animationDelay: "0.2s",
+          opacity: 0
+        }}
+        aria-hidden="true"
+      >
+        <img
+          src="https://i.postimg.cc/Ss6yShGy/glows.png"
+          alt=""
+          className="w-full h-auto"
+          loading="eager"
+        />
+      </div>
+      
+      <div className="relative z-20 animate-scale-in" style={{ animationDelay: "0.3s", opacity: 0 }}>
+        {error && (
+          <div className="mb-4 p-4 bg-red-500/10 border border-red-500/50 rounded-lg text-red-400 text-sm text-center max-w-sm mx-auto animate-fade-in">
+            {error}
+          </div>
+        )}
+        <AuthForm
+        logoSrc="/favicon.png"
+        logoAlt="Proofy"
+        title="Bienvenue sur Proofy"
+        description="Connectez-vous pour générer vos preuves visuelles"
+        primaryAction={{
+          label: isLoading ? "Connexion..." : "Continuer avec Google",
+          icon: <GoogleIcon />,
+          onClick: handleGoogleLogin,
+        }}
+        secondaryActions={[
+          {
+            label: isLoading ? "Connexion..." : "Continuer avec Apple",
+            icon: <AppleIcon />,
+            onClick: handleAppleLogin,
+          },
+          {
+            label: "Continuer avec Email",
+            onClick: handleEmailLogin,
+          },
+        ]}
+        skipAction={{
+          label: "Continuer sans compte",
+          onClick: handleSkip,
+        }}
+      />
+      </div>
+    </div>
   );
 };
 
 export default LoginPage;
-

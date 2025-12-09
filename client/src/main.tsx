@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
+import { AuthProvider } from "./contexts/AuthContext";
 import "./index.css";
 
 // Vérifier que root existe avant de rendre
@@ -14,7 +15,9 @@ try {
   const root = createRoot(rootElement);
   root.render(
     <BrowserRouter>
-      <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </BrowserRouter>
   );
 } catch (error) {

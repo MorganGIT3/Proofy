@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Inline Button Component
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -237,6 +238,8 @@ const Check = ({ className = "", size = 16 }: { className?: string; size?: numbe
 // Navigation Component
 const Navigation = React.memo(() => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   return (
     <header className="fixed top-0 w-full z-50 border-b border-gray-800/50 bg-black/80 backdrop-blur-md">
@@ -260,12 +263,35 @@ const Navigation = React.memo(() => {
           </div>
 
           <div className="hidden md:flex items-center gap-4">
-            <Button type="button" variant="ghost" size="sm">
-              Connexion
-            </Button>
-            <Button type="button" variant="default" size="sm">
-              Commencer
-            </Button>
+            {user ? (
+              <Button 
+                type="button" 
+                variant="default" 
+                size="sm"
+                onClick={() => navigate('/dashboard')}
+              >
+                Dashboard
+              </Button>
+            ) : (
+              <>
+                <Button 
+                  type="button" 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => navigate('/login')}
+                >
+                  Connexion
+                </Button>
+                <Button 
+                  type="button" 
+                  variant="default" 
+                  size="sm"
+                  onClick={() => navigate('/login')}
+                >
+                  Commencer
+                </Button>
+              </>
+            )}
           </div>
 
           <button
@@ -304,12 +330,44 @@ const Navigation = React.memo(() => {
               Démo
             </a>
             <div className="flex flex-col gap-2 pt-4 border-t border-gray-800/50">
-              <Button type="button" variant="ghost" size="sm">
-                Connexion
-              </Button>
-              <Button type="button" variant="default" size="sm">
-                Commencer
-              </Button>
+              {user ? (
+                <Button 
+                  type="button" 
+                  variant="default" 
+                  size="sm"
+                  onClick={() => {
+                    navigate('/dashboard');
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  Dashboard
+                </Button>
+              ) : (
+                <>
+                  <Button 
+                    type="button" 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => {
+                      navigate('/login');
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    Connexion
+                  </Button>
+                  <Button 
+                    type="button" 
+                    variant="default" 
+                    size="sm"
+                    onClick={() => {
+                      navigate('/login');
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    Commencer
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -323,6 +381,7 @@ Navigation.displayName = "Navigation";
 // Hero Component
 const Hero = React.memo(() => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [isVideoModalOpen, setIsVideoModalOpen] = React.useState(false);
   
   return (
@@ -394,17 +453,17 @@ const Hero = React.memo(() => {
           variant="gradient"
           size="lg"
           className="rounded-lg flex items-center justify-center"
-          aria-label="Générer mes preuves"
-          onClick={() => navigate('/login')}
+          aria-label={user ? "Accéder au dashboard" : "Générer mes preuves"}
+          onClick={() => navigate(user ? '/dashboard' : '/login')}
         >
-          Générer mes preuves
+          {user ? "Accéder au dashboard" : "Générer mes preuves"}
           <ArrowRight size={20} />
         </Button>
         <Button
           type="button"
-          variant="outline"
+          variant="ghost"
           size="lg"
-          className="rounded-lg border-gray-700 text-white hover:bg-gray-800/50 flex items-center justify-center"
+          className="rounded-lg border border-gray-700 text-white hover:bg-gray-800/50 flex items-center justify-center"
           aria-label="Voir la démo"
           onClick={() => setIsVideoModalOpen(true)}
         >
