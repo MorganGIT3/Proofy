@@ -1,126 +1,307 @@
-import { useState, useEffect } from 'react';
-import LandingPageNew from './LandingPageNew';
-import { AuthModal } from './AuthModal';
-import { OTPVerification } from './OTPVerification';
-import AnimatedBackground from './AnimatedBackground';
-import { Zap } from 'lucide-react';
-import { useClickSound } from '@/hooks/useClickSound';
-import { supabase } from '@/lib/supabase';
+import React from "react";
 
-interface LandingPageProps {
-  onLogin?: () => void;
+// Inline Button Component
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "default" | "secondary" | "ghost" | "gradient";
+  size?: "default" | "sm" | "lg";
+  children: React.ReactNode;
 }
 
-export function LandingPage({ onLogin }: LandingPageProps) {
-  const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [otpModalOpen, setOtpModalOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-  const playClick = useClickSound(0.3);
-
-  useEffect(() => {
-    checkAuth();
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ variant = "default", size = "default", className = "", children, ...props }, ref) => {
+    const baseStyles = "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
     
-    // Écouter les changements de session
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setIsAuthenticated(!!session);
-      setIsCheckingAuth(false);
-    });
-
-    return () => {
-      subscription.unsubscribe();
+    const variants = {
+      default: "bg-white text-black hover:bg-gray-100",
+      secondary: "bg-gray-800 text-white hover:bg-gray-700",
+      ghost: "hover:bg-gray-800/50 text-white",
+      gradient: "bg-gradient-to-b from-white via-white/95 to-white/60 text-black hover:scale-105 active:scale-95"
     };
-  }, []);
+    
+    const sizes = {
+      default: "h-10 px-4 py-2 text-sm",
+      sm: "h-10 px-5 text-sm",
+      lg: "h-12 px-8 text-base"
+    };
+    
+    return (
+      <button
+        ref={ref}
+        className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
+        {...props}
+      >
+        {children}
+      </button>
+    );
+  }
+);
 
-  const checkAuth = async () => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      setIsAuthenticated(!!session);
-    } catch (error) {
-      console.error('Erreur lors de la vérification de la session:', error);
-      setIsAuthenticated(false);
-    } finally {
-      setIsCheckingAuth(false);
-    }
-  };
+Button.displayName = "Button";
 
-  const handleAuthSuccess = () => {
-    // Fermer immédiatement le modal
-    setAuthModalOpen(false);
-    // Vérifier à nouveau la session
-    checkAuth();
-    // Appeler directement onLogin pour aller à l'onboarding
-    onLogin?.();
-  };
+// Icons
+const ArrowRight = ({ className = "", size = 16 }: { className?: string; size?: number }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M5 12h14" />
+    <path d="m12 5 7 7-7 7" />
+  </svg>
+);
 
-  const handleGoClick = () => {
-    playClick();
-    onLogin?.();
-  };
+const Menu = ({ className = "", size = 24 }: { className?: string; size?: number }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <line x1="4" x2="20" y1="12" y2="12" />
+    <line x1="4" x2="20" y1="6" y2="6" />
+    <line x1="4" x2="20" y1="18" y2="18" />
+  </svg>
+);
 
+const X = ({ className = "", size = 24 }: { className?: string; size?: number }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M18 6 6 18" />
+    <path d="m6 6 12 12" />
+  </svg>
+);
+
+// Navigation Component
+const Navigation = React.memo(() => {
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
   return (
-    <div className="relative min-h-screen bg-black">
-      {/* Animated Background */}
-      <AnimatedBackground />
-
-      {/* Logo seulement en haut à gauche */}
-      <div className="absolute top-0 left-0 z-10 p-6">
-        <div className="flex items-center gap-2">
-          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white shadow-lg shadow-gray-500/30">
-            <Zap className="h-4 w-4 text-black" />
+    <header className="fixed top-0 w-full z-50 border-b border-gray-800/50 bg-black/80 backdrop-blur-md">
+      <nav className="max-w-7xl mx-auto px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <img src="/favicon.png" alt="Proofy" className="h-8 w-8" />
+            <div className="text-xl font-semibold text-white">Proofy</div>
           </div>
-          <span className="font-bold text-xl text-white">RizeAppHub™</span>
+          
+          <div className="hidden md:flex items-center justify-center gap-8 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            <a href="#features" className="text-sm text-white/60 hover:text-white transition-colors">
+              Features
+            </a>
+            <a href="#templates" className="text-sm text-white/60 hover:text-white transition-colors">
+              Templates
+            </a>
+            <a href="#pricing" className="text-sm text-white/60 hover:text-white transition-colors">
+              Pricing
+            </a>
+          </div>
+
+          <div className="hidden md:flex items-center gap-4">
+            <Button type="button" variant="ghost" size="sm">
+              Sign in
+            </Button>
+            <Button type="button" variant="default" size="sm">
+              Sign Up
+            </Button>
+          </div>
+
+          <button
+            type="button"
+            className="md:hidden text-white"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
-      </div>
+      </nav>
 
-      {/* Bouton Admin discret en haut à droite */}
-      <div className="absolute top-0 right-0 z-30 p-6">
-        <button 
-          onClick={() => { playClick(); setOtpModalOpen(true); }}
-          className="text-xs text-gray-400 hover:text-gray-200 transition-colors duration-200 opacity-30 hover:opacity-60 cursor-pointer"
-          title="Accès Admin"
-        >
-          Admin
-        </button>
-      </div>
-
-      {/* New Landing Page Content */}
-      <div className="relative z-20">
-        {!isCheckingAuth && (
-          <LandingPageNew 
-            isAuthenticated={isAuthenticated}
-            onLogin={() => setAuthModalOpen(true)}
-            onSignup={() => setAuthModalOpen(true)}
-            onGo={handleGoClick}
-          />
-        )}
-      </div>
-
-      {/* Modals */}
-      <AuthModal 
-        open={authModalOpen} 
-        onOpenChange={setAuthModalOpen}
-        onAuthSuccess={handleAuthSuccess}
-      />
-      
-      {/* OTP Modal */}
-      {otpModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ border: 'none', outline: 'none' }}>
-          <div className="absolute inset-0 bg-black/80" onClick={() => setOtpModalOpen(false)} />
-          <div className="relative z-10" style={{ border: 'none', outline: 'none' }}>
-            <OTPVerification 
-              onSuccess={() => {
-                console.log("Accès admin accordé!")
-                setOtpModalOpen(false)
-                // Rediriger vers le dashboard admin
-                window.location.href = '/admin-dashboard'
-              }}
-              onClose={() => setOtpModalOpen(false)}
-            />
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-black/95 backdrop-blur-md border-t border-gray-800/50 animate-[slideDown_0.3s_ease-out]">
+          <div className="px-6 py-4 flex flex-col gap-4">
+            <a
+              href="#features"
+              className="text-sm text-white/60 hover:text-white transition-colors py-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Features
+            </a>
+            <a
+              href="#templates"
+              className="text-sm text-white/60 hover:text-white transition-colors py-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Templates
+            </a>
+            <a
+              href="#pricing"
+              className="text-sm text-white/60 hover:text-white transition-colors py-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Pricing
+            </a>
+            <div className="flex flex-col gap-2 pt-4 border-t border-gray-800/50">
+              <Button type="button" variant="ghost" size="sm">
+                Sign in
+              </Button>
+              <Button type="button" variant="default" size="sm">
+                Sign Up
+              </Button>
+            </div>
           </div>
         </div>
       )}
-    </div>
+    </header>
+  );
+});
+
+Navigation.displayName = "Navigation";
+
+// Hero Component
+const Hero = React.memo(() => {
+  return (
+    <section
+      className="relative min-h-screen flex flex-col items-center justify-start px-6 py-20 md:py-24"
+      style={{
+        animation: "fadeIn 0.6s ease-out"
+      }}
+    >
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        
+        * {
+          font-family: 'Poppins', sans-serif;
+        }
+        
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
+
+      <aside className="mb-8 inline-flex flex-wrap items-center justify-center gap-2 px-4 py-2 rounded-full border border-gray-700 bg-gray-800/50 backdrop-blur-sm max-w-full">
+        <span className="text-xs text-center whitespace-nowrap" style={{ color: '#9ca3af' }}>
+          Create realistic fake dashboard beacons
+        </span>
+        <a
+          href="#features"
+          className="flex items-center gap-1 text-xs hover:text-white transition-all active:scale-95 whitespace-nowrap"
+          style={{ color: '#9ca3af' }}
+          aria-label="Learn more about features"
+        >
+          Learn more
+          <ArrowRight size={12} />
+        </a>
+      </aside>
+
+      <h1
+        className="text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl px-6 leading-tight mb-6"
+        style={{
+          background: "linear-gradient(to bottom, #ffffff, #ffffff, rgba(255, 255, 255, 0.6))",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+          letterSpacing: "-0.05em"
+        }}
+      >
+        Create fake dashboard beacons <br />for your projects
+      </h1>
+
+      <p className="text-sm md:text-base text-center max-w-2xl px-6 mb-10" style={{ color: '#9ca3af' }}>
+        Generate professional-looking fake dashboard beacons instantly. <br />Perfect for demos, mockups, and presentations.
+      </p>
+
+      <div className="flex items-center gap-4 relative z-10 mb-16">
+        <Button
+          type="button"
+          variant="gradient"
+          size="lg"
+          className="rounded-lg flex items-center justify-center"
+          aria-label="Create your first dashboard beacon"
+        >
+          Create Dashboard Beacon
+          <ArrowRight size={20} />
+        </Button>
+      </div>
+
+      <div className="w-full max-w-5xl relative pb-20">
+        <div
+          className="absolute left-1/2 w-[90%] pointer-events-none z-0"
+          style={{
+            top: "-23%",
+            transform: "translateX(-50%)"
+          }}
+          aria-hidden="true"
+        >
+          <img
+            src="https://i.postimg.cc/Ss6yShGy/glows.png"
+            alt=""
+            className="w-full h-auto"
+            loading="eager"
+          />
+        </div>
+        
+        <div className="relative z-10">
+          <img
+            src="https://i.postimg.cc/SKcdVTr1/Dashboard2.png"
+            alt="Dashboard preview showing analytics and metrics interface"
+            className="w-full h-auto rounded-lg shadow-2xl"
+            loading="eager"
+          />
+        </div>
+      </div>
+    </section>
+  );
+});
+
+Hero.displayName = "Hero";
+
+// Main Component
+export default function LandingPage() {
+  return (
+    <main className="min-h-screen bg-black text-white">
+      <Navigation />
+      <Hero />
+    </main>
   );
 }
