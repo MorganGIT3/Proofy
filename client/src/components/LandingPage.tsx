@@ -286,7 +286,7 @@ const Navigation = React.memo(() => {
       >
         <div className={cn(
           'mx-auto mt-2 max-w-6xl px-3 sm:px-6 transition-all duration-300 lg:px-12 relative',
-          isScrolled && 'bg-black/90 max-w-4xl rounded-2xl backdrop-blur-md lg:px-5'
+          isScrolled && 'bg-black/70 max-w-4xl rounded-2xl backdrop-blur-md lg:px-5'
         )}>
           <div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
             <div className="flex w-full justify-between lg:w-auto">
@@ -536,10 +536,9 @@ const PricingSection = React.memo(() => {
       buttonVariant: "outline" as const,
       includes: [
         "Inclus dans ce plan:",
-        "Dashboards ultra-réalistes",
-        "Visuels pour stories, pubs & tunnels",
+        "Création de dashboards illimitée",
         "Exports HD sans watermark",
-        "Tous les templates inclus",
+        "1 template de plateforme au choix",
         "Génération instantanée",
         "Sans code, sans installation",
       ],
@@ -554,11 +553,9 @@ const PricingSection = React.memo(() => {
       popular: true,
       includes: [
         "Inclus dans ce plan:",
-        "Notifications de ventes en direct sur écran verrouillé",
         "Plan Proofy Basic inclus",
-        "Scénarios programmables (toutes les X minutes/heures)",
-        "Effet \"vente en direct\"",
-        "FOMO en temps réel",
+        "Notifications de ventes en direct sur écran verrouillé",
+        "Accès à tous les templates de plateformes",
         "Support prioritaire",
       ],
     },
@@ -657,9 +654,9 @@ const PricingSection = React.memo(() => {
                       <span className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-medium">
                         Populaire
                       </span>
-                    </div>
+          </div>
                   )}
-                </div>
+        </div>
                 <div className="flex items-baseline">
                   <AnimatedPrice 
                     price={isYearly ? plan.yearlyPrice : plan.price} 
@@ -668,7 +665,7 @@ const PricingSection = React.memo(() => {
                   <span className="text-gray-400 ml-1 text-sm sm:text-base">
                     /{isYearly ? "an" : "mois"}
                   </span>
-                </div>
+      </div>
               </CardHeader>
 
               <CardContent className="pt-0 p-4 sm:p-6">
@@ -805,9 +802,9 @@ const PricingSection = React.memo(() => {
                     <span className="text-xs font-medium text-orange-500 bg-orange-500/10 px-2 sm:px-3 py-1 rounded-full border border-orange-500/30">
                       ACTIF
                     </span>
-                  )}
-                </div>
-                
+        )}
+      </div>
+
                 {/* Placeholder pour la vidéo/visuel */}
                 <div className="w-full h-32 sm:h-40 md:h-48 bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-lg mb-4 flex items-center justify-center border border-gray-800/50 relative overflow-hidden">
                   <div className="absolute inset-0 opacity-20">
@@ -1073,21 +1070,6 @@ export const Timeline = ({ data }: { data: TimelineEntryNew[] }) => {
       className="w-full bg-black font-sans md:px-10 overflow-visible"
       ref={containerRef}
     >
-      <div className="max-w-7xl mx-auto py-20 px-4 md:px-8 lg:px-10">
-        <h3
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl mx-auto px-4 sm:px-6 leading-tight mb-8 sm:mb-10 md:mb-12 relative z-10"
-          style={{
-            background: "linear-gradient(to bottom, #ffffff, #ffffff, rgba(255, 255, 255, 0.6))",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-            letterSpacing: "-0.05em"
-          }}
-        >
-          Plateformes disponibles
-        </h3>
-      </div>
-
       <div ref={ref} className="relative max-w-7xl mx-auto pb-20">
         {data.map((item, index) => (
           <div
@@ -1123,9 +1105,9 @@ export const Timeline = ({ data }: { data: TimelineEntryNew[] }) => {
               opacity: opacityTransform,
             }}
             className="absolute inset-x-0 top-0  w-[2px] bg-gradient-to-t from-orange-500 via-orange-400 to-transparent from-[0%] via-[10%] rounded-full"
-          />
+            />
+          </div>
         </div>
-      </div>
     </div>
   );
 };
@@ -1319,7 +1301,7 @@ const Hero = React.memo(() => {
           type="button"
           onClick={() => navigate(user ? '/dashboard' : '/login')}
           className="w-full sm:w-auto mb-0 p-3 sm:p-4 text-lg sm:text-xl rounded-xl relative overflow-hidden transition-all duration-300 bg-gradient-to-t from-orange-500 to-orange-600 shadow-lg shadow-orange-500 border border-orange-400 text-white flex items-center justify-center gap-2"
-          aria-label={user ? "Accéder au dashboard" : "Créer mes preuves"}
+          aria-label="Créer mon dashboard"
           whileHover={{ 
             scale: 1.05,
             boxShadow: "0 20px 40px -12px rgba(255, 107, 53, 0.5)"
@@ -1338,7 +1320,7 @@ const Hero = React.memo(() => {
             whileHover={{ x: "100%" }}
             transition={{ duration: 0.6, ease: "easeInOut" }}
           />
-          <span className="relative z-10">{user ? "Accéder au dashboard" : "Créer mes preuves"}</span>
+          <span className="relative z-10">Créer mon dashboard</span>
           <ArrowRight size={20} className="relative z-10" />
         </motion.button>
         <Button
@@ -1642,7 +1624,13 @@ export default function LandingPage() {
     <main className="min-h-screen bg-black text-white overflow-x-hidden">
       <Navigation />
       <Hero />
-      <TimelineDemo />
+      <footer className="w-full py-8 px-4 md:px-8">
+        <div className="max-w-7xl mx-auto">
+          <p className="text-xs text-gray-500 text-center">
+            Proofy propose des outils de démonstration visuelle à des fins marketing. L'utilisateur est seul responsable de l'usage qu'il en fait.
+          </p>
+        </div>
+      </footer>
     </main>
   );
 }
