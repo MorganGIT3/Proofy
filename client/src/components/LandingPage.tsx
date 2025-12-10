@@ -768,23 +768,23 @@ const PricingSection = React.memo(() => {
             { 
               name: "Shopify", 
               status: "soon",
-              description: "Bientôt disponible"
+              description: "Génère un dashboard Shopify visuel montrant un chiffre d'affaires par jour, semaine ou mois, avec des notifications de ventes simulées, pour prouver ton expertise e-commerce et rassurer ton audience."
             },
             { 
               name: "Stripe", 
               status: "soon",
-              description: "Bientôt disponible"
+              description: "Crée un dashboard Stripe de démonstration avec paiements et chiffre d'affaires affichés (jour, semaine, mois), accompagné de notifications visuelles, pour montrer que ton business encaisse et inspirer la confiance."
             },
             { 
               name: "TikTok", 
               status: "soon",
-              description: "Bientôt disponible"
+              description: "Génère un dashboard TikTok de présentation affichant des revenus de monétisation et la progression de tes gains, pour prouver que TikTok peut vraiment devenir une source de revenus."
             },
           ].map((platform, index) => (
             <Card
               key={index}
               className={cn(
-                "relative overflow-hidden border",
+                "relative overflow-hidden border group",
                 platform.status === "active"
                   ? "bg-gray-900/50 border-orange-500/50"
                   : "bg-gray-900/30 border-gray-800/50 opacity-60"
@@ -828,7 +828,7 @@ const PricingSection = React.memo(() => {
                   )}
           </div>
                 
-                <p className="text-xs sm:text-sm text-gray-400 break-words">{platform.description}</p>
+                <p className="text-xs sm:text-sm text-gray-400 break-words opacity-0 group-hover:opacity-100 transition-opacity duration-300">{platform.description}</p>
               </CardContent>
             </Card>
           ))}
@@ -868,7 +868,7 @@ const PlatformsTimeline = () => {
 
   const timelineData: TimelineEntry[] = [
     {
-      title: "✅ BEACONS",
+      title: "BEACONS",
       content: (
         <div className="flex flex-col md:flex-row gap-6 items-start">
           <div className="w-full md:w-1/2 aspect-video bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-lg flex items-center justify-center border border-gray-800/50 relative overflow-hidden">
@@ -895,7 +895,7 @@ const PlatformsTimeline = () => {
       ),
     },
     {
-      title: "🟣 SHOPIFY",
+      title: "SHOPIFY",
       content: (
         <div className="flex flex-col md:flex-row gap-6 items-start">
           <div className="w-full md:w-1/2 aspect-video bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-lg flex items-center justify-center border border-gray-800/50 relative overflow-hidden">
@@ -922,7 +922,7 @@ const PlatformsTimeline = () => {
       ),
     },
     {
-      title: "🔵 STRIPE",
+      title: "STRIPE",
       content: (
         <div className="flex flex-col md:flex-row gap-6 items-start">
           <div className="w-full md:w-1/2 aspect-video bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-lg flex items-center justify-center border border-gray-800/50 relative overflow-hidden">
@@ -949,7 +949,7 @@ const PlatformsTimeline = () => {
       ),
     },
     {
-      title: "🔴 TIKTOK",
+      title: "TIKTOK",
       content: (
         <div className="flex flex-col md:flex-row gap-6 items-start">
           <div className="w-full md:w-1/2 aspect-video bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-lg flex items-center justify-center border border-gray-800/50 relative overflow-hidden">
