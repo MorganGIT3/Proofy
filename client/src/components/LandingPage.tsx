@@ -590,26 +590,32 @@ const PricingSection = React.memo(() => {
       className="px-3 sm:px-4 pt-12 sm:pt-16 md:pt-20 pb-12 sm:pb-16 md:pb-20 min-h-screen max-w-7xl mx-auto relative"
       ref={pricingRef}
     >
-      <article className="text-left mb-6 space-y-4 max-w-2xl relative z-10">
-        <h2
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl mx-auto px-4 sm:px-6 leading-tight mb-4"
+      {/* Titre centré */}
+      <h2
+        className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl mx-auto px-4 sm:px-6 leading-tight mb-6 sm:mb-8 md:mb-10 relative z-10"
+        style={{
+          letterSpacing: "-0.05em"
+        }}
+      >
+        <span
           style={{
             background: "linear-gradient(to bottom, #ffffff, #ffffff, rgba(255, 255, 255, 0.6))",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
-            letterSpacing: "-0.05em"
           }}
         >
-          Choisissez votre plan
-        </h2>
+          Passe à l'action
+        </span>
+      </h2>
 
+      <article className="text-center mb-6 space-y-4 max-w-2xl mx-auto relative z-10">
         <TimelineContent
           as="p"
           animationNum={0}
           timelineRef={pricingRef}
           customVariants={revealVariants}
-          className="md:text-base text-sm text-gray-400 w-[80%]"
+          className="md:text-base text-sm text-gray-400 mx-auto"
         >
           Des offres adaptées à vos besoins. Créez des preuves visuelles qui convertissent.
         </TimelineContent>
@@ -620,7 +626,7 @@ const PricingSection = React.memo(() => {
           timelineRef={pricingRef}
           customVariants={revealVariants}
         >
-          <PricingSwitch onSwitch={togglePricingPeriod} className="w-fit" />
+          <PricingSwitch onSwitch={togglePricingPeriod} className="w-fit mx-auto" />
         </TimelineContent>
       </article>
 
