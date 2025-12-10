@@ -972,9 +972,8 @@ const Hero = React.memo(() => {
             backgroundClip: "text",
           }}
         >
-          Montre des résultats <br />avant même de les{" "}
+          L'app n°1 pour créer des dashboards de résultats sur toutes les plateformes.
         </span>
-        <span style={{ color: "#ff6b35" }}>avoir.</span>
       </h1>
 
       <p className="text-sm md:text-base text-center max-w-2xl px-4 sm:px-6 mb-6 sm:mb-10" style={{ color: '#9ca3af' }}>
