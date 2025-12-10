@@ -853,7 +853,7 @@ const PricingSection = React.memo(() => {
                 {/* Image Airbnb */}
                 <div className="w-full h-32 sm:h-40 md:h-48 rounded-lg mb-4 border border-gray-800/50 relative overflow-hidden">
                   <img 
-                    src="/airbnb image.jpg" 
+                    src="/new_airbnb image.jpg" 
                     alt="Dashboard Airbnb"
                     className="w-full h-full object-cover"
                   />
