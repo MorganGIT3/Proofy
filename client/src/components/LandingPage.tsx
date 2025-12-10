@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { TimelineContent } from "@/components/ui/timeline-animation";
 import { VerticalCutReveal } from "@/components/ui/vertical-cut-reveal";
 import { cn } from "@/lib/utils";
-import { CheckCheck, GraduationCap, Users, Briefcase, Megaphone, Video, TrendingUp } from "lucide-react";
+import { CheckCheck, GraduationCap, Users, Briefcase, Megaphone, Video, TrendingUp, Settings, Monitor, Zap, Upload } from "lucide-react";
 import { AnimatedText } from "@/components/AnimatedText";
 
 // Inline Button Component
@@ -1536,6 +1536,124 @@ const Hero = React.memo(() => {
           </CardContent>
         </Card>
     </div>
+
+      {/* Section Pourquoi les créateurs adorent Proofy */}
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-20 relative z-10">
+        {/* Titre */}
+        <h2
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl mx-auto px-4 sm:px-6 leading-tight mb-6 sm:mb-8 md:mb-10"
+          style={{
+            letterSpacing: "-0.05em"
+          }}
+        >
+          <span
+            style={{
+              background: "linear-gradient(to bottom, #ffffff, #ffffff, rgba(255, 255, 255, 0.6))",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            Pourquoi les créateurs adorent Proofy?
+          </span>
+        </h2>
+
+        {/* Sous-titre */}
+        <p className="text-center text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto mb-8 sm:mb-12 md:mb-16 px-4">
+          Tout ce dont vous avez besoin pour créer des dashboards bluffants en quelques secondes
+        </p>
+
+        {/* Grille de cartes */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 max-w-6xl mx-auto">
+          {/* Carte 1 */}
+          <Card className="bg-gray-900/50 border-gray-800 backdrop-blur-sm">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="flex-1">
+                  <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white mb-2 sm:mb-3">
+                    1. 100 % personnalisable
+                  </h3>
+                  <div className="flex items-start gap-2 sm:gap-3 mb-2">
+                    <Settings className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500 flex-shrink-0 mt-0.5" />
+                    <p className="text-xs sm:text-sm md:text-base text-gray-300 leading-relaxed">
+                      Modifie chaque chiffre, chaque métrique, chaque élément.
+                    </p>
+                  </div>
+                  <p className="text-xs sm:text-sm md:text-base text-gray-300 leading-relaxed">
+                    Crée exactement le dashboard que tu veux, sans aucune limite.
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Carte 2 */}
+          <Card className="bg-gray-900/50 border-gray-800 backdrop-blur-sm">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="flex-1">
+                  <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white mb-2 sm:mb-3">
+                    2. Réplique parfaite des vraies plateformes
+                  </h3>
+                  <div className="flex items-start gap-2 sm:gap-3 mb-2">
+                    <Monitor className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500 flex-shrink-0 mt-0.5" />
+                    <p className="text-xs sm:text-sm md:text-base text-gray-300 leading-relaxed">
+                      Un rendu identique à Shopify, Stripe, Beacons, TikTok, Airbnb…
+                    </p>
+                  </div>
+                  <p className="text-xs sm:text-sm md:text-base text-gray-300 leading-relaxed">
+                    Ton audience ne fera pas la différence.
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Carte 3 */}
+          <Card className="bg-gray-900/50 border-gray-800 backdrop-blur-sm">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="flex-1">
+                  <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white mb-2 sm:mb-3">
+                    3. Aucun skill technique nécessaire
+                  </h3>
+                  <div className="flex items-start gap-2 sm:gap-3 mb-2">
+                    <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500 flex-shrink-0 mt-0.5" />
+                    <p className="text-xs sm:text-sm md:text-base text-gray-300 leading-relaxed">
+                      Pas de design, pas de code, rien à apprendre.
+                    </p>
+                  </div>
+                  <p className="text-xs sm:text-sm md:text-base text-gray-300 leading-relaxed">
+                    Choisis un template, remplis les champs, c'est prêt.
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Carte 4 */}
+          <Card className="bg-gray-900/50 border-gray-800 backdrop-blur-sm">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-start gap-3 sm:gap-4">
+                <div className="flex-1">
+                  <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white mb-2 sm:mb-3">
+                    4. Export instantané en haute qualité
+                  </h3>
+                  <div className="flex items-start gap-2 sm:gap-3 mb-2">
+                    <Upload className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500 flex-shrink-0 mt-0.5" />
+                    <p className="text-xs sm:text-sm md:text-base text-gray-300 leading-relaxed">
+                      Exporte en PNG / JPG en quelques secondes.
+                    </p>
+                  </div>
+                  <p className="text-xs sm:text-sm md:text-base text-gray-300 leading-relaxed">
+                    Qualité 4K, parfaite pour stories, pubs et pages de vente.
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
 
       {/* Section Tarification */}
       <PricingSection />
