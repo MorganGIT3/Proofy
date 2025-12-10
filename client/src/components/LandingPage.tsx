@@ -832,7 +832,7 @@ const PricingSection = React.memo(() => {
                   )}
                 </div>
                 
-                <p className="text-xs sm:text-sm text-gray-400 break-words">{platform.description}</p>
+                <p className="text-xs sm:text-sm text-white break-words">{platform.description}</p>
               </CardContent>
             </Card>
           ))}
@@ -860,7 +860,7 @@ const PricingSection = React.memo(() => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 </div>
                 
-                <p className="text-xs sm:text-sm text-gray-400 break-words">
+                <p className="text-xs sm:text-sm text-white break-words">
                   Crée un dashboard Airbnb de démonstration affichant tes revenus par nuit, semaine ou mois, avec des notifications de réservations simulées, pour prouver la rentabilité de la location courte durée et renforcer instantanément ta crédibilité.
                 </p>
               </CardContent>
