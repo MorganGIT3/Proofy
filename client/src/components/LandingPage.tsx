@@ -501,8 +501,6 @@ const PricingSection = React.memo(() => {
       popular: true,
       includes: [
         "Tout le plan BASIC, plus:",
-        "PROOFY LIVE – Notifications en direct",
-        "Notifications sur écran verrouillé",
         "Scénarios programmables (toutes les X minutes/heures)",
         "Effet \"vente en direct\"",
         "FOMO en temps réel",
@@ -938,14 +936,20 @@ const Hero = React.memo(() => {
       <h1
         className="text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl px-6 leading-tight mb-6"
         style={{
-          background: "linear-gradient(to bottom, #ffffff, #ffffff, rgba(255, 255, 255, 0.6))",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text",
           letterSpacing: "-0.05em"
         }}
       >
-        Montre des résultats <br />avant même de les avoir.
+        <span
+          style={{
+            background: "linear-gradient(to bottom, #ffffff, #ffffff, rgba(255, 255, 255, 0.6))",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+          }}
+        >
+          Montre des résultats <br />avant même de les{" "}
+        </span>
+        <span style={{ color: "#ff6b35" }}>avoir.</span>
       </h1>
 
       <p className="text-sm md:text-base text-center max-w-2xl px-6 mb-10" style={{ color: '#9ca3af' }}>
@@ -1055,14 +1059,20 @@ const Hero = React.memo(() => {
       <h2
         className="text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl mx-auto px-6 leading-tight mb-20 relative z-10"
         style={{
-          background: "linear-gradient(to bottom, #ffffff, #ffffff, rgba(255, 255, 255, 0.6))",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text",
           letterSpacing: "-0.05em"
         }}
       >
-        Plus de 1 000 créateurs utilisent déjà Proofy
+        <span
+          style={{
+            background: "linear-gradient(to bottom, #ffffff, #ffffff, rgba(255, 255, 255, 0.6))",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+          }}
+        >
+          Plus de 1 000 créateurs utilisent déjà{" "}
+        </span>
+        <span style={{ color: "#ff6b35" }}>Proofy</span>
       </h2>
 
       {/* Card Types d'utilisateurs */}
@@ -1070,7 +1080,7 @@ const Hero = React.memo(() => {
         <Card className="bg-gray-900/50 border-gray-800 backdrop-blur-sm">
           <CardContent className="p-6">
             <h3 className="text-xl font-semibold uppercase text-white mb-6">
-              Qui utilise Proofy
+              Qui utilise Proofy ?
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
