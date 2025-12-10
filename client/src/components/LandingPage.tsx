@@ -972,9 +972,9 @@ const Hero = React.memo(() => {
             backgroundClip: "text",
           }}
         >
-          L'app n°1 pour créer des dashboards <br className="hidden sm:block" />
-          de résultats{" "}
+          L'app n°1 pour créer des dashboards de résultats
         </span>
+        <br />
         <span style={{ color: "#ff6b35" }}>
           sur toutes les plateformes.
         </span>
