@@ -763,7 +763,7 @@ const PricingSection = React.memo(() => {
             { 
               name: "Beacons", 
               status: "active",
-              description: "Modifiez votre dashboard Beacons en direct avec notre extension (sur le site officiel de beacons)"
+              description: "Crée un dashboard Beacons simulé avec tes ventes affichées en temps réel et des notifications visuelles sur écran verrouillé, pour donner l'image d'une formation qui se vend et renforcer instantanément ta crédibilité."
             },
             { 
               name: "Shopify", 
@@ -784,7 +784,7 @@ const PricingSection = React.memo(() => {
             <Card
               key={index}
               className={cn(
-                "relative overflow-hidden border group",
+                "relative overflow-hidden border",
                 platform.status === "active"
                   ? "bg-gray-900/50 border-orange-500/50"
                   : "bg-gray-900/30 border-gray-800/50 opacity-60"
@@ -828,7 +828,7 @@ const PricingSection = React.memo(() => {
                   )}
           </div>
                 
-                <p className="text-xs sm:text-sm text-gray-400 break-words opacity-0 group-hover:opacity-100 transition-opacity duration-300">{platform.description}</p>
+                <p className="text-xs sm:text-sm text-gray-400 break-words">{platform.description}</p>
               </CardContent>
             </Card>
           ))}
@@ -1290,10 +1290,6 @@ const Hero = React.memo(() => {
           sur toutes les plateformes.
         </span>
       </h1>
-
-      <p className="text-sm md:text-base text-center max-w-2xl px-4 sm:px-6 mb-6 sm:mb-10" style={{ color: '#9ca3af' }}>
-        Transforme l'attention en conversions grâce à des preuves visuelles instantanées.
-      </p>
 
       {/* Boutons CTA */}
       <div className="flex flex-col sm:flex-row items-center gap-4 relative z-10 mb-10 sm:mb-16">
