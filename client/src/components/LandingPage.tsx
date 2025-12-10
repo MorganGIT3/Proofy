@@ -314,7 +314,7 @@ const Navigation = React.memo(() => {
               </button>
             </div>
 
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden lg:block z-10">
+            <div className="absolute left-[47%] top-1/2 -translate-x-1/2 -translate-y-1/2 hidden lg:block z-10">
               <ul className="flex gap-4 text-xs whitespace-nowrap">
                 {menuItems.map((item, index) => (
                   <li key={index}>
