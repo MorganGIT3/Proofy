@@ -500,7 +500,7 @@ const PricingSection = React.memo(() => {
       buttonVariant: "default" as const,
       popular: true,
       includes: [
-        "Tout le plan BASIC, plus:",
+        "Inclus dans ce plan:",
         "Scénarios programmables (toutes les X minutes/heures)",
         "Effet \"vente en direct\"",
         "FOMO en temps réel",
