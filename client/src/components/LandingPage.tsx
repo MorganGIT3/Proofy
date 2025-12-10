@@ -1154,7 +1154,7 @@ const Hero = React.memo(() => {
   
   return (
     <section
-      className="relative min-h-screen flex flex-col items-center justify-start px-4 sm:px-6 py-12 sm:py-16 md:py-24 overflow-hidden"
+      className="relative min-h-screen flex flex-col items-center justify-start px-4 sm:px-6 pt-24 pb-12 sm:pt-16 sm:pb-16 md:pt-24 md:pb-24 overflow-hidden"
       style={{
         animation: "fadeIn 0.6s ease-out"
       }}
