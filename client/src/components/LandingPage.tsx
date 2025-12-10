@@ -772,7 +772,7 @@ const PricingSection = React.memo(() => {
             { 
               name: "Shopify", 
               status: "soon",
-              image: "/shopify image .jpg",
+              image: "/new_shopify image.jpeg",
               description: "Génère un dashboard Shopify visuel montrant un chiffre d'affaires par jour, semaine ou mois, avec des notifications de ventes simulées, pour prouver ton expertise e-commerce et rassurer ton audience."
             },
             { 
