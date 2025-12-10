@@ -187,7 +187,7 @@ export const LoginPage: React.FC = () => {
         logoSrc="/favicon.png"
         logoAlt="Proofy"
         title="Bienvenue sur Proofy"
-        description="Connectez-vous pour générer vos preuves visuelles"
+        description="Crée tes preuves visuelles en quelques secondes."
         primaryAction={{
           label: isLoading ? "Connexion..." : "Continuer avec Google",
           icon: <GoogleIcon />,
@@ -204,10 +204,6 @@ export const LoginPage: React.FC = () => {
             onClick: handleEmailLogin,
           },
         ]}
-        skipAction={{
-          label: "Continuer sans compte",
-          onClick: handleSkip,
-        }}
       />
       </div>
     </div>

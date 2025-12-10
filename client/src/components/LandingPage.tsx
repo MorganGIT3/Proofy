@@ -258,7 +258,7 @@ const Navigation = React.memo(() => {
 
   const menuItems = [
     { name: 'Qui utilise Proofy', href: '#qui-utilise-proofy' },
-    { name: 'Choisissez votre plan', href: '#tarifs' },
+    { name: 'Passe à l\'action', href: '#tarifs' },
     { name: 'Plateformes disponibles', href: '#plateformes-disponibles' },
   ];
 
