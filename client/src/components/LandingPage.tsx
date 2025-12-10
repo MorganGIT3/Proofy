@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { TimelineContent } from "@/components/ui/timeline-animation";
 import { VerticalCutReveal } from "@/components/ui/vertical-cut-reveal";
 import { cn } from "@/lib/utils";
-import { CheckCheck, GraduationCap, Users, Briefcase, Megaphone, Video, TrendingUp, Play } from "lucide-react";
+import { CheckCheck, GraduationCap, Users, Briefcase, Megaphone, Video, TrendingUp } from "lucide-react";
 
 // Inline Button Component
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
