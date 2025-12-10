@@ -501,6 +501,8 @@ const PricingSection = React.memo(() => {
       popular: true,
       includes: [
         "Inclus dans ce plan:",
+        "Notifications de ventes en direct sur écran verrouillé",
+        "Plan Proofy Basic inclus",
         "Scénarios programmables (toutes les X minutes/heures)",
         "Effet \"vente en direct\"",
         "FOMO en temps réel",
