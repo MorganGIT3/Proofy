@@ -537,7 +537,7 @@ const PricingSection = React.memo(() => {
       className="px-4 pt-20 pb-20 min-h-screen max-w-7xl mx-auto relative"
       ref={pricingRef}
     >
-      <article className="text-left mb-6 space-y-4 max-w-2xl">
+      <article className="text-left mb-6 space-y-4 max-w-2xl relative z-10">
         <h2
           className="text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl mx-auto px-6 leading-tight mb-4"
           style={{
@@ -571,7 +571,7 @@ const PricingSection = React.memo(() => {
         </TimelineContent>
       </article>
 
-      <div className="grid md:grid-cols-2 gap-4 py-6">
+      <div className="grid md:grid-cols-2 gap-4 py-6 relative z-10">
         {plans.map((plan, index) => (
           <TimelineContent
             key={plan.name}
@@ -673,9 +673,27 @@ const PricingSection = React.memo(() => {
       </div>
 
       {/* Section Plateformes disponibles */}
-      <div id="plateformes-disponibles" className="w-full max-w-6xl mx-auto px-6 py-12 scroll-mt-20">
+      <div id="plateformes-disponibles" className="w-full max-w-6xl mx-auto px-6 py-12 scroll-mt-20 relative overflow-hidden">
+        {/* Effets lumineux orange pour la section plateformes */}
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <div 
+            className="absolute top-1/2 left-1/3 w-72 h-72 rounded-full opacity-15 blur-3xl"
+            style={{
+              background: "radial-gradient(circle, rgba(255, 107, 53, 0.5) 0%, transparent 70%)",
+              animation: "pulse 4s ease-in-out infinite"
+            }}
+          />
+          <div 
+            className="absolute bottom-1/4 right-1/3 w-64 h-64 rounded-full opacity-12 blur-3xl"
+            style={{
+              background: "radial-gradient(circle, rgba(255, 107, 53, 0.4) 0%, transparent 70%)",
+              animation: "pulse 5.5s ease-in-out infinite",
+              animationDelay: "1s"
+            }}
+          />
+        </div>
         <h3
-          className="text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl mx-auto px-6 leading-tight mb-12"
+          className="text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl mx-auto px-6 leading-tight mb-12 relative z-10"
           style={{
             background: "linear-gradient(to bottom, #ffffff, #ffffff, rgba(255, 255, 255, 0.6))",
             WebkitBackgroundClip: "text",
@@ -686,7 +704,7 @@ const PricingSection = React.memo(() => {
         >
           Plateformes disponibles
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
           {[
             { 
               name: "Beacons", 
@@ -776,11 +794,49 @@ const Hero = React.memo(() => {
   
   return (
     <section
-      className="relative min-h-screen flex flex-col items-center justify-start px-6 py-20 md:py-24"
+      className="relative min-h-screen flex flex-col items-center justify-start px-6 py-20 md:py-24 overflow-hidden"
       style={{
         animation: "fadeIn 0.6s ease-out"
       }}
     >
+      {/* Effets lumineux orange dans le fond */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        {/* Glow en haut à droite */}
+        <div 
+          className="absolute top-20 right-10 w-96 h-96 rounded-full opacity-20 blur-3xl"
+          style={{
+            background: "radial-gradient(circle, rgba(255, 107, 53, 0.6) 0%, transparent 70%)",
+            animation: "pulse 4s ease-in-out infinite"
+          }}
+        />
+        {/* Glow au milieu gauche */}
+        <div 
+          className="absolute top-1/2 left-10 w-80 h-80 rounded-full opacity-15 blur-3xl"
+          style={{
+            background: "radial-gradient(circle, rgba(255, 107, 53, 0.5) 0%, transparent 70%)",
+            animation: "pulse 5s ease-in-out infinite",
+            animationDelay: "1s"
+          }}
+        />
+        {/* Glow en bas à droite */}
+        <div 
+          className="absolute bottom-20 right-1/4 w-72 h-72 rounded-full opacity-10 blur-3xl"
+          style={{
+            background: "radial-gradient(circle, rgba(255, 107, 53, 0.4) 0%, transparent 70%)",
+            animation: "pulse 6s ease-in-out infinite",
+            animationDelay: "2s"
+          }}
+        />
+        {/* Glow au centre */}
+        <div 
+          className="absolute top-1/3 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full opacity-12 blur-3xl"
+          style={{
+            background: "radial-gradient(circle, rgba(255, 107, 53, 0.5) 0%, transparent 70%)",
+            animation: "pulse 4.5s ease-in-out infinite",
+            animationDelay: "0.5s"
+          }}
+        />
+      </div>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
         
@@ -818,7 +874,61 @@ const Hero = React.memo(() => {
             opacity: 0.5;
           }
         }
+        
+        /* Grain texture */
+        @keyframes grain {
+          0%, 100% { transform: translate(0, 0); }
+          10% { transform: translate(-5%, -10%); }
+          20% { transform: translate(-15%, 5%); }
+          30% { transform: translate(7%, -25%); }
+          40% { transform: translate(-5%, 25%); }
+          50% { transform: translate(-15%, 10%); }
+          60% { transform: translate(15%, 0%); }
+          70% { transform: translate(0%, 15%); }
+          80% { transform: translate(3%, 35%); }
+          90% { transform: translate(-10%, 10%); }
+        }
       `}</style>
+      
+      {/* Grain texture overlay - Couche 1 */}
+      <div 
+        className="fixed inset-0 pointer-events-none z-0 opacity-50"
+        style={{
+          backgroundImage: `
+            repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0px, transparent 1px, transparent 2px, rgba(255,255,255,0.05) 3px),
+            repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0px, transparent 1px, transparent 2px, rgba(255,255,255,0.05) 3px)
+          `,
+          backgroundSize: '150px 150px',
+          animation: 'grain 8s steps(10) infinite',
+          mixBlendMode: 'overlay'
+        }}
+      />
+      {/* Grain texture overlay - Couche 2 */}
+      <div 
+        className="fixed inset-0 pointer-events-none z-0 opacity-40"
+        style={{
+          backgroundImage: `
+            repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0px, transparent 1px, transparent 1px, rgba(255,255,255,0.04) 2px),
+            repeating-linear-gradient(-45deg, rgba(255,255,255,0.04) 0px, transparent 1px, transparent 1px, rgba(255,255,255,0.04) 2px)
+          `,
+          backgroundSize: '100px 100px',
+          animation: 'grain 6s steps(10) infinite reverse',
+          mixBlendMode: 'overlay'
+        }}
+      />
+      {/* Grain texture overlay - Couche 3 (fin) */}
+      <div 
+        className="fixed inset-0 pointer-events-none z-0 opacity-30"
+        style={{
+          backgroundImage: `
+            repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, transparent 0.5px, transparent 1px, rgba(255,255,255,0.03) 1.5px),
+            repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0px, transparent 0.5px, transparent 1px, rgba(255,255,255,0.03) 1.5px)
+          `,
+          backgroundSize: '50px 50px',
+          animation: 'grain 10s steps(10) infinite',
+          mixBlendMode: 'overlay'
+        }}
+      />
 
       {/* Sous-titre psychologique */}
       <aside className="mb-8 inline-flex flex-wrap items-center justify-center gap-2 px-4 py-2 rounded-full border border-gray-700 bg-gray-800/50 backdrop-blur-sm max-w-full">
@@ -946,7 +1056,7 @@ const Hero = React.memo(() => {
 
       {/* Texte social proof sous la vidéo */}
       <h2
-        className="text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl mx-auto px-6 leading-tight mb-20"
+        className="text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl mx-auto px-6 leading-tight mb-20 relative z-10"
         style={{
           background: "linear-gradient(to bottom, #ffffff, #ffffff, rgba(255, 255, 255, 0.6))",
           WebkitBackgroundClip: "text",
@@ -1007,33 +1117,6 @@ const Hero = React.memo(() => {
             </div>
           </CardContent>
         </Card>
-      </div>
-
-
-      {/* Fonctionnalités */}
-      <div id="fonctionnalites" className="w-full max-w-3xl mx-auto mb-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-400">
-          <div className="flex items-start gap-3">
-            <Check size={18} className="text-white mt-0.5 flex-shrink-0" />
-            <span>Crée des dashboards ultra-réalistes</span>
-          </div>
-          <div className="flex items-start gap-3">
-            <Check size={18} className="text-white mt-0.5 flex-shrink-0" />
-            <span>Affiche ventes, revenus & activité</span>
-          </div>
-          <div className="flex items-start gap-3">
-            <Check size={18} className="text-white mt-0.5 flex-shrink-0" />
-            <span>Parfait pour stories, pubs & tunnels</span>
-          </div>
-          <div className="flex items-start gap-3">
-            <Check size={18} className="text-white mt-0.5 flex-shrink-0" />
-            <span>Notifications en direct sur écran verrouillé</span>
-          </div>
-          <div className="flex items-start gap-3 md:col-span-2">
-            <Check size={18} className="text-white mt-0.5 flex-shrink-0" />
-            <span>Sans code. Sans installation. Instantané.</span>
-          </div>
-        </div>
       </div>
 
       {/* Section Tarification */}
