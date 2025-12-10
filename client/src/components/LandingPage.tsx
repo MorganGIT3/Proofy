@@ -837,9 +837,6 @@ const PricingSection = React.memo(() => {
           ))}
         </div>
       </div>
-
-      {/* Timeline Section - Deuxième version des plateformes */}
-      <PlatformsTimeline />
     </div>
   );
 });
