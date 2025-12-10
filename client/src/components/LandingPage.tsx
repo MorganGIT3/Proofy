@@ -1571,7 +1571,7 @@ const Hero = React.memo(() => {
               <div className="flex items-start gap-3 sm:gap-4">
                 <div className="flex-1">
                   <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white mb-2 sm:mb-3">
-                    1. 100 % personnalisable
+                    100 % personnalisable
                   </h3>
                   <div className="flex items-start gap-2 sm:gap-3 mb-2">
                     <Settings className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500 flex-shrink-0 mt-0.5" />
@@ -1593,7 +1593,7 @@ const Hero = React.memo(() => {
               <div className="flex items-start gap-3 sm:gap-4">
                 <div className="flex-1">
                   <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white mb-2 sm:mb-3">
-                    2. Réplique parfaite des vraies plateformes
+                    Réplique parfaite des vraies plateformes
                   </h3>
                   <div className="flex items-start gap-2 sm:gap-3 mb-2">
                     <Monitor className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500 flex-shrink-0 mt-0.5" />
@@ -1615,7 +1615,7 @@ const Hero = React.memo(() => {
               <div className="flex items-start gap-3 sm:gap-4">
                 <div className="flex-1">
                   <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white mb-2 sm:mb-3">
-                    3. Aucun skill technique nécessaire
+                    Aucun skill technique nécessaire
                   </h3>
                   <div className="flex items-start gap-2 sm:gap-3 mb-2">
                     <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500 flex-shrink-0 mt-0.5" />
@@ -1637,7 +1637,7 @@ const Hero = React.memo(() => {
               <div className="flex items-start gap-3 sm:gap-4">
                 <div className="flex-1">
                   <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white mb-2 sm:mb-3">
-                    4. Export instantané en haute qualité
+                    Export instantané en haute qualité
                   </h3>
                   <div className="flex items-start gap-2 sm:gap-3 mb-2">
                     <Upload className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500 flex-shrink-0 mt-0.5" />
