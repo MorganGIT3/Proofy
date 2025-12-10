@@ -832,6 +832,40 @@ const PricingSection = React.memo(() => {
               </CardContent>
             </Card>
           ))}
+          
+          {/* Card Airbnb centrée en bas */}
+          <div className="md:col-span-2 flex justify-center">
+            <Card
+              className="relative overflow-hidden border bg-gray-900/30 border-gray-800/50 opacity-60 w-full md:max-w-md"
+            >
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-lg sm:text-xl font-semibold text-white">Airbnb</h4>
+                  <span className="text-xs font-medium text-gray-400 bg-gray-800/50 px-2 sm:px-3 py-1 rounded-full">
+                    SOON
+                  </span>
+                </div>
+
+                {/* Placeholder pour la vidéo/visuel */}
+                <div className="w-full h-32 sm:h-40 md:h-48 bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-lg mb-4 flex items-center justify-center border border-gray-800/50 relative overflow-hidden">
+                  <div className="absolute inset-0 opacity-20">
+                    <div className="absolute inset-0" style={{
+                      backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,107,53,0.1) 0%, transparent 50%),
+                                      radial-gradient(circle at 80% 80%, rgba(255,107,53,0.1) 0%, transparent 50%)`,
+                      animation: 'pulse 4s ease-in-out infinite'
+                    }} />
+                  </div>
+                  <div className="relative z-10 text-center">
+                    <p className="text-xs sm:text-sm text-gray-500">Bientôt disponible</p>
+                  </div>
+                </div>
+                
+                <p className="text-xs sm:text-sm text-gray-400 break-words">
+                  Crée un dashboard Airbnb de démonstration affichant tes revenus par nuit, semaine ou mois, avec des notifications de réservations simulées, pour prouver la rentabilité de la location courte durée et renforcer instantanément ta crédibilité.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
