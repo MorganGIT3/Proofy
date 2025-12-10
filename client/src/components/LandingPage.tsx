@@ -1073,14 +1073,14 @@ export const Timeline = ({ data }: { data: TimelineEntryNew[] }) => {
 
   return (
     <div
-      className="w-full bg-white dark:bg-neutral-950 font-sans md:px-10 overflow-visible"
+      className="w-full bg-black font-sans md:px-10 overflow-visible"
       ref={containerRef}
     >
       <div className="max-w-7xl mx-auto py-20 px-4 md:px-8 lg:px-10">
-        <h2 className="text-lg md:text-4xl mb-4 text-black dark:text-white max-w-4xl">
+        <h2 className="text-lg md:text-4xl mb-4 text-white max-w-4xl">
           Changelog from my journey
         </h2>
-        <p className="text-neutral-700 dark:text-neutral-300 text-sm md:text-base max-w-sm">
+        <p className="text-gray-400 text-sm md:text-base max-w-sm">
           I&apos;ve been working on Aceternity for the past 2 years. Here&apos;s
           a timeline of my journey.
         </p>
@@ -1093,16 +1093,16 @@ export const Timeline = ({ data }: { data: TimelineEntryNew[] }) => {
             className="flex justify-start pt-10 md:pt-40 md:gap-10 min-h-[400px] md:min-h-[600px]"
           >
             <div className="sticky flex flex-col md:flex-row z-40 items-center top-20 md:top-40 self-start max-w-xs lg:max-w-sm md:w-full h-fit">
-              <div className="h-10 absolute left-3 md:left-3 w-10 rounded-full bg-white dark:bg-black flex items-center justify-center z-50">
-                <div className="h-4 w-4 rounded-full bg-neutral-200 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 p-2" />
+              <div className="h-10 absolute left-3 md:left-3 w-10 rounded-full bg-black flex items-center justify-center z-50">
+                <div className="h-4 w-4 rounded-full bg-gray-800 border border-gray-700 p-2" />
               </div>
-              <h3 className="hidden md:block text-xl md:pl-20 md:text-5xl font-bold text-neutral-500 dark:text-neutral-500 whitespace-nowrap">
+              <h3 className="hidden md:block text-xl md:pl-20 md:text-5xl font-bold text-gray-400 whitespace-nowrap">
                 {item.title}
               </h3>
             </div>
 
             <div className="relative pl-20 pr-4 md:pl-4 w-full">
-              <h3 className="md:hidden block text-2xl mb-4 text-left font-bold text-neutral-500 dark:text-neutral-500">
+              <h3 className="md:hidden block text-2xl mb-4 text-left font-bold text-gray-400">
                 {item.title}
               </h3>
               {item.content}{" "}
@@ -1113,14 +1113,14 @@ export const Timeline = ({ data }: { data: TimelineEntryNew[] }) => {
           style={{
             height: height + "px",
           }}
-          className="absolute md:left-8 left-8 top-0 overflow-hidden w-[2px] bg-[linear-gradient(to_bottom,var(--tw-gradient-stops))] from-transparent from-[0%] via-neutral-200 dark:via-neutral-700 to-transparent to-[99%]  [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)] "
+          className="absolute md:left-8 left-8 top-0 overflow-hidden w-[2px] bg-[linear-gradient(to_bottom,var(--tw-gradient-stops))] from-transparent from-[0%] via-gray-700 to-transparent to-[99%]  [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)] "
         >
           <motion.div
             style={{
               height: heightTransform,
               opacity: opacityTransform,
             }}
-            className="absolute inset-x-0 top-0  w-[2px] bg-gradient-to-t from-purple-500 via-blue-500 to-transparent from-[0%] via-[10%] rounded-full"
+            className="absolute inset-x-0 top-0  w-[2px] bg-gradient-to-t from-orange-500 via-orange-400 to-transparent from-[0%] via-[10%] rounded-full"
           />
         </div>
       </div>
@@ -1511,7 +1511,7 @@ const TimelineDemo = () => {
       title: "2024",
       content: (
         <div>
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
+          <p className="text-gray-300 text-xs md:text-sm font-normal mb-8">
             Built and launched Aceternity UI and Aceternity UI Pro from scratch
           </p>
           <div className="grid grid-cols-2 gap-4">
@@ -1543,11 +1543,11 @@ const TimelineDemo = () => {
       title: "Early 2023",
       content: (
         <div>
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
+          <p className="text-gray-300 text-xs md:text-sm font-normal mb-8">
             I usually run out of copy, but when I see content this big, I try to
             integrate lorem ipsum.
           </p>
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">
+          <p className="text-gray-300 text-xs md:text-sm font-normal mb-8">
             Lorem ipsum is for people who are too lazy to write copy. But we are
             not. Here are some more example of beautiful designs I built.
           </p>
@@ -1580,23 +1580,23 @@ const TimelineDemo = () => {
       title: "Changelog",
       content: (
         <div>
-          <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-4">
+          <p className="text-gray-300 text-xs md:text-sm font-normal mb-4">
             Deployed 5 new components on Aceternity today
           </p>
           <div className="mb-8">
-            <div className="flex gap-2 items-center text-neutral-700 dark:text-neutral-300 text-xs md:text-sm">
+            <div className="flex gap-2 items-center text-gray-400 text-xs md:text-sm">
               ✅ Card grid component
             </div>
-            <div className="flex gap-2 items-center text-neutral-700 dark:text-neutral-300 text-xs md:text-sm">
+            <div className="flex gap-2 items-center text-gray-400 text-xs md:text-sm">
               ✅ Startup template Aceternity
             </div>
-            <div className="flex gap-2 items-center text-neutral-700 dark:text-neutral-300 text-xs md:text-sm">
+            <div className="flex gap-2 items-center text-gray-400 text-xs md:text-sm">
               ✅ Random file upload lol
             </div>
-            <div className="flex gap-2 items-center text-neutral-700 dark:text-neutral-300 text-xs md:text-sm">
+            <div className="flex gap-2 items-center text-gray-400 text-xs md:text-sm">
               ✅ Himesh Reshammiya Music CD
             </div>
-            <div className="flex gap-2 items-center text-neutral-700 dark:text-neutral-300 text-xs md:text-sm">
+            <div className="flex gap-2 items-center text-gray-400 text-xs md:text-sm">
               ✅ Salman Bhai Fan Club registrations open
             </div>
           </div>
