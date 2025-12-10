@@ -614,7 +614,7 @@ const PricingSection = React.memo(() => {
           customVariants={revealVariants}
           className="md:text-base text-sm text-gray-400 mx-auto"
         >
-          Des offres adaptées à vos besoins. Créez des preuves visuelles qui convertissent.
+          Choisis l'offre qui te permet de montrer tes résultats et d'accélérer tes ventes.
         </TimelineContent>
 
         <TimelineContent
