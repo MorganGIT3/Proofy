@@ -1,12 +1,12 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { TimelineContent } from "@/components/ui/timeline-animation";
 import { VerticalCutReveal } from "@/components/ui/vertical-cut-reveal";
 import { cn } from "@/lib/utils";
-import { CheckCheck, GraduationCap, Users, Briefcase, Megaphone, Video, TrendingUp } from "lucide-react";
+import { CheckCheck, GraduationCap, Users, Briefcase, Megaphone, Video, TrendingUp, Play } from "lucide-react";
 
 // Inline Button Component
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -837,11 +837,213 @@ const PricingSection = React.memo(() => {
           ))}
         </div>
       </div>
+
+      {/* Timeline Section - Deuxième version des plateformes */}
+      <PlatformsTimeline />
     </div>
   );
 });
 
 PricingSection.displayName = "PricingSection";
+
+// Timeline Component for Platforms
+interface TimelineEntry {
+  title: string;
+  content: React.ReactNode;
+}
+
+const PlatformsTimeline = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    if (ref.current) {
+      const rect = ref.current.getBoundingClientRect();
+      setHeight(rect.height);
+    }
+  }, [ref]);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start 10%", "end 50%"],
+  });
+
+  const heightTransform = useTransform(scrollYProgress, [0, 1], [0, height]);
+  const opacityTransform = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
+
+  const timelineData: TimelineEntry[] = [
+    {
+      title: "BEACONS",
+      content: (
+        <div className="flex flex-col md:flex-row gap-6 items-start">
+          <div className="w-full md:w-1/2 aspect-video bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-lg flex items-center justify-center border border-gray-800/50 relative overflow-hidden">
+            <div className="absolute inset-0 opacity-20">
+              <div className="absolute inset-0" style={{
+                backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,107,53,0.1) 0%, transparent 50%),
+                                radial-gradient(circle at 80% 80%, rgba(255,107,53,0.1) 0%, transparent 50%)`,
+                animation: 'pulse 4s ease-in-out infinite'
+              }} />
+            </div>
+            <div className="relative z-10 text-center">
+              <div className="w-16 h-16 rounded-full bg-orange-500/20 border border-orange-500/50 flex items-center justify-center mx-auto mb-2">
+                <Play size={32} className="text-orange-500 ml-1" />
+              </div>
+              <p className="text-sm text-gray-400">Vidéo de démo</p>
+            </div>
+          </div>
+          <div className="w-full md:w-1/2">
+            <p className="text-base md:text-lg text-gray-300 leading-relaxed">
+              Crée un dashboard Beacons simulé avec tes ventes affichées en temps réel et des notifications visuelles sur écran verrouillé, pour donner l'image d'une formation qui se vend et renforcer instantanément ta crédibilité.
+            </p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "SHOPIFY",
+      content: (
+        <div className="flex flex-col md:flex-row gap-6 items-start">
+          <div className="w-full md:w-1/2 aspect-video bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-lg flex items-center justify-center border border-gray-800/50 relative overflow-hidden">
+            <div className="absolute inset-0 opacity-20">
+              <div className="absolute inset-0" style={{
+                backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,107,53,0.1) 0%, transparent 50%),
+                                radial-gradient(circle at 80% 80%, rgba(255,107,53,0.1) 0%, transparent 50%)`,
+                animation: 'pulse 4s ease-in-out infinite'
+              }} />
+            </div>
+            <div className="relative z-10 text-center">
+              <div className="w-16 h-16 rounded-full bg-orange-500/20 border border-orange-500/50 flex items-center justify-center mx-auto mb-2">
+                <Play size={32} className="text-orange-500 ml-1" />
+              </div>
+              <p className="text-sm text-gray-400">Vidéo de démo</p>
+            </div>
+          </div>
+          <div className="w-full md:w-1/2">
+            <p className="text-base md:text-lg text-gray-300 leading-relaxed">
+              Génère un dashboard Shopify visuel montrant un chiffre d'affaires par jour, semaine ou mois, avec des notifications de ventes simulées, pour prouver ton expertise e-commerce et rassurer ton audience.
+            </p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "STRIPE",
+      content: (
+        <div className="flex flex-col md:flex-row gap-6 items-start">
+          <div className="w-full md:w-1/2 aspect-video bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-lg flex items-center justify-center border border-gray-800/50 relative overflow-hidden">
+            <div className="absolute inset-0 opacity-20">
+              <div className="absolute inset-0" style={{
+                backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,107,53,0.1) 0%, transparent 50%),
+                                radial-gradient(circle at 80% 80%, rgba(255,107,53,0.1) 0%, transparent 50%)`,
+                animation: 'pulse 4s ease-in-out infinite'
+              }} />
+            </div>
+            <div className="relative z-10 text-center">
+              <div className="w-16 h-16 rounded-full bg-orange-500/20 border border-orange-500/50 flex items-center justify-center mx-auto mb-2">
+                <Play size={32} className="text-orange-500 ml-1" />
+              </div>
+              <p className="text-sm text-gray-400">Vidéo de démo</p>
+            </div>
+          </div>
+          <div className="w-full md:w-1/2">
+            <p className="text-base md:text-lg text-gray-300 leading-relaxed">
+              Crée un dashboard Stripe de démonstration avec paiements et chiffre d'affaires affichés (jour, semaine, mois), accompagné de notifications visuelles, pour montrer que ton business encaisse et inspirer la confiance.
+            </p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "TIKTOK",
+      content: (
+        <div className="flex flex-col md:flex-row gap-6 items-start">
+          <div className="w-full md:w-1/2 aspect-video bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-lg flex items-center justify-center border border-gray-800/50 relative overflow-hidden">
+            <div className="absolute inset-0 opacity-20">
+              <div className="absolute inset-0" style={{
+                backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,107,53,0.1) 0%, transparent 50%),
+                                radial-gradient(circle at 80% 80%, rgba(255,107,53,0.1) 0%, transparent 50%)`,
+                animation: 'pulse 4s ease-in-out infinite'
+              }} />
+            </div>
+            <div className="relative z-10 text-center">
+              <div className="w-16 h-16 rounded-full bg-orange-500/20 border border-orange-500/50 flex items-center justify-center mx-auto mb-2">
+                <Play size={32} className="text-orange-500 ml-1" />
+              </div>
+              <p className="text-sm text-gray-400">Vidéo de démo</p>
+            </div>
+          </div>
+          <div className="w-full md:w-1/2">
+            <p className="text-base md:text-lg text-gray-300 leading-relaxed">
+              Génère un dashboard TikTok de présentation affichant des revenus de monétisation et la progression de tes gains, pour prouver que TikTok peut vraiment devenir une source de revenus.
+            </p>
+          </div>
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <div
+      className="w-full bg-black font-sans md:px-10 py-20"
+      ref={containerRef}
+    >
+      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-10 mb-12">
+        <h3
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl mx-auto px-4 sm:px-6 leading-tight mb-4"
+          style={{
+            background: "linear-gradient(to bottom, #ffffff, #ffffff, rgba(255, 255, 255, 0.6))",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+            letterSpacing: "-0.05em"
+          }}
+        >
+          Plateformes disponibles
+        </h3>
+      </div>
+
+      <div ref={ref} className="relative max-w-7xl mx-auto pb-20 px-4 md:px-8 lg:px-10">
+        {timelineData.map((item, index) => (
+          <div
+            key={index}
+            className="flex justify-start pt-10 md:pt-40 md:gap-10"
+          >
+            <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start max-w-xs lg:max-w-sm md:w-full">
+              <div className="h-10 absolute left-3 md:left-3 w-10 rounded-full bg-black flex items-center justify-center">
+                <div className="h-4 w-4 rounded-full bg-gray-800 border border-gray-700 p-2" />
+              </div>
+              <h3 className="hidden md:block text-xl md:pl-20 md:text-5xl font-bold text-gray-400">
+                {item.title}
+              </h3>
+            </div>
+
+            <div className="relative pl-20 pr-4 md:pl-4 w-full">
+              <h3 className="md:hidden block text-2xl mb-4 text-left font-bold text-gray-400">
+                {item.title}
+              </h3>
+              {item.content}
+            </div>
+          </div>
+        ))}
+        <div
+          style={{
+            height: height + "px",
+          }}
+          className="absolute md:left-8 left-8 top-0 overflow-hidden w-[2px] bg-[linear-gradient(to_bottom,var(--tw-gradient-stops))] from-transparent from-[0%] via-gray-700 to-transparent to-[99%] [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)]"
+        >
+          <motion.div
+            style={{
+              height: heightTransform,
+              opacity: opacityTransform,
+            }}
+            className="absolute inset-x-0 top-0 w-[2px] bg-gradient-to-t from-orange-500 via-orange-400 to-transparent from-[0%] via-[10%] rounded-full"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // Hero Component
 const Hero = React.memo(() => {
