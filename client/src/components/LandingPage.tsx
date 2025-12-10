@@ -874,7 +874,7 @@ const PlatformsTimeline = () => {
 
   const timelineData: TimelineEntry[] = [
     {
-      title: "BEACONS",
+      title: "✅ BEACONS",
       content: (
         <div className="flex flex-col md:flex-row gap-6 items-start">
           <div className="w-full md:w-1/2 aspect-video bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-lg flex items-center justify-center border border-gray-800/50 relative overflow-hidden">
@@ -901,7 +901,7 @@ const PlatformsTimeline = () => {
       ),
     },
     {
-      title: "SHOPIFY",
+      title: "🟣 SHOPIFY",
       content: (
         <div className="flex flex-col md:flex-row gap-6 items-start">
           <div className="w-full md:w-1/2 aspect-video bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-lg flex items-center justify-center border border-gray-800/50 relative overflow-hidden">
@@ -928,7 +928,7 @@ const PlatformsTimeline = () => {
       ),
     },
     {
-      title: "STRIPE",
+      title: "🔵 STRIPE",
       content: (
         <div className="flex flex-col md:flex-row gap-6 items-start">
           <div className="w-full md:w-1/2 aspect-video bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-lg flex items-center justify-center border border-gray-800/50 relative overflow-hidden">
@@ -955,7 +955,7 @@ const PlatformsTimeline = () => {
       ),
     },
     {
-      title: "TIKTOK",
+      title: "🔴 TIKTOK",
       content: (
         <div className="flex flex-col md:flex-row gap-6 items-start">
           <div className="w-full md:w-1/2 aspect-video bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-lg flex items-center justify-center border border-gray-800/50 relative overflow-hidden">
