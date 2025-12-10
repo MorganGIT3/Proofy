@@ -601,9 +601,6 @@ const PricingSection = React.memo(() => {
                     </div>
                   )}
                 </div>
-                <p className="xl:text-sm md:text-xs text-sm text-gray-400 mb-4">
-                  {plan.description}
-                </p>
                 <div className="flex items-baseline">
                   <span className="text-4xl font-semibold text-white">
                     {isYearly ? plan.yearlyPrice : plan.price}€
