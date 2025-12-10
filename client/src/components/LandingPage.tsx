@@ -488,12 +488,9 @@ const PricingSwitch = ({
 // Animated Price Component
 const AnimatedPrice = ({ price, isYearly }: { price: number; isYearly: boolean }) => {
   const [displayPrice, setDisplayPrice] = useState(price);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [key, setKey] = useState(0);
 
   React.useEffect(() => {
     if (displayPrice !== price) {
-      setIsAnimating(true);
       const startPrice = displayPrice;
       const endPrice = price;
       const difference = endPrice - startPrice;
@@ -509,10 +506,6 @@ const AnimatedPrice = ({ price, isYearly }: { price: number; isYearly: boolean }
         if (currentStep >= steps) {
           setDisplayPrice(endPrice);
           clearInterval(interval);
-          setTimeout(() => {
-            setIsAnimating(false);
-            setKey(prev => prev + 1);
-          }, 150);
         }
       }, 15);
 
@@ -521,21 +514,9 @@ const AnimatedPrice = ({ price, isYearly }: { price: number; isYearly: boolean }
   }, [price]);
 
   return (
-    <motion.span
-      key={key}
-      className="text-3xl sm:text-4xl font-semibold text-white inline-block overflow-hidden"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{
-        opacity: isAnimating ? [1, 0.7, 1] : 1,
-        y: isAnimating ? [0, -15, 0] : 0,
-      }}
-      transition={{
-        duration: 0.6,
-        ease: "easeInOut"
-      }}
-    >
+    <span className="text-3xl sm:text-4xl font-semibold text-white inline-block">
       {displayPrice}€
-    </motion.span>
+    </span>
   );
 };
 
