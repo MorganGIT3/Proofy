@@ -647,18 +647,18 @@ const PricingSection = React.memo(() => {
                   : "bg-gray-900/50 border-gray-800"
               )}
             >
+              {plan.popular && (
+                <div className="absolute top-2 right-2 sm:top-3 sm:right-3 z-10">
+                  <span className="bg-orange-500 text-white px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs md:text-sm font-medium">
+                    Populaire
+                  </span>
+                </div>
+              )}
               <CardHeader className="text-left p-2 sm:p-4 md:p-6">
-                <div className="flex justify-between items-start">
+                <div>
                   <h3 className="text-xs sm:text-lg md:text-2xl xl:text-3xl font-semibold text-white mb-1 sm:mb-2 leading-tight">
                     PROOFY {plan.name}
                   </h3>
-                  {plan.popular && (
-                    <div>
-                      <span className="bg-orange-500 text-white px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs md:text-sm font-medium">
-                        Populaire
-                      </span>
-          </div>
-                  )}
         </div>
                 <div className="flex items-baseline">
                   <AnimatedPrice 
