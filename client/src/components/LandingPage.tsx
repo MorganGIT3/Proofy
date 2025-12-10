@@ -937,13 +937,6 @@ const Hero = React.memo(() => {
         }}
       />
 
-      {/* Sous-titre psychologique */}
-      <aside className="mb-6 sm:mb-8 inline-flex flex-wrap items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-full border border-gray-700 bg-gray-800/50 backdrop-blur-sm max-w-full">
-        <span className="text-xs text-center break-words" style={{ color: '#9ca3af' }}>
-          Les gens n'achètent pas des promesses. Ils achètent ce qu'ils voient.
-        </span>
-      </aside>
-
       {/* Titre principal */}
       <h1
         className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl px-4 sm:px-6 leading-tight mb-4 sm:mb-6"
