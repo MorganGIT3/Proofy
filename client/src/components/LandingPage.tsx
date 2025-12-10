@@ -1074,13 +1074,18 @@ export const Timeline = ({ data }: { data: TimelineEntryNew[] }) => {
       ref={containerRef}
     >
       <div className="max-w-7xl mx-auto py-20 px-4 md:px-8 lg:px-10">
-        <h2 className="text-lg md:text-4xl mb-4 text-white max-w-4xl">
-          Changelog from my journey
-        </h2>
-        <p className="text-gray-400 text-sm md:text-base max-w-sm">
-          I&apos;ve been working on Aceternity for the past 2 years. Here&apos;s
-          a timeline of my journey.
-        </p>
+        <h3
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl mx-auto px-4 sm:px-6 leading-tight mb-8 sm:mb-10 md:mb-12 relative z-10"
+          style={{
+            background: "linear-gradient(to bottom, #ffffff, #ffffff, rgba(255, 255, 255, 0.6))",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+            letterSpacing: "-0.05em"
+          }}
+        >
+          Plateformes disponibles
+        </h3>
       </div>
 
       <div ref={ref} className="relative max-w-7xl mx-auto pb-20">
