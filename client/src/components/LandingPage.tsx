@@ -489,6 +489,7 @@ const PricingSwitch = ({
 const AnimatedPrice = ({ price, isYearly }: { price: number; isYearly: boolean }) => {
   const [displayPrice, setDisplayPrice] = useState(price);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [key, setKey] = useState(0);
 
   React.useEffect(() => {
     if (displayPrice !== price) {
@@ -496,7 +497,7 @@ const AnimatedPrice = ({ price, isYearly }: { price: number; isYearly: boolean }
       const startPrice = displayPrice;
       const endPrice = price;
       const difference = endPrice - startPrice;
-      const steps = 30;
+      const steps = Math.min(40, Math.abs(difference) * 2);
       const stepValue = difference / steps;
       let currentStep = 0;
 
@@ -508,9 +509,12 @@ const AnimatedPrice = ({ price, isYearly }: { price: number; isYearly: boolean }
         if (currentStep >= steps) {
           setDisplayPrice(endPrice);
           clearInterval(interval);
-          setTimeout(() => setIsAnimating(false), 100);
+          setTimeout(() => {
+            setIsAnimating(false);
+            setKey(prev => prev + 1);
+          }, 150);
         }
-      }, 20);
+      }, 15);
 
       return () => clearInterval(interval);
     }
@@ -518,12 +522,15 @@ const AnimatedPrice = ({ price, isYearly }: { price: number; isYearly: boolean }
 
   return (
     <motion.span
-      className="text-3xl sm:text-4xl font-semibold text-white inline-block"
+      key={key}
+      className="text-3xl sm:text-4xl font-semibold text-white inline-block overflow-hidden"
+      initial={{ opacity: 0, y: 20 }}
       animate={{
-        y: isAnimating ? [0, -10, 0] : 0,
+        opacity: isAnimating ? [1, 0.7, 1] : 1,
+        y: isAnimating ? [0, -15, 0] : 0,
       }}
       transition={{
-        duration: 0.3,
+        duration: 0.6,
         ease: "easeInOut"
       }}
     >
