@@ -7,10 +7,11 @@ import { TimelineContent } from "@/components/ui/timeline-animation";
 import { VerticalCutReveal } from "@/components/ui/vertical-cut-reveal";
 import { cn } from "@/lib/utils";
 import { CheckCheck, GraduationCap, Users, Briefcase, Megaphone, Video, TrendingUp } from "lucide-react";
+import { AnimatedText } from "@/components/AnimatedText";
 
 // Inline Button Component
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "default" | "secondary" | "ghost" | "gradient";
+  variant?: "default" | "secondary" | "ghost" | "gradient" | "outline";
   size?: "default" | "sm" | "lg";
   children: React.ReactNode;
 }
@@ -23,7 +24,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       default: "bg-white text-black hover:bg-gray-100",
       secondary: "bg-gray-800 text-white hover:bg-gray-700",
       ghost: "hover:bg-gray-800/50 text-white",
-      gradient: "bg-gradient-to-b from-white via-white/95 to-white/60 text-black hover:scale-105 active:scale-95"
+      gradient: "bg-gradient-to-b from-white via-white/95 to-white/60 text-black hover:scale-105 active:scale-95",
+      outline: "border border-gray-700 text-white hover:bg-gray-800/50 bg-transparent"
     };
     
     const sizes = {
@@ -635,10 +637,11 @@ const PricingSection = React.memo(() => {
             animationNum={2 + index}
             timelineRef={pricingRef}
             customVariants={revealVariants}
+            className="h-full"
           >
             <Card
               className={cn(
-                "relative border",
+                "relative border h-full flex flex-col",
                 plan.popular
                   ? "ring-2 ring-orange-500 bg-gray-900/50 border-orange-500/30"
                   : "bg-gray-900/50 border-gray-800"
@@ -668,7 +671,7 @@ const PricingSection = React.memo(() => {
       </div>
               </CardHeader>
 
-              <CardContent className="pt-0 p-4 sm:p-6">
+              <CardContent className="pt-0 p-4 sm:p-6 flex-1 flex flex-col">
                 <motion.button
                   onClick={() => navigate('/login')}
                   className={cn(
@@ -702,7 +705,7 @@ const PricingSection = React.memo(() => {
                   <span className="relative z-10">{plan.buttonText}</span>
                 </motion.button>
 
-                <div className="space-y-3 pt-4 border-t border-gray-800">
+                <div className="space-y-3 pt-4 border-t border-gray-800 flex-1">
                   <h2 className="text-xl font-semibold uppercase text-white mb-3">
                     Fonctionnalités
                   </h2>
@@ -763,21 +766,25 @@ const PricingSection = React.memo(() => {
             { 
               name: "Beacons", 
               status: "active",
+              image: "/beacons image .jpg",
               description: "Crée un dashboard Beacons simulé avec tes ventes affichées en temps réel et des notifications visuelles sur écran verrouillé, pour donner l'image d'une formation qui se vend et renforcer instantanément ta crédibilité."
             },
             { 
               name: "Shopify", 
               status: "soon",
+              image: "/shopify image .jpg",
               description: "Génère un dashboard Shopify visuel montrant un chiffre d'affaires par jour, semaine ou mois, avec des notifications de ventes simulées, pour prouver ton expertise e-commerce et rassurer ton audience."
             },
             { 
               name: "Stripe", 
               status: "soon",
+              image: "/stripe image.jpg",
               description: "Crée un dashboard Stripe de démonstration avec paiements et chiffre d'affaires affichés (jour, semaine, mois), accompagné de notifications visuelles, pour montrer que ton business encaisse et inspirer la confiance."
             },
             { 
               name: "TikTok", 
               status: "soon",
+              image: "/tik-tok image.jpg",
               description: "Génère un dashboard TikTok de présentation affichant des revenus de monétisation et la progression de tes gains, pour prouver que TikTok peut vraiment devenir une source de revenus."
             },
           ].map((platform, index) => (
@@ -805,28 +812,25 @@ const PricingSection = React.memo(() => {
         )}
       </div>
 
-                {/* Placeholder pour la vidéo/visuel */}
-                <div className="w-full h-32 sm:h-40 md:h-48 bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-lg mb-4 flex items-center justify-center border border-gray-800/50 relative overflow-hidden">
-                  <div className="absolute inset-0 opacity-20">
-                    <div className="absolute inset-0" style={{
-                      backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,107,53,0.1) 0%, transparent 50%),
-                                      radial-gradient(circle at 80% 80%, rgba(255,107,53,0.1) 0%, transparent 50%)`,
-                      animation: 'pulse 4s ease-in-out infinite'
-                    }} />
-                  </div>
-                  {platform.status === "active" ? (
-                    <div className="relative z-10 text-center">
-                      <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-orange-500/20 border border-orange-500/50 flex items-center justify-center mx-auto mb-2">
-                        <Play size={24} className="sm:w-7 sm:h-7 md:w-8 md:h-8 text-orange-500" />
+                {/* Image de la plateforme */}
+                <div className="w-full h-32 sm:h-40 md:h-48 rounded-lg mb-4 border border-gray-800/50 relative overflow-hidden">
+                  <img 
+                    src={platform.image} 
+                    alt={`Dashboard ${platform.name}`}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  {platform.status === "active" && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="relative z-10 text-center">
+                        <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-orange-500/20 border border-orange-500/50 flex items-center justify-center mx-auto mb-2 backdrop-blur-sm">
+                          <Play size={24} className="sm:w-7 sm:h-7 md:w-8 md:h-8 text-orange-500" />
+                        </div>
+                        <p className="text-xs sm:text-sm text-gray-300 font-medium">Vidéo de démo</p>
                       </div>
-                      <p className="text-xs sm:text-sm text-gray-400">Vidéo de démo</p>
-                    </div>
-                  ) : (
-                    <div className="relative z-10 text-center">
-                      <p className="text-xs sm:text-sm text-gray-500">Bientôt disponible</p>
                     </div>
                   )}
-          </div>
+                </div>
                 
                 <p className="text-xs sm:text-sm text-gray-400 break-words">{platform.description}</p>
               </CardContent>
@@ -846,18 +850,14 @@ const PricingSection = React.memo(() => {
                   </span>
                 </div>
 
-                {/* Placeholder pour la vidéo/visuel */}
-                <div className="w-full h-32 sm:h-40 md:h-48 bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-lg mb-4 flex items-center justify-center border border-gray-800/50 relative overflow-hidden">
-                  <div className="absolute inset-0 opacity-20">
-                    <div className="absolute inset-0" style={{
-                      backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,107,53,0.1) 0%, transparent 50%),
-                                      radial-gradient(circle at 80% 80%, rgba(255,107,53,0.1) 0%, transparent 50%)`,
-                      animation: 'pulse 4s ease-in-out infinite'
-                    }} />
-                  </div>
-                  <div className="relative z-10 text-center">
-                    <p className="text-xs sm:text-sm text-gray-500">Bientôt disponible</p>
-                  </div>
+                {/* Image Airbnb */}
+                <div className="w-full h-32 sm:h-40 md:h-48 rounded-lg mb-4 border border-gray-800/50 relative overflow-hidden">
+                  <img 
+                    src="/airbnb image.jpg" 
+                    alt="Dashboard Airbnb"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 </div>
                 
                 <p className="text-xs sm:text-sm text-gray-400 break-words">
@@ -1320,8 +1320,33 @@ const Hero = React.memo(() => {
           L'app n°1 pour créer des dashboards de résultats
         </span>
         <br />
-        <span style={{ color: "#ff6b35" }}>
-          sur toutes les plateformes.
+        <span style={{ color: "#ffffff" }}>
+          sur{" "}
+        </span>
+        <span style={{ color: "#ff6b35", display: "inline-block", position: "relative" }}>
+          toutes les plateformes.
+          <motion.svg
+            width="100%"
+            height="20"
+            viewBox="0 0 400 20"
+            className="absolute -bottom-2 left-0 text-orange-500"
+            style={{ width: "100%", height: "12px", overflow: "visible" }}
+            preserveAspectRatio="none"
+          >
+            <motion.path
+              d="M 0,10 Q 100,0 200,10 Q 300,20 400,10"
+              stroke="currentColor"
+              strokeWidth="4"
+              fill="none"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: 1 }}
+              transition={{ duration: 1.5, ease: "easeInOut" }}
+              whileHover={{
+                d: "M 0,10 Q 100,20 200,10 Q 300,0 400,10",
+                transition: { duration: 0.8 },
+              }}
+            />
+          </motion.svg>
         </span>
       </h1>
 
