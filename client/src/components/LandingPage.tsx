@@ -285,7 +285,7 @@ const Navigation = React.memo(() => {
         className="fixed group z-20 w-full px-2"
       >
         <div className={cn(
-          'mx-auto mt-2 max-w-6xl px-6 transition-all duration-300 lg:px-12 relative',
+          'mx-auto mt-2 max-w-6xl px-3 sm:px-6 transition-all duration-300 lg:px-12 relative',
           isScrolled && 'bg-black/90 max-w-4xl rounded-2xl backdrop-blur-md lg:px-5'
         )}>
           <div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
@@ -294,7 +294,7 @@ const Navigation = React.memo(() => {
                 onClick={() => navigate('/')}
                 className="flex items-center space-x-2 cursor-pointer"
               >
-                <img src="/favicon.png" alt="Proofy" className="h-8 w-8" />
+                <img src="/favicon.png" alt="Proofy" className="h-6 w-6 sm:h-8 sm:w-8" />
                 <div className="text-xl font-semibold text-white">Proofy</div>
               </div>
 
@@ -532,12 +532,12 @@ const PricingSection = React.memo(() => {
   return (
     <div
       id="tarifs"
-      className="px-4 pt-20 pb-20 min-h-screen max-w-7xl mx-auto relative"
+      className="px-3 sm:px-4 pt-12 sm:pt-16 md:pt-20 pb-12 sm:pb-16 md:pb-20 min-h-screen max-w-7xl mx-auto relative"
       ref={pricingRef}
     >
       <article className="text-left mb-6 space-y-4 max-w-2xl relative z-10">
         <h2
-          className="text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl mx-auto px-6 leading-tight mb-4"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl mx-auto px-4 sm:px-6 leading-tight mb-4"
           style={{
             background: "linear-gradient(to bottom, #ffffff, #ffffff, rgba(255, 255, 255, 0.6))",
             WebkitBackgroundClip: "text",
@@ -569,7 +569,7 @@ const PricingSection = React.memo(() => {
         </TimelineContent>
       </article>
 
-      <div className="grid md:grid-cols-2 gap-4 py-6 relative z-10">
+      <div className="grid md:grid-cols-2 gap-3 sm:gap-4 py-6 relative z-10">
         {plans.map((plan, index) => (
           <TimelineContent
             key={plan.name}
@@ -586,9 +586,9 @@ const PricingSection = React.memo(() => {
                   : "bg-gray-900/50 border-gray-800"
               )}
             >
-              <CardHeader className="text-left">
+              <CardHeader className="text-left p-4 sm:p-6">
                 <div className="flex justify-between">
-                  <h3 className="xl:text-3xl md:text-2xl text-3xl font-semibold text-white mb-2">
+                  <h3 className="xl:text-3xl md:text-2xl text-2xl sm:text-3xl font-semibold text-white mb-2">
                     PROOFY {plan.name}
                   </h3>
                   {plan.popular && (
@@ -600,20 +600,20 @@ const PricingSection = React.memo(() => {
                   )}
                 </div>
                 <div className="flex items-baseline">
-                  <span className="text-4xl font-semibold text-white">
+                  <span className="text-3xl sm:text-4xl font-semibold text-white">
                     {isYearly ? plan.yearlyPrice : plan.price}€
                   </span>
-                  <span className="text-gray-400 ml-1">
+                  <span className="text-gray-400 ml-1 text-sm sm:text-base">
                     /{isYearly ? "an" : "mois"}
                   </span>
                 </div>
               </CardHeader>
 
-              <CardContent className="pt-0">
+              <CardContent className="pt-0 p-4 sm:p-6">
                 <motion.button
                   onClick={() => navigate('/login')}
                   className={cn(
-                    "w-full mb-6 p-4 text-xl rounded-xl relative overflow-hidden transition-all duration-300",
+                    "w-full mb-6 p-3 sm:p-4 text-lg sm:text-xl rounded-xl relative overflow-hidden transition-all duration-300",
                     plan.popular
                       ? "bg-gradient-to-t from-orange-500 to-orange-600 shadow-lg shadow-orange-500 border border-orange-400 text-white"
                       : plan.buttonVariant === "outline"
@@ -668,18 +668,18 @@ const PricingSection = React.memo(() => {
       </div>
 
       {/* Section Plateformes disponibles */}
-      <div id="plateformes-disponibles" className="w-full max-w-6xl mx-auto px-6 py-12 scroll-mt-20 relative overflow-hidden">
+      <div id="plateformes-disponibles" className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 md:py-12 scroll-mt-20 relative overflow-hidden">
         {/* Effets lumineux orange pour la section plateformes */}
         <div className="absolute inset-0 pointer-events-none z-0">
           <div 
-            className="absolute top-1/2 left-1/3 w-72 h-72 rounded-full opacity-15 blur-3xl"
+            className="absolute top-1/2 left-1/3 w-36 h-36 sm:w-56 sm:h-56 md:w-72 md:h-72 rounded-full opacity-15 blur-3xl"
             style={{
               background: "radial-gradient(circle, rgba(255, 107, 53, 0.5) 0%, transparent 70%)",
               animation: "pulse 4s ease-in-out infinite"
             }}
           />
           <div 
-            className="absolute bottom-1/4 right-1/3 w-64 h-64 rounded-full opacity-12 blur-3xl"
+            className="absolute bottom-1/4 right-1/3 w-32 h-32 sm:w-48 sm:h-48 md:w-64 md:h-64 rounded-full opacity-12 blur-3xl"
             style={{
               background: "radial-gradient(circle, rgba(255, 107, 53, 0.4) 0%, transparent 70%)",
               animation: "pulse 5.5s ease-in-out infinite",
@@ -688,7 +688,7 @@ const PricingSection = React.memo(() => {
           />
         </div>
         <h3
-          className="text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl mx-auto px-6 leading-tight mb-12 relative z-10"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl mx-auto px-4 sm:px-6 leading-tight mb-8 sm:mb-10 md:mb-12 relative z-10"
           style={{
             background: "linear-gradient(to bottom, #ffffff, #ffffff, rgba(255, 255, 255, 0.6))",
             WebkitBackgroundClip: "text",
@@ -699,7 +699,7 @@ const PricingSection = React.memo(() => {
         >
           Plateformes disponibles
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 relative z-10">
           {[
             { 
               name: "Beacons", 
@@ -731,23 +731,23 @@ const PricingSection = React.memo(() => {
                   : "bg-gray-900/30 border-gray-800/50 opacity-60"
               )}
             >
-              <CardContent className="p-6">
+              <CardContent className="p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-xl font-semibold text-white">{platform.name}</h4>
+                  <h4 className="text-lg sm:text-xl font-semibold text-white">{platform.name}</h4>
                   {platform.status === "soon" && (
-                    <span className="text-xs font-medium text-gray-400 bg-gray-800/50 px-3 py-1 rounded-full">
+                    <span className="text-xs font-medium text-gray-400 bg-gray-800/50 px-2 sm:px-3 py-1 rounded-full">
                       SOON
                     </span>
                   )}
                   {platform.status === "active" && (
-                    <span className="text-xs font-medium text-orange-500 bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/30">
+                    <span className="text-xs font-medium text-orange-500 bg-orange-500/10 px-2 sm:px-3 py-1 rounded-full border border-orange-500/30">
                       ACTIF
                     </span>
                   )}
                 </div>
                 
                 {/* Placeholder pour la vidéo/visuel */}
-                <div className="w-full h-48 bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-lg mb-4 flex items-center justify-center border border-gray-800/50 relative overflow-hidden">
+                <div className="w-full h-32 sm:h-40 md:h-48 bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-lg mb-4 flex items-center justify-center border border-gray-800/50 relative overflow-hidden">
                   <div className="absolute inset-0 opacity-20">
                     <div className="absolute inset-0" style={{
                       backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,107,53,0.1) 0%, transparent 50%),
@@ -757,19 +757,19 @@ const PricingSection = React.memo(() => {
                   </div>
                   {platform.status === "active" ? (
                     <div className="relative z-10 text-center">
-                      <div className="w-16 h-16 rounded-full bg-orange-500/20 border border-orange-500/50 flex items-center justify-center mx-auto mb-2">
-                        <Play size={32} className="text-orange-500" />
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-orange-500/20 border border-orange-500/50 flex items-center justify-center mx-auto mb-2">
+                        <Play size={24} className="sm:w-7 sm:h-7 md:w-8 md:h-8 text-orange-500" />
                       </div>
-                      <p className="text-sm text-gray-400">Vidéo de démo</p>
+                      <p className="text-xs sm:text-sm text-gray-400">Vidéo de démo</p>
                     </div>
                   ) : (
                     <div className="relative z-10 text-center">
-                      <p className="text-sm text-gray-500">Bientôt disponible</p>
+                      <p className="text-xs sm:text-sm text-gray-500">Bientôt disponible</p>
                     </div>
                   )}
-                </div>
+          </div>
                 
-                <p className="text-sm text-gray-400">{platform.description}</p>
+                <p className="text-xs sm:text-sm text-gray-400 break-words">{platform.description}</p>
               </CardContent>
             </Card>
           ))}
@@ -789,7 +789,7 @@ const Hero = React.memo(() => {
   
   return (
     <section
-      className="relative min-h-screen flex flex-col items-center justify-start px-6 py-20 md:py-24 overflow-hidden"
+      className="relative min-h-screen flex flex-col items-center justify-start px-4 sm:px-6 py-12 sm:py-16 md:py-24 overflow-hidden"
       style={{
         animation: "fadeIn 0.6s ease-out"
       }}
@@ -798,7 +798,7 @@ const Hero = React.memo(() => {
       <div className="fixed inset-0 pointer-events-none z-0">
         {/* Glow en haut à droite */}
         <div 
-          className="absolute top-20 right-10 w-96 h-96 rounded-full opacity-20 blur-3xl"
+          className="absolute top-10 right-4 sm:top-20 sm:right-10 w-48 h-48 sm:w-72 sm:h-72 md:w-96 md:h-96 rounded-full opacity-20 blur-3xl"
           style={{
             background: "radial-gradient(circle, rgba(255, 107, 53, 0.6) 0%, transparent 70%)",
             animation: "pulse 4s ease-in-out infinite"
@@ -806,7 +806,7 @@ const Hero = React.memo(() => {
         />
         {/* Glow au milieu gauche */}
         <div 
-          className="absolute top-1/2 left-10 w-80 h-80 rounded-full opacity-15 blur-3xl"
+          className="absolute top-1/2 left-4 sm:left-10 w-40 h-40 sm:w-60 sm:h-60 md:w-80 md:h-80 rounded-full opacity-15 blur-3xl"
           style={{
             background: "radial-gradient(circle, rgba(255, 107, 53, 0.5) 0%, transparent 70%)",
             animation: "pulse 5s ease-in-out infinite",
@@ -815,7 +815,7 @@ const Hero = React.memo(() => {
         />
         {/* Glow en bas à droite */}
         <div 
-          className="absolute bottom-20 right-1/4 w-72 h-72 rounded-full opacity-10 blur-3xl"
+          className="absolute bottom-10 sm:bottom-20 right-1/4 w-36 h-36 sm:w-56 sm:h-56 md:w-72 md:h-72 rounded-full opacity-10 blur-3xl"
           style={{
             background: "radial-gradient(circle, rgba(255, 107, 53, 0.4) 0%, transparent 70%)",
             animation: "pulse 6s ease-in-out infinite",
@@ -824,7 +824,7 @@ const Hero = React.memo(() => {
         />
         {/* Glow au centre */}
         <div 
-          className="absolute top-1/3 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full opacity-12 blur-3xl"
+          className="absolute top-1/3 left-1/2 -translate-x-1/2 w-32 h-32 sm:w-48 sm:h-48 md:w-64 md:h-64 rounded-full opacity-12 blur-3xl"
           style={{
             background: "radial-gradient(circle, rgba(255, 107, 53, 0.5) 0%, transparent 70%)",
             animation: "pulse 4.5s ease-in-out infinite",
@@ -883,6 +883,18 @@ const Hero = React.memo(() => {
           80% { transform: translate(3%, 35%); }
           90% { transform: translate(-10%, 10%); }
         }
+        
+        @media (min-width: 640px) {
+          .glow-video-top {
+            top: -20% !important;
+          }
+        }
+        
+        @media (min-width: 768px) {
+          .glow-video-top {
+            top: -23% !important;
+          }
+        }
       `}</style>
       
       {/* Grain texture overlay - Couche 1 */}
@@ -926,15 +938,15 @@ const Hero = React.memo(() => {
       />
 
       {/* Sous-titre psychologique */}
-      <aside className="mb-8 inline-flex flex-wrap items-center justify-center gap-2 px-4 py-2 rounded-full border border-gray-700 bg-gray-800/50 backdrop-blur-sm max-w-full">
-        <span className="text-xs text-center whitespace-nowrap" style={{ color: '#9ca3af' }}>
+      <aside className="mb-6 sm:mb-8 inline-flex flex-wrap items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-full border border-gray-700 bg-gray-800/50 backdrop-blur-sm max-w-full">
+        <span className="text-xs text-center break-words" style={{ color: '#9ca3af' }}>
           Les gens n'achètent pas des promesses. Ils achètent ce qu'ils voient.
         </span>
       </aside>
 
       {/* Titre principal */}
       <h1
-        className="text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl px-6 leading-tight mb-6"
+        className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl px-4 sm:px-6 leading-tight mb-4 sm:mb-6"
         style={{
           letterSpacing: "-0.05em"
         }}
@@ -952,12 +964,12 @@ const Hero = React.memo(() => {
         <span style={{ color: "#ff6b35" }}>avoir.</span>
       </h1>
 
-      <p className="text-sm md:text-base text-center max-w-2xl px-6 mb-10" style={{ color: '#9ca3af' }}>
+      <p className="text-sm md:text-base text-center max-w-2xl px-4 sm:px-6 mb-6 sm:mb-10" style={{ color: '#9ca3af' }}>
         Transforme l'attention en conversions grâce à des preuves visuelles instantanées.
       </p>
 
       {/* Boutons CTA */}
-      <div className="flex flex-col sm:flex-row items-center gap-4 relative z-10 mb-16">
+      <div className="flex flex-col sm:flex-row items-center gap-4 relative z-10 mb-10 sm:mb-16">
         <Button
           type="button"
           variant="gradient"
@@ -989,11 +1001,11 @@ const Hero = React.memo(() => {
       />
 
       {/* Video Demo Preview */}
-      <div className="w-full max-w-5xl relative pb-20">
+      <div className="w-full max-w-5xl relative pb-12 sm:pb-16 md:pb-20">
         <div
-          className="absolute left-1/2 w-[90%] pointer-events-none z-0"
+          className="absolute left-1/2 w-full sm:w-[90%] pointer-events-none z-0 glow-video-top"
           style={{
-            top: "-23%",
+            top: "-15%",
             transform: "translateX(-50%)"
           }}
           aria-hidden="true"
@@ -1019,11 +1031,11 @@ const Hero = React.memo(() => {
             </div>
             
             {/* Video placeholder content */}
-            <div className="relative z-10 h-full flex flex-col items-center justify-center gap-6 p-8">
+            <div className="relative z-10 h-full flex flex-col items-center justify-center gap-4 sm:gap-6 p-4 sm:p-8">
               {/* Play icon with animation */}
               <div className="relative">
-                <div className="w-24 h-24 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20 group-hover:bg-white/15 transition-all duration-300 animate-pulse">
-                  <Play size={48} className="text-white ml-2" />
+                <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20 group-hover:bg-white/15 transition-all duration-300 animate-pulse">
+                  <Play size={32} className="sm:w-10 sm:h-10 md:w-12 md:h-12 text-white ml-1 sm:ml-2" />
                 </div>
                 {/* Ripple effect */}
                 <div className="absolute inset-0 rounded-full border-2 border-white/20 animate-ping" style={{ animationDelay: '0.5s' }} />
@@ -1031,10 +1043,10 @@ const Hero = React.memo(() => {
               
               {/* Text */}
               <div className="text-center space-y-2">
-                <h3 className="text-xl md:text-2xl font-semibold text-white">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-white">
                   Vidéo de démo
                 </h3>
-                <p className="text-sm md:text-base text-gray-400">
+                <p className="text-xs sm:text-sm md:text-base text-gray-400">
                   Disponible prochainement
                 </p>
               </div>
@@ -1057,7 +1069,7 @@ const Hero = React.memo(() => {
 
       {/* Texte social proof sous la vidéo */}
       <h2
-        className="text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl mx-auto px-6 leading-tight mb-20 relative z-10"
+        className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl mx-auto px-4 sm:px-6 leading-tight mb-12 sm:mb-16 md:mb-20 relative z-10"
         style={{
           letterSpacing: "-0.05em"
         }}
@@ -1076,9 +1088,9 @@ const Hero = React.memo(() => {
       </h2>
 
       {/* Card Types d'utilisateurs */}
-      <div id="qui-utilise-proofy" className="w-full max-w-4xl mx-auto mb-20 px-6 scroll-mt-20">
+      <div id="qui-utilise-proofy" className="w-full max-w-4xl mx-auto mb-12 sm:mb-16 md:mb-20 px-4 sm:px-6 scroll-mt-20">
         <Card className="bg-gray-900/50 border-gray-800 backdrop-blur-sm">
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <h3 className="text-xl font-semibold uppercase text-white mb-6">
               Qui utilise Proofy ?
             </h3>
@@ -1124,7 +1136,7 @@ const Hero = React.memo(() => {
             </div>
           </CardContent>
         </Card>
-      </div>
+    </div>
 
       {/* Section Tarification */}
       <PricingSection />
@@ -1137,7 +1149,7 @@ Hero.displayName = "Hero";
 // Main Component
 export default function LandingPage() {
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen bg-black text-white overflow-x-hidden">
       <Navigation />
       <Hero />
     </main>
