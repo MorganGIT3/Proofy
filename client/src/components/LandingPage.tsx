@@ -377,18 +377,36 @@ const Navigation = React.memo(() => {
                     >
                       <span>Connexion</span>
                     </Button>
-                    <Button
+                    <motion.button
                       type="button"
-                      variant="default"
-                      size="sm"
                       onClick={() => {
                         navigate('/login');
                         setMenuState(false);
                       }}
-                      className={cn('text-black', isScrolled ? 'lg:inline-flex' : 'lg:inline-flex')}
+                      className={cn(
+                        'h-10 px-5 text-sm rounded-xl relative overflow-hidden transition-all duration-300 bg-gradient-to-t from-orange-500 to-orange-600 shadow-lg shadow-orange-500 border border-orange-400 text-white inline-flex items-center justify-center',
+                        isScrolled ? 'lg:inline-flex' : 'lg:inline-flex'
+                      )}
+                      whileHover={{ 
+                        scale: 1.05,
+                        boxShadow: "0 20px 40px -12px rgba(255, 107, 53, 0.5)"
+                      }}
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ 
+                        type: "spring", 
+                        stiffness: 400, 
+                        damping: 17 
+                      }}
                     >
-                      <span className="text-black">{isScrolled ? 'Commencer' : 'Commencer'}</span>
-                    </Button>
+                      {/* Shimmer effect */}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                        initial={{ x: "-100%" }}
+                        whileHover={{ x: "100%" }}
+                        transition={{ duration: 0.6, ease: "easeInOut" }}
+                      />
+                      <span className="relative z-10">{isScrolled ? 'Commencer' : 'Commencer'}</span>
+                    </motion.button>
                   </>
                 )}
               </div>
