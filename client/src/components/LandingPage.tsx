@@ -1488,7 +1488,7 @@ const Hero = React.memo(() => {
       <div id="qui-utilise-proofy" className="w-full max-w-4xl mx-auto mb-12 sm:mb-16 md:mb-20 px-4 sm:px-6 scroll-mt-20">
         <Card className="bg-gray-900/50 border-gray-800 backdrop-blur-sm">
           <CardContent className="p-4 sm:p-6">
-            <h3 className="text-xl font-semibold uppercase text-white mb-6">
+            <h3 className="text-xl font-semibold uppercase text-white mb-6 text-center">
               Qui utilise Proofy ?
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
