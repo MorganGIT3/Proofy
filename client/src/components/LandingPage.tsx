@@ -485,6 +485,53 @@ const PricingSwitch = ({
   );
 };
 
+// Animated Price Component
+const AnimatedPrice = ({ price, isYearly }: { price: number; isYearly: boolean }) => {
+  const [displayPrice, setDisplayPrice] = useState(price);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  React.useEffect(() => {
+    if (displayPrice !== price) {
+      setIsAnimating(true);
+      const startPrice = displayPrice;
+      const endPrice = price;
+      const difference = endPrice - startPrice;
+      const steps = 30;
+      const stepValue = difference / steps;
+      let currentStep = 0;
+
+      const interval = setInterval(() => {
+        currentStep++;
+        const newPrice = Math.round(startPrice + stepValue * currentStep);
+        setDisplayPrice(newPrice);
+
+        if (currentStep >= steps) {
+          setDisplayPrice(endPrice);
+          clearInterval(interval);
+          setTimeout(() => setIsAnimating(false), 100);
+        }
+      }, 20);
+
+      return () => clearInterval(interval);
+    }
+  }, [price]);
+
+  return (
+    <motion.span
+      className="text-3xl sm:text-4xl font-semibold text-white inline-block"
+      animate={{
+        y: isAnimating ? [0, -10, 0] : 0,
+      }}
+      transition={{
+        duration: 0.3,
+        ease: "easeInOut"
+      }}
+    >
+      {displayPrice}€
+    </motion.span>
+  );
+};
+
 // Pricing Section Component
 const PricingSection = React.memo(() => {
   const navigate = useNavigate();
@@ -620,9 +667,10 @@ const PricingSection = React.memo(() => {
                   )}
                 </div>
                 <div className="flex items-baseline">
-                  <span className="text-3xl sm:text-4xl font-semibold text-white">
-                    {isYearly ? plan.yearlyPrice : plan.price}€
-                  </span>
+                  <AnimatedPrice 
+                    price={isYearly ? plan.yearlyPrice : plan.price} 
+                    isYearly={isYearly}
+                  />
                   <span className="text-gray-400 ml-1 text-sm sm:text-base">
                     /{isYearly ? "an" : "mois"}
                   </span>
