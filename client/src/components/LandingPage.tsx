@@ -965,17 +965,32 @@ const Hero = React.memo(() => {
 
       {/* Boutons CTA */}
       <div className="flex flex-col sm:flex-row items-center gap-4 relative z-10 mb-10 sm:mb-16">
-        <Button
+        <motion.button
           type="button"
-          variant="gradient"
-          size="lg"
-          className="rounded-lg flex items-center justify-center"
-          aria-label={user ? "Accéder au dashboard" : "Créer mes preuves"}
           onClick={() => navigate(user ? '/dashboard' : '/login')}
+          className="w-full sm:w-auto mb-0 p-3 sm:p-4 text-lg sm:text-xl rounded-xl relative overflow-hidden transition-all duration-300 bg-gradient-to-t from-orange-500 to-orange-600 shadow-lg shadow-orange-500 border border-orange-400 text-white flex items-center justify-center gap-2"
+          aria-label={user ? "Accéder au dashboard" : "Créer mes preuves"}
+          whileHover={{ 
+            scale: 1.05,
+            boxShadow: "0 20px 40px -12px rgba(255, 107, 53, 0.5)"
+          }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ 
+            type: "spring", 
+            stiffness: 400, 
+            damping: 17 
+          }}
         >
-          {user ? "Accéder au dashboard" : "Créer mes preuves"}
-          <ArrowRight size={20} />
-        </Button>
+          {/* Shimmer effect */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+            initial={{ x: "-100%" }}
+            whileHover={{ x: "100%" }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+          />
+          <span className="relative z-10">{user ? "Accéder au dashboard" : "Créer mes preuves"}</span>
+          <ArrowRight size={20} className="relative z-10" />
+        </motion.button>
         <Button
           type="button"
           variant="ghost"
