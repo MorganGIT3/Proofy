@@ -2,129 +2,79 @@ import { useEffect, useState } from 'react';
 
 interface CallbackState {
   status: 'loading' | 'success' | 'error';
-  message?: string;
+  errorMessage?: string;
 }
 
 export default function ExtensionCallback() {
   const [state, setState] = useState<CallbackState>({ status: 'loading' });
 
   useEffect(() => {
-    console.log('[Vercel Callback] Page chargée');
-    console.log('[Vercel Callback] URL:', window.location.href);
-    console.log('[Vercel Callback] Hash:', window.location.hash);
-    
-    // Extraire les tokens depuis l'URL hash
-    const hash = window.location.hash.substring(1);
-    if (!hash) {
-      console.error('[Vercel Callback] Aucun hash trouvé dans l\'URL');
-      setState({
-        status: 'error',
-        message: 'Aucun token trouvé dans l\'URL'
-      });
-      return;
-    }
-    
-    const hashParams = new URLSearchParams(hash);
-    const accessToken = hashParams.get('access_token');
-    const refreshToken = hashParams.get('refresh_token');
-    const error = hashParams.get('error');
-    const errorDescription = hashParams.get('error_description');
-    
-    if (error) {
-      console.error('[Vercel Callback] Erreur:', error, errorDescription);
-      setState({
-        status: 'error',
-        message: errorDescription || error
-      });
+    (function() {
+      console.log('[Vercel Callback] Page chargée');
+      console.log('[Vercel Callback] URL:', window.location.href);
+      console.log('[Vercel Callback] Hash:', window.location.hash);
       
-      // Essayer d'envoyer l'erreur à l'extension
-      try {
-        if (typeof (window as any).chrome !== 'undefined' && (window as any).chrome.runtime) {
-          (window as any).chrome.runtime.sendMessage({
-            type: 'OAUTH_CALLBACK',
-            error: errorDescription || error
-          });
-        }
-      } catch (e) {
-        console.error('[Vercel Callback] Erreur lors de l\'envoi du message:', e);
+      // Extraire les tokens depuis l'URL hash
+      const hash = window.location.hash.substring(1);
+      if (!hash) {
+        console.error('[Vercel Callback] Aucun hash trouvé dans l\'URL');
+        setState({
+          status: 'error',
+          errorMessage: 'Aucun token trouvé dans l\'URL'
+        });
+        return;
       }
       
-      setTimeout(() => {
-        window.close();
-      }, 3000);
-      return;
-    }
-    
-    if (!accessToken || !refreshToken) {
-      console.error('[Vercel Callback] Tokens manquants');
-      setState({
-        status: 'error',
-        message: 'Tokens manquants dans l\'URL'
-      });
-      setTimeout(() => {
-        window.close();
-      }, 3000);
-      return;
-    }
-    
-    console.log('[Vercel Callback] Tokens trouvés, envoi à l\'extension...');
-    
-    // Essayer d'envoyer les tokens à l'extension
-    // Note: Cela ne fonctionnera que si la page est chargée dans le contexte de l'extension
-    // Sinon, l'extension devra lire les tokens depuis l'URL capturée par chrome.identity
-    try {
-      if (typeof (window as any).chrome !== 'undefined' && (window as any).chrome.runtime) {
-        (window as any).chrome.runtime.sendMessage({
-          type: 'OAUTH_CALLBACK',
-          tokens: {
-            access_token: accessToken,
-            refresh_token: refreshToken
-          }
-        }, function(response: any) {
-          console.log('[Vercel Callback] Réponse de l\'extension:', response);
-          if (response && response.success) {
-            setState({
-              status: 'success',
-              message: 'Authentification réussie !'
-            });
-            setTimeout(() => {
-              window.close();
-            }, 2000);
-          } else {
-            // Même sans réponse de l'extension, on considère que c'est un succès
-            // car chrome.identity.launchWebAuthFlow a capturé l'URL
-            setState({
-              status: 'success',
-              message: 'Authentification réussie !'
-            });
-            setTimeout(() => {
-              window.close();
-            }, 2000);
-          }
-        });
-      } else {
-        // Si chrome.runtime n'est pas disponible, les tokens seront lus depuis l'URL
-        // par chrome.identity.launchWebAuthFlow
-        console.log('[Vercel Callback] chrome.runtime non disponible, les tokens seront lus depuis l\'URL');
+      const hashParams = new URLSearchParams(hash);
+      const accessToken = hashParams.get('access_token');
+      const refreshToken = hashParams.get('refresh_token');
+      const error = hashParams.get('error');
+      const errorDescription = hashParams.get('error_description');
+      
+      if (error) {
+        console.error('[Vercel Callback] Erreur:', error, errorDescription);
         setState({
-          status: 'success',
-          message: 'Authentification réussie !'
+          status: 'error',
+          errorMessage: errorDescription || error
+        });
+        
+        // L'erreur sera capturée par chrome.identity.launchWebAuthFlow dans l'URL
+        // Pas besoin d'envoyer de message, l'extension lira l'erreur depuis l'URL
+        
+        setTimeout(() => {
+          window.close();
+        }, 3000);
+        return;
+      }
+      
+      if (!accessToken || !refreshToken) {
+        console.error('[Vercel Callback] Tokens manquants');
+        setState({
+          status: 'error',
+          errorMessage: 'Tokens manquants dans l\'URL'
         });
         setTimeout(() => {
           window.close();
-        }, 2000);
+        }, 3000);
+        return;
       }
-    } catch (e) {
-      console.error('[Vercel Callback] Erreur lors de l\'envoi du message:', e);
-      // Les tokens seront lus depuis l'URL par chrome.identity
+      
+      console.log('[Vercel Callback] Tokens trouvés dans l\'URL');
+      console.log('[Vercel Callback] Les tokens seront automatiquement capturés par chrome.identity.launchWebAuthFlow');
+      console.log('[Vercel Callback] L\'extension extraira les tokens depuis l\'URL hash');
+      
+      // Afficher un message de succès
+      // Les tokens sont dans l'URL hash et seront capturés par chrome.identity.launchWebAuthFlow
+      // L'extension n'a pas besoin de recevoir un message, elle lit directement depuis l'URL
       setState({
-        status: 'success',
-        message: 'Authentification réussie !'
+        status: 'success'
       });
+      
+      // Attendre un peu avant de fermer pour que chrome.identity capture l'URL
       setTimeout(() => {
         window.close();
       }, 2000);
-    }
+    })();
   }, []);
 
   return (
@@ -139,10 +89,10 @@ export default function ExtensionCallback() {
       color: '#fff',
       textAlign: 'center'
     }}>
-      <div style={{ padding: '20px' }}>
+      <div className="container" style={{ padding: '20px' }}>
         {state.status === 'loading' && (
           <>
-            <div style={{
+            <div className="spinner" style={{
               border: '3px solid rgba(255, 255, 255, 0.1)',
               borderTop: '3px solid #fff',
               borderRadius: '50%',
@@ -159,17 +109,22 @@ export default function ExtensionCallback() {
         )}
         
         {state.status === 'success' && (
-          <>
-            <h2 style={{ color: '#4caf50', marginBottom: '10px' }}>✓ {state.message}</h2>
-            <p>Vous pouvez fermer cette fenêtre</p>
-          </>
+          <div style={{ padding: '20px' }}>
+            <h2 style={{ color: '#4caf50' }}>✓ Authentification réussie !</h2>
+            <p>Les tokens ont été capturés.</p>
+            <p style={{ fontSize: '12px', color: '#888', marginTop: '10px' }}>
+              Cette fenêtre se fermera automatiquement...
+            </p>
+          </div>
         )}
         
         {state.status === 'error' && (
-          <>
-            <h2 style={{ color: '#ff4444', marginBottom: '10px' }}>Erreur d'authentification</h2>
-            <p>{state.message}</p>
-          </>
+          <div style={{ padding: '20px' }}>
+            <h2 style={{ color: '#ff4444' }}>
+              {state.errorMessage === 'Aucun token trouvé dans l\'URL' || state.errorMessage === 'Tokens manquants dans l\'URL' ? 'Erreur' : 'Erreur d\'authentification'}
+            </h2>
+            <p>{state.errorMessage}</p>
+          </div>
         )}
         
         <style>{`
