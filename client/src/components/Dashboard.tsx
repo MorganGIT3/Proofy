@@ -1,12 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { LogOut, User } from 'lucide-react';
+import { FirstNameModal } from '@/components/FirstNameModal';
 
 export const Dashboard: React.FC = () => {
-  const { user, signOut } = useAuth();
+  const { user, signOut, hasFirstName, updateProfile, getProfile } = useAuth();
   const navigate = useNavigate();
+  const [showFirstNameModal, setShowFirstNameModal] = useState(false);
+  const [checkingFirstName, setCheckingFirstName] = useState(true);
+  const [profileFirstName, setProfileFirstName] = useState<string | null>(null);
+
+  // Vérifier si l'utilisateur a un prénom au chargement
+  useEffect(() => {
+    const checkFirstName = async () => {
+      if (!user) {
+        setCheckingFirstName(false);
+        return;
+      }
+
+      try {
+        const profile = await getProfile();
+        if (profile?.first_name) {
+          setProfileFirstName(profile.first_name);
+        }
+        
+        const hasName = await hasFirstName();
+        if (!hasName) {
+          setShowFirstNameModal(true);
+        }
+      } catch (error) {
+        console.error('Error checking first name:', error);
+      } finally {
+        setCheckingFirstName(false);
+      }
+    };
+
+    checkFirstName();
+  }, [user, hasFirstName, getProfile]);
 
   const handleSignOut = async () => {
     try {
@@ -17,7 +49,22 @@ export const Dashboard: React.FC = () => {
     }
   };
 
+  const handleSaveFirstName = async (firstName: string) => {
+    try {
+      await updateProfile(firstName);
+      setProfileFirstName(firstName);
+      setShowFirstNameModal(false);
+    } catch (error) {
+      console.error('Error saving first name:', error);
+      throw error;
+    }
+  };
+
   const getUserDisplayName = () => {
+    // Priorité au prénom du profil
+    if (profileFirstName) {
+      return profileFirstName;
+    }
     if (user?.user_metadata?.full_name) {
       return user.user_metadata.full_name;
     }
@@ -85,6 +132,12 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
       </header>
+
+      {/* First Name Modal */}
+      <FirstNameModal 
+        isOpen={showFirstNameModal} 
+        onSave={handleSaveFirstName}
+      />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 py-12 animate-fade-in">

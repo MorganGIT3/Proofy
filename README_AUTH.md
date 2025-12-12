@@ -71,3 +71,8 @@ Les sessions sont automatiquement gérées par Supabase et persistent entre les 
 - Vérifiez que les URLs de redirection sont correctement configurées
 - Consultez la console du navigateur pour les erreurs
 
+
+
+
+
+

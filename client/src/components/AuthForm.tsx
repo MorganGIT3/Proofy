@@ -113,7 +113,7 @@ const AuthForm = React.forwardRef<HTMLDivElement, AuthFormProps>(
             {/* Secondary Action Buttons */}
             <div className="grid gap-2">
               {secondaryActions?.map((action, index) => (
-                <Button key={index} variant="secondary" className="w-full transition-transform hover:scale-[1.03]" onClick={action.onClick} disabled={action.label.includes("Connexion...")}>
+                <Button key={index} className="w-full transition-transform hover:scale-[1.03]" onClick={action.onClick} disabled={action.label.includes("Connexion...")}>
                   {action.icon}
                   {action.label}
                 </Button>
