@@ -353,18 +353,29 @@ const Navigation = React.memo(() => {
               </div>
               <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
                 {user ? (
-                  <Button
+                  <motion.button
                     type="button"
-                    variant="default"
-                    size="sm"
                     onClick={() => {
                       navigate('/dashboard');
                       setMenuState(false);
                     }}
-                    className={cn(isScrolled && 'lg:inline-flex')}
+                    className={cn(
+                      'h-9 px-4 text-sm rounded-xl relative overflow-hidden transition-all duration-300 bg-gradient-to-t from-orange-500 to-orange-600 shadow-lg shadow-orange-500/30 border border-orange-400 text-white inline-flex items-center justify-center font-medium',
+                      isScrolled && 'lg:inline-flex'
+                    )}
+                    whileHover={{ 
+                      scale: 1.05,
+                      boxShadow: "0 15px 30px -8px rgba(255, 107, 53, 0.5)"
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ 
+                      type: "spring", 
+                      stiffness: 400, 
+                      damping: 17 
+                    }}
                   >
                     <span>Dashboard</span>
-                  </Button>
+                  </motion.button>
                 ) : (
                   <>
                     <Button
