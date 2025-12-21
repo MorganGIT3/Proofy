@@ -58,10 +58,10 @@ export const SettingsPage: React.FC = () => {
               letterSpacing: "-0.05em"
             }}
           >
-            Settings
+            Paramètres
           </h1>
           <p className="text-gray-400 text-lg">
-            Manage your account settings and preferences
+            Gérez les paramètres et préférences de votre compte
           </p>
         </div>
 
@@ -69,14 +69,14 @@ export const SettingsPage: React.FC = () => {
         <Card className="bg-gray-900/50 border-gray-800">
           <CardContent className="p-6">
             <div className="mb-6">
-              <h2 className="text-xl font-semibold text-white mb-2">Account Information</h2>
-              <p className="text-gray-400 text-sm">Your personal details</p>
+              <h2 className="text-xl font-semibold text-white mb-2">Informations du compte</h2>
+              <p className="text-gray-400 text-sm">Vos informations personnelles</p>
             </div>
 
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Name
+                  Nom
                 </label>
                 <div className="px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white">
                   {getUserDisplayName()}

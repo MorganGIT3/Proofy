@@ -341,7 +341,7 @@ export const DashboardHome: React.FC = () => {
                       <h3 className="text-lg sm:text-xl font-semibold text-white">{platform.name}</h3>
                       {platform.status === "soon" && (
                         <span className="text-xs font-medium text-gray-400 bg-gray-800/50 px-3 py-1 rounded-full">
-                          SOON
+                          BIENTÔT
                         </span>
                       )}
                       {platform.status === "active" && (
@@ -354,7 +354,7 @@ export const DashboardHome: React.FC = () => {
                     <div className="w-full h-32 sm:h-40 md:h-48 rounded-lg mb-4 border border-gray-800/50 relative overflow-hidden">
                       <img 
                         src={platform.image} 
-                        alt={`Dashboard ${platform.name}`}
+                        alt={`Tableau de bord ${platform.name}`}
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />

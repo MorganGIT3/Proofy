@@ -75,10 +75,10 @@ export const ExtensionConnectionsPage: React.FC = () => {
               letterSpacing: "-0.05em"
             }}
           >
-            Extension Connections
+            Connexions d'extension
           </h1>
           <p className="text-gray-400 text-lg">
-            Manage your active Chrome extension sessions. Maximum {maxConnections} connections allowed.
+            Gérez vos sessions actives de l'extension Chrome. Maximum {maxConnections} connexions autorisées.
           </p>
         </div>
 
@@ -90,7 +90,7 @@ export const ExtensionConnectionsPage: React.FC = () => {
             className="flex items-center gap-2 px-4 py-2 bg-gray-900/50 border border-gray-800 rounded-lg text-white hover:bg-gray-800/50 transition-colors"
           >
             <Edit className="h-4 w-4" />
-            <span>Edit</span>
+            <span>Modifier</span>
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -98,7 +98,7 @@ export const ExtensionConnectionsPage: React.FC = () => {
             className="flex items-center gap-2 px-4 py-2 bg-gray-900/50 border border-gray-800 rounded-lg text-white hover:bg-gray-800/50 transition-colors"
           >
             <RefreshCw className="h-4 w-4" />
-            <span>Refresh</span>
+            <span>Actualiser</span>
           </motion.button>
         </div>
 
@@ -122,19 +122,19 @@ export const ExtensionConnectionsPage: React.FC = () => {
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                         <div>
-                          <p className="text-gray-400 mb-1">Operating System</p>
+                          <p className="text-gray-400 mb-1">Système d'exploitation</p>
                           <p className="text-white">{connection.os}</p>
                         </div>
                         <div>
-                          <p className="text-gray-400 mb-1">IP Address</p>
+                          <p className="text-gray-400 mb-1">Adresse IP</p>
                           <p className="text-white">{connection.ip}</p>
                         </div>
                         <div>
-                          <p className="text-gray-400 mb-1">Last used</p>
+                          <p className="text-gray-400 mb-1">Dernière utilisation</p>
                           <p className="text-white">{connection.lastUsed}</p>
                         </div>
                         <div>
-                          <p className="text-gray-400 mb-1">Connected</p>
+                          <p className="text-gray-400 mb-1">Connecté</p>
                           <p className="text-white">{connection.connected}</p>
                         </div>
                       </div>
@@ -145,7 +145,7 @@ export const ExtensionConnectionsPage: React.FC = () => {
                       className="flex items-center gap-2 px-4 py-2 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 hover:bg-red-500/20 transition-colors ml-4"
                     >
                       <X className="h-4 w-4" />
-                      <span>Disconnect</span>
+                      <span>Déconnecter</span>
                     </motion.button>
                   </div>
                 </CardContent>

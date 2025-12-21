@@ -32,14 +32,14 @@ interface NavigationItem {
 }
 
 const mainNavigationItems: NavigationItem[] = [
-  { id: "dashboard", name: "Dashboard", icon: Home, href: "/dashboard", section: 'main' },
+  { id: "dashboard", name: "Tableau de bord", icon: Home, href: "/dashboard", section: 'main' },
   { id: "extension", name: "Extension", icon: Puzzle, href: "/dashboard/extension", section: 'main' },
-  { id: "connections", name: "Extension Connections", icon: Link2, href: "/dashboard/connections", section: 'main' },
+  { id: "connections", name: "Connexions d'extension", icon: Link2, href: "/dashboard/connections", section: 'main' },
 ];
 
 const accountNavigationItems: NavigationItem[] = [
-  { id: "billing", name: "Billing", icon: CreditCard, href: "/dashboard/billing", section: 'account' },
-  { id: "settings", name: "Settings", icon: Settings, href: "/dashboard/settings", section: 'account' },
+  { id: "billing", name: "Facturation", icon: CreditCard, href: "/dashboard/billing", section: 'account' },
+  { id: "settings", name: "Paramètres", icon: Settings, href: "/dashboard/settings", section: 'account' },
 ];
 
 export const DashboardLayout: React.FC = () => {
@@ -231,7 +231,7 @@ export const DashboardLayout: React.FC = () => {
       <button
         onClick={toggleSidebar}
         className="fixed top-4 left-4 z-50 p-2 rounded-lg bg-gray-900/80 shadow-lg border border-gray-800/50 md:hidden hover:bg-gray-800/80 transition-all duration-200 backdrop-blur-sm"
-        aria-label="Toggle sidebar"
+        aria-label="Basculer la barre latérale"
       >
         {isOpen ? 
           <X className="h-5 w-5 text-white" /> : 
@@ -263,7 +263,7 @@ export const DashboardLayout: React.FC = () => {
               <img src="/favicon.png" alt="Proofy" className="h-9 w-9 object-contain rounded" />
               <div className="flex flex-col">
                 <span className="font-semibold text-white text-base">Proofy</span>
-                <span className="text-xs text-gray-400">Dashboard</span>
+                <span className="text-xs text-gray-400">Tableau de bord</span>
               </div>
             </div>
           )}
@@ -278,7 +278,7 @@ export const DashboardLayout: React.FC = () => {
           <button
             onClick={toggleCollapse}
             className="hidden md:flex p-1.5 rounded-md hover:bg-gray-800/50 transition-all duration-200 text-gray-400 hover:text-orange-400"
-            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            aria-label={isCollapsed ? "Développer la barre latérale" : "Réduire la barre latérale"}
           >
             {isCollapsed ? (
               <ChevronRight className="h-4 w-4" />
@@ -299,7 +299,7 @@ export const DashboardLayout: React.FC = () => {
           {!isCollapsed && (
             <div className="px-3 py-2 mb-2">
               <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                Account
+                Compte
               </div>
             </div>
           )}
@@ -373,14 +373,14 @@ export const DashboardLayout: React.FC = () => {
                   className="flex items-center gap-2 text-white hover:bg-orange-500/10 hover:text-orange-400 cursor-pointer focus:bg-orange-500/10 focus:text-orange-400"
                 >
                   <Settings className="h-4 w-4" />
-                  <span>Settings</span>
+                  <span>Paramètres</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => navigate('/dashboard/billing')}
                   className="flex items-center gap-2 text-white hover:bg-orange-500/10 hover:text-orange-400 cursor-pointer focus:bg-orange-500/10 focus:text-orange-400"
                 >
                   <CreditCard className="h-4 w-4" />
-                  <span>Billing</span>
+                  <span>Facturation</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-orange-500/20" />
                 <DropdownMenuItem
