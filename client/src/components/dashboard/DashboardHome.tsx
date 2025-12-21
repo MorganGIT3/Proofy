@@ -263,7 +263,7 @@ export const DashboardHome: React.FC = () => {
           </h2>
 
           {/* Floating Icons */}
-          <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 pointer-events-none hidden md:block">
             {platforms.map((platform, index) => (
               <motion.div
                 key={platform.name}
