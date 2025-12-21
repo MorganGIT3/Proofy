@@ -387,7 +387,6 @@ export const DashboardLayout: React.FC = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          </div>
         </div>
       </header>
 
