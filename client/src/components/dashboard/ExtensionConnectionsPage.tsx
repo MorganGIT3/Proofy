@@ -39,25 +39,47 @@ export const ExtensionConnectionsPage: React.FC = () => {
 
   // Fonction pour récupérer les connexions depuis Supabase
   const fetchConnections = useCallback(async () => {
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ExtensionConnectionsPage.tsx:41',message:'fetchConnections called',data:{userId:user?.id,userExists:!!user},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
     if (!user) {
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ExtensionConnectionsPage.tsx:44',message:'User is null, returning early',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+      // #endregion
       setLoading(false);
       return;
     }
 
     try {
       setError(null);
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ExtensionConnectionsPage.tsx:49',message:'Before Supabase query',data:{userId:user.id,userIdType:typeof user.id},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+      // #endregion
       const { data, error: fetchError } = await supabase
         .from('extension_connections')
         .select('*')
         .eq('user_id', user.id)
         .order('last_used_at', { ascending: false });
 
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ExtensionConnectionsPage.tsx:56',message:'After Supabase query',data:{hasError:!!fetchError,errorCode:fetchError?.code,errorMessage:fetchError?.message,dataLength:data?.length,dataType:Array.isArray(data)?'array':'other'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+      // #endregion
+
       if (fetchError) {
+        // #region agent log
+        fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ExtensionConnectionsPage.tsx:59',message:'Supabase error thrown',data:{errorCode:fetchError.code,errorMessage:fetchError.message,errorDetails:fetchError.details},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+        // #endregion
         throw fetchError;
       }
 
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ExtensionConnectionsPage.tsx:65',message:'Setting connections',data:{connectionsCount:data?.length||0,firstConnection:data?.[0]?{id:data[0].id,browser:data[0].browser}:null},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+      // #endregion
       setConnections(data || []);
     } catch (err: any) {
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ExtensionConnectionsPage.tsx:68',message:'Catch block executed',data:{errorType:err?.constructor?.name,errorMessage:err?.message,errorCode:err?.code},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+      // #endregion
       console.error('Error fetching connections:', err);
       setError(err.message || 'Erreur lors de la récupération des connexions');
     } finally {
@@ -68,6 +90,9 @@ export const ExtensionConnectionsPage: React.FC = () => {
 
   // Charger les connexions au montage
   useEffect(() => {
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ExtensionConnectionsPage.tsx:75',message:'useEffect triggered',data:{userExists:!!user,userId:user?.id,loading},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
     if (user) {
       fetchConnections();
     }
