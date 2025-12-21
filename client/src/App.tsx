@@ -5,6 +5,7 @@ import NotFound from "@/components/NotFound";
 import ExtensionCallback from "@/components/ExtensionCallback";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { ErrorBoundary } from "./ErrorBoundary";
+import { WelcomePage } from "@/components/WelcomePage";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { DashboardHome } from "@/components/dashboard/DashboardHome";
 import { ExtensionPage } from "@/components/dashboard/ExtensionPage";
@@ -19,6 +20,14 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/auth/extension-callback" element={<ExtensionCallback />} />
+        <Route 
+          path="/welcome"
+          element={
+            <ProtectedRoute>
+              <WelcomePage />
+            </ProtectedRoute>
+          }
+        />
         <Route 
           path="/dashboard" 
           element={

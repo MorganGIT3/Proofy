@@ -44,10 +44,10 @@ export const LoginPage: React.FC = () => {
   const [showPasswordField, setShowPasswordField] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
 
-  // Rediriger vers le dashboard si déjà connecté
+  // Rediriger vers la page welcome si déjà connecté
   React.useEffect(() => {
     if (!loading && user) {
-      navigate('/dashboard', { replace: true });
+      navigate('/welcome', { replace: true });
     }
   }, [user, loading, navigate]);
 
