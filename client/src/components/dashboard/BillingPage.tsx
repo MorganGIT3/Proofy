@@ -310,20 +310,20 @@ export const BillingPage: React.FC = () => {
                       <span className="relative z-10">{plan.buttonText}</span>
                     </motion.button>
 
-                    <div className="space-y-1 sm:space-y-1.5 pt-2 border-t border-gray-800 flex-1">
-                      <h2 className="text-[9px] sm:text-[10px] md:text-xs font-semibold uppercase text-white mb-1">
+                    <div className="space-y-1.5 sm:space-y-2 pt-2 border-t border-gray-800 flex-1">
+                      <h2 className="text-[10px] sm:text-xs md:text-sm font-semibold uppercase text-white mb-1.5">
                         Fonctionnalités
                       </h2>
-                      <h4 className="font-medium text-[9px] sm:text-[10px] md:text-xs text-gray-300 mb-1">
+                      <h4 className="font-medium text-[10px] sm:text-xs md:text-sm text-gray-300 mb-1.5">
                         {plan.includes[0]}
                       </h4>
-                      <ul className="space-y-0.5 sm:space-y-1 font-semibold">
+                      <ul className="space-y-1 sm:space-y-1.5 font-semibold">
                         {plan.includes.slice(1).map((feature, featureIndex) => (
                           <li key={featureIndex} className="flex items-start">
-                            <span className="h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4 bg-gray-800 border border-orange-500 rounded-full grid place-content-center mt-0.5 mr-1 sm:mr-1.5 flex-shrink-0">
-                              <CheckCheck className="h-1.5 w-1.5 sm:h-2 sm:w-2 md:h-2.5 md:w-2.5 text-orange-500" />
+                            <span className="h-3.5 w-3.5 sm:h-4 sm:w-4 md:h-4.5 md:w-4.5 bg-gray-800 border border-orange-500 rounded-full grid place-content-center mt-0.5 mr-1.5 sm:mr-2 flex-shrink-0">
+                              <CheckCheck className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 text-orange-500" />
                             </span>
-                            <span className="text-[8px] sm:text-[9px] md:text-[10px] text-gray-300 leading-tight">{feature}</span>
+                            <span className="text-[10px] sm:text-xs md:text-sm text-gray-300 leading-tight">{feature}</span>
                           </li>
                         ))}
                       </ul>
