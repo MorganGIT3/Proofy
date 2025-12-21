@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowUpRight } from 'lucide-react';
 
@@ -8,6 +8,30 @@ export const WelcomePage: React.FC = () => {
   const [isClicked, setIsClicked] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [isButtonHovered, setIsButtonHovered] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  // Démarrer la barre de progression quand showSuccess devient true
+  useEffect(() => {
+    if (showSuccess && progress === 0) {
+      setProgress(0);
+      const interval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 100) {
+            clearInterval(interval);
+            return 100;
+          }
+          return prev + 2; // 100% en 1 seconde (50 * 20ms = 1000ms)
+        });
+      }, 20);
+
+      // Rediriger vers le dashboard après 1 seconde de progression
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [showSuccess, navigate, progress]);
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -16,15 +40,16 @@ export const WelcomePage: React.FC = () => {
     setTimeout(() => {
       setShowSuccess(true);
     }, 500);
-
-    // Rediriger vers le dashboard après l'animation
-    setTimeout(() => {
-      navigate('/dashboard');
-    }, 1500);
   };
 
   const handleGoToDashboard = () => {
-    navigate('/dashboard');
+    // Si la barre de progression n'a pas encore commencé, la démarrer
+    if (!showSuccess) {
+      setShowSuccess(true);
+    } else {
+      // Si déjà en cours, rediriger immédiatement
+      navigate('/dashboard');
+    }
   };
 
   return (
@@ -165,6 +190,26 @@ export const WelcomePage: React.FC = () => {
           >
             Commence maintenant
           </span>
+
+          {/* Progress bar */}
+          <div
+            className="w-full max-w-xs transition-all duration-500"
+            style={{
+              transform: showSuccess ? "translateY(0)" : "translateY(10px)",
+              opacity: showSuccess ? 1 : 0,
+              transitionDelay: "500ms",
+            }}
+          >
+            <div className="h-1 bg-gray-800/50 rounded-full overflow-hidden border border-orange-500/20">
+              <div
+                className="h-full bg-gradient-to-r from-orange-500 to-orange-600 rounded-full transition-all duration-75 ease-linear"
+                style={{
+                  width: `${progress}%`,
+                  boxShadow: "0 0 10px rgba(255, 153, 0, 0.5)",
+                }}
+              />
+            </div>
+          </div>
         </div>
 
         <div
