@@ -148,13 +148,6 @@ const AirbnbIcon = () => (
   </svg>
 );
 
-const GoogleSCIcon = () => (
-  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect width="40" height="40" rx="8" fill="#4285F4"/>
-    <text x="20" y="26" fontSize="16" fontWeight="bold" fill="white" textAnchor="middle">G</text>
-  </svg>
-);
-
 interface PlatformCard {
   name: string;
   status: 'active' | 'soon';
@@ -167,7 +160,7 @@ const platforms: PlatformCard[] = [
   { name: 'Shopify', status: 'soon', icon: <ShopifyIcon />, position: { x: '30%', y: '15%' } },
   { name: 'Stripe', status: 'soon', icon: <StripeIcon />, position: { x: '50%', y: '25%' } },
   { name: 'TikTok', status: 'soon', icon: <TikTokIcon />, position: { x: '70%', y: '20%' } },
-  { name: 'Google SC', status: 'soon', icon: <GoogleSCIcon />, position: { x: '90%', y: '18%' } },
+  { name: 'Airbnb', status: 'soon', icon: <AirbnbIcon />, position: { x: '90%', y: '18%' } },
 ];
 
 export const DashboardHome: React.FC = () => {
