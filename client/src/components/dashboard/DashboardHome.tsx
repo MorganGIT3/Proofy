@@ -152,15 +152,16 @@ interface PlatformCard {
   name: string;
   status: 'active' | 'soon';
   icon: React.ReactNode;
+  image: string;
   position: { x: string; y: string };
 }
 
 const platforms: PlatformCard[] = [
-  { name: 'Beacons.ai', status: 'active', icon: <BeaconsIcon />, position: { x: '10%', y: '20%' } },
-  { name: 'Shopify', status: 'soon', icon: <ShopifyIcon />, position: { x: '30%', y: '15%' } },
-  { name: 'Stripe', status: 'soon', icon: <StripeIcon />, position: { x: '50%', y: '25%' } },
-  { name: 'TikTok', status: 'soon', icon: <TikTokIcon />, position: { x: '70%', y: '20%' } },
-  { name: 'Airbnb', status: 'soon', icon: <AirbnbIcon />, position: { x: '90%', y: '18%' } },
+  { name: 'Beacons.ai', status: 'active', icon: <BeaconsIcon />, image: '/beacons image .jpg', position: { x: '10%', y: '20%' } },
+  { name: 'Shopify', status: 'soon', icon: <ShopifyIcon />, image: '/new_shopify image.jpeg', position: { x: '30%', y: '15%' } },
+  { name: 'Stripe', status: 'soon', icon: <StripeIcon />, image: '/stripe image.jpg', position: { x: '50%', y: '25%' } },
+  { name: 'TikTok', status: 'soon', icon: <TikTokIcon />, image: '/tik-tok image.jpg', position: { x: '70%', y: '20%' } },
+  { name: 'Airbnb', status: 'soon', icon: <AirbnbIcon />, image: '/new_airbnb image.jpg', position: { x: '90%', y: '18%' } },
 ];
 
 export const DashboardHome: React.FC = () => {
@@ -349,10 +350,26 @@ export const DashboardHome: React.FC = () => {
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center justify-center py-8">
-                      <div className="w-16 h-16 flex items-center justify-center">
-                        {platform.icon}
-                      </div>
+                    {/* Image de la plateforme */}
+                    <div className="w-full h-32 sm:h-40 md:h-48 rounded-lg mb-4 border border-gray-800/50 relative overflow-hidden">
+                      <img 
+                        src={platform.image} 
+                        alt={`Dashboard ${platform.name}`}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                      {platform.status === "active" && (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="relative z-10 text-center">
+                            <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-orange-500/20 border border-orange-500/50 flex items-center justify-center mx-auto mb-2 backdrop-blur-sm">
+                              <svg className="sm:w-7 sm:h-7 md:w-8 md:h-8 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                              </svg>
+                            </div>
+                            <p className="text-xs sm:text-sm text-gray-300 font-medium">Vidéo de démo</p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
