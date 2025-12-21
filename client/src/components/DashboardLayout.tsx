@@ -7,6 +7,7 @@ import {
   Link2,
   CreditCard,
   Settings,
+  Bell,
   Menu, 
   X, 
   ChevronLeft, 
@@ -35,6 +36,7 @@ const mainNavigationItems: NavigationItem[] = [
   { id: "dashboard", name: "Tableau de bord", icon: Home, href: "/dashboard", section: 'main' },
   { id: "extension", name: "Extension", icon: Puzzle, href: "/dashboard/extension", section: 'main' },
   { id: "connections", name: "Connexions d'extension", icon: Link2, href: "/dashboard/connections", section: 'main' },
+  { id: "sales-notifications", name: "Sales Notifications", icon: Bell, href: "/dashboard/sales-notifications", section: 'main' },
 ];
 
 const accountNavigationItems: NavigationItem[] = [
@@ -82,6 +84,8 @@ export const DashboardLayout: React.FC = () => {
       setActiveItem('extension');
     } else if (path === '/dashboard/connections') {
       setActiveItem('connections');
+    } else if (path === '/dashboard/sales-notifications') {
+      setActiveItem('sales-notifications');
     } else if (path === '/dashboard/billing') {
       setActiveItem('billing');
     } else if (path === '/dashboard/settings') {

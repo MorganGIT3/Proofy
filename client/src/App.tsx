@@ -12,6 +12,7 @@ import { ExtensionPage } from "@/components/dashboard/ExtensionPage";
 import { ExtensionConnectionsPage } from "@/components/dashboard/ExtensionConnectionsPage";
 import { SettingsPage } from "@/components/dashboard/SettingsPage";
 import { BillingPage } from "@/components/dashboard/BillingPage";
+import { SalesNotificationsPage } from "@/components/dashboard/SalesNotificationsPage";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           <Route index element={<DashboardHome />} />
           <Route path="extension" element={<ExtensionPage />} />
           <Route path="connections" element={<ExtensionConnectionsPage />} />
+          <Route path="sales-notifications" element={<SalesNotificationsPage />} />
           <Route path="billing" element={<BillingPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
