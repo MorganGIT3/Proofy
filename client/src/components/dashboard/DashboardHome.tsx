@@ -159,7 +159,7 @@ interface PlatformCard {
 const platforms: PlatformCard[] = [
   { name: 'Beacons.ai', status: 'active', icon: <BeaconsIcon />, image: '/beacons image .jpg', position: { x: '10%', y: '20%' } },
   { name: 'Shopify', status: 'soon', icon: <ShopifyIcon />, image: '/new_shopify image.jpeg', position: { x: '30%', y: '15%' } },
-  { name: 'Stripe', status: 'soon', icon: <StripeIcon />, image: '/stripe image.jpg', position: { x: '50%', y: '25%' } },
+  { name: 'Stripe', status: 'soon', icon: <StripeIcon />, image: '/stripeicon.png', position: { x: '50%', y: '25%' } },
   { name: 'TikTok', status: 'soon', icon: <TikTokIcon />, image: '/tik-tok image.jpg', position: { x: '70%', y: '20%' } },
   { name: 'Airbnb', status: 'soon', icon: <AirbnbIcon />, image: '/new_airbnb image.jpg', position: { x: '90%', y: '18%' } },
 ];
