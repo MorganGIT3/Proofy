@@ -100,7 +100,7 @@ const AnimatedPrice = ({ price, isYearly }: { price: number; isYearly: boolean }
   }, [price]);
 
   return (
-    <span className="text-3xl sm:text-4xl font-semibold text-white inline-block">
+    <span className="text-xl sm:text-2xl md:text-3xl font-semibold text-white inline-block">
       {displayPrice}€
     </span>
   );
@@ -189,14 +189,14 @@ export const BillingPage: React.FC = () => {
         />
       </div>
 
-      <div className="relative z-10 px-6 py-12 max-w-7xl mx-auto">
+      <div className="relative z-10 px-6 py-4 max-w-7xl mx-auto">
         {/* Section Pricing */}
         <div
-          className="px-3 sm:px-4 pt-12 sm:pt-16 md:pt-20 pb-12 sm:pb-16 md:pb-20 relative"
+          className="px-3 sm:px-4 pt-4 sm:pt-6 md:pt-8 pb-4 sm:pb-6 md:pb-8 relative"
           ref={pricingRef}
         >
           <h2
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium text-center max-w-3xl mx-auto px-4 sm:px-6 leading-tight mb-6 sm:mb-8 md:mb-10 relative z-10"
+            className="text-2xl sm:text-3xl md:text-4xl font-medium text-center max-w-3xl mx-auto px-4 sm:px-6 leading-tight mb-3 sm:mb-4 md:mb-5 relative z-10"
             style={{
               letterSpacing: "-0.05em"
             }}
@@ -213,13 +213,13 @@ export const BillingPage: React.FC = () => {
             </span>
           </h2>
 
-          <article className="text-center mb-6 space-y-4 max-w-2xl mx-auto relative z-10">
+          <article className="text-center mb-4 space-y-2 max-w-2xl mx-auto relative z-10">
             <TimelineContent
               as="p"
               animationNum={0}
               timelineRef={pricingRef}
               customVariants={revealVariants}
-              className="md:text-base text-sm text-gray-400 mx-auto"
+              className="text-xs sm:text-sm text-gray-400 mx-auto"
             >
               Choisis l'offre qui te permet de montrer tes résultats et d'accélérer tes ventes.
             </TimelineContent>
@@ -234,7 +234,7 @@ export const BillingPage: React.FC = () => {
             </TimelineContent>
           </article>
 
-          <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 py-6 relative z-10">
+          <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 py-3 relative z-10">
             {plans.map((plan, index) => (
               <TimelineContent
                 key={plan.name}
@@ -253,15 +253,15 @@ export const BillingPage: React.FC = () => {
                   )}
                 >
                   {plan.popular && (
-                    <div className="absolute top-2 right-2 sm:top-3 sm:right-3 z-10">
-                      <span className="bg-orange-500 text-white px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs md:text-sm font-medium">
+                    <div className="absolute top-1 right-1 sm:top-2 sm:right-2 z-10">
+                      <span className="bg-orange-500 text-white px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-medium">
                         Populaire
                       </span>
                     </div>
                   )}
-                  <CardHeader className="text-left p-2 sm:p-4 md:p-6">
+                  <CardHeader className="text-left p-2 sm:p-3 md:p-4">
                     <div>
-                      <h3 className="text-xs sm:text-lg md:text-2xl xl:text-3xl font-semibold text-white mb-1 sm:mb-2 leading-tight">
+                      <h3 className="text-sm sm:text-base md:text-lg font-semibold text-white mb-1 leading-tight">
                         PROOFY {plan.name}
                       </h3>
                     </div>
@@ -270,17 +270,17 @@ export const BillingPage: React.FC = () => {
                         price={isYearly ? plan.yearlyPrice : plan.price} 
                         isYearly={isYearly}
                       />
-                      <span className="text-gray-400 ml-1 text-[10px] sm:text-sm md:text-base">
+                      <span className="text-gray-400 ml-1 text-xs sm:text-sm">
                         /{isYearly ? "an" : "mois"}
                       </span>
                     </div>
                   </CardHeader>
 
-                  <CardContent className="pt-0 p-2 sm:p-4 md:p-6 flex-1 flex flex-col">
+                  <CardContent className="pt-0 p-2 sm:p-3 md:p-4 flex-1 flex flex-col">
                     <motion.button
                       onClick={() => navigate('/login')}
                       className={cn(
-                        "w-full mb-3 sm:mb-6 p-2 sm:p-3 md:p-4 text-xs sm:text-base md:text-lg lg:text-xl rounded-lg sm:rounded-xl relative overflow-hidden transition-all duration-300",
+                        "w-full mb-2 sm:mb-3 p-1.5 sm:p-2 md:p-2.5 text-xs sm:text-sm md:text-base rounded-lg relative overflow-hidden transition-all duration-300",
                         plan.popular
                           ? "bg-gradient-to-t from-orange-500 to-orange-600 shadow-lg shadow-orange-500 border border-orange-400 text-white"
                           : plan.buttonVariant === "outline"
@@ -310,20 +310,20 @@ export const BillingPage: React.FC = () => {
                       <span className="relative z-10">{plan.buttonText}</span>
                     </motion.button>
 
-                    <div className="space-y-1.5 sm:space-y-3 pt-2 sm:pt-4 border-t border-gray-800 flex-1">
-                      <h2 className="text-[10px] sm:text-sm md:text-lg lg:text-xl font-semibold uppercase text-white mb-1 sm:mb-3">
+                    <div className="space-y-1 sm:space-y-1.5 pt-2 border-t border-gray-800 flex-1">
+                      <h2 className="text-[9px] sm:text-[10px] md:text-xs font-semibold uppercase text-white mb-1">
                         Fonctionnalités
                       </h2>
-                      <h4 className="font-medium text-[10px] sm:text-xs md:text-sm lg:text-base text-gray-300 mb-1 sm:mb-3">
+                      <h4 className="font-medium text-[9px] sm:text-[10px] md:text-xs text-gray-300 mb-1">
                         {plan.includes[0]}
                       </h4>
-                      <ul className="space-y-1 sm:space-y-2 font-semibold">
+                      <ul className="space-y-0.5 sm:space-y-1 font-semibold">
                         {plan.includes.slice(1).map((feature, featureIndex) => (
                           <li key={featureIndex} className="flex items-start">
-                            <span className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 bg-gray-800 border border-orange-500 rounded-full grid place-content-center mt-0.5 mr-1.5 sm:mr-2 md:mr-3 flex-shrink-0">
-                              <CheckCheck className="h-2.5 w-2.5 sm:h-3 sm:w-3 md:h-4 md:w-4 text-orange-500" />
+                            <span className="h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4 bg-gray-800 border border-orange-500 rounded-full grid place-content-center mt-0.5 mr-1 sm:mr-1.5 flex-shrink-0">
+                              <CheckCheck className="h-1.5 w-1.5 sm:h-2 sm:w-2 md:h-2.5 md:w-2.5 text-orange-500" />
                             </span>
-                            <span className="text-[9px] sm:text-xs md:text-sm text-gray-300 leading-tight">{feature}</span>
+                            <span className="text-[8px] sm:text-[9px] md:text-[10px] text-gray-300 leading-tight">{feature}</span>
                           </li>
                         ))}
                       </ul>
