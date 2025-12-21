@@ -11,9 +11,17 @@ import {
   X, 
   ChevronLeft, 
   ChevronRight,
-  LogOut
+  LogOut,
+  ChevronDown
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface NavigationItem {
   id: string;
@@ -334,20 +342,52 @@ export const DashboardLayout: React.FC = () => {
       >
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-end gap-4">
-            <div className="flex items-center gap-3 px-4 py-2 rounded-lg bg-gray-900/50 border border-gray-800/50">
-              <div className="w-10 h-10 bg-gradient-to-br from-orange-500/20 to-orange-500/10 rounded-full flex items-center justify-center border border-orange-500/30">
-                <span className="text-white font-medium text-sm">{getUserInitials()}</span>
-              </div>
-              <div className="text-right hidden sm:block">
-                <p className="text-sm text-white font-medium">{getUserDisplayName()}</p>
-                <div className="flex items-center gap-2 mt-1">
-                  {getSubscriptionBadge()}
-                </div>
-              </div>
-              <div className="sm:hidden">
-                {getSubscriptionBadge()}
-              </div>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-3 px-4 py-2 rounded-lg bg-gray-900/50 border border-gray-800/50 hover:bg-gray-800/50 transition-colors cursor-pointer">
+                  <div className="w-10 h-10 bg-gradient-to-br from-orange-500/20 to-orange-500/10 rounded-full flex items-center justify-center border border-orange-500/30">
+                    <span className="text-white font-medium text-sm">{getUserInitials()}</span>
+                  </div>
+                  <div className="text-right hidden sm:block">
+                    <p className="text-sm text-white font-medium">{getUserDisplayName()}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      {getSubscriptionBadge()}
+                    </div>
+                  </div>
+                  <div className="sm:hidden">
+                    {getSubscriptionBadge()}
+                  </div>
+                  <ChevronDown className="h-4 w-4 text-gray-400 hidden sm:block" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent 
+                align="end" 
+                className="w-56 bg-gray-900/95 backdrop-blur-md border border-orange-500/20 shadow-lg shadow-orange-500/10"
+              >
+                <DropdownMenuItem
+                  onClick={() => navigate('/dashboard/settings')}
+                  className="flex items-center gap-2 text-white hover:bg-orange-500/10 hover:text-orange-400 cursor-pointer focus:bg-orange-500/10 focus:text-orange-400"
+                >
+                  <Settings className="h-4 w-4" />
+                  <span>Settings</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => navigate('/dashboard/billing')}
+                  className="flex items-center gap-2 text-white hover:bg-orange-500/10 hover:text-orange-400 cursor-pointer focus:bg-orange-500/10 focus:text-orange-400"
+                >
+                  <CreditCard className="h-4 w-4" />
+                  <span>Billing</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="bg-orange-500/20" />
+                <DropdownMenuItem
+                  onClick={handleSignOut}
+                  className="flex items-center gap-2 text-red-400 hover:bg-red-500/10 hover:text-red-300 cursor-pointer focus:bg-red-500/10 focus:text-red-300"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Se déconnecter</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </header>
