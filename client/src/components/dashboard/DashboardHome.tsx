@@ -326,7 +326,7 @@ export const DashboardHome: React.FC = () => {
           </div>
 
           {/* Platform Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 relative z-10 mt-32">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 relative z-10 mt-48 md:mt-56">
             {platforms.map((platform, index) => (
               <motion.div
                 key={platform.name}
