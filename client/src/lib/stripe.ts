@@ -31,93 +31,77 @@ export async function createCheckoutSession(
   fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:23',message:'Before invoke Edge Function',data:{functionName:'create-checkout-session',supabaseUrl:import.meta.env.VITE_SUPABASE_URL},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
   // #endregion
 
-  // Appeler l'Edge Function avec capture de la réponse brute
-  let rawResponse: any = null
+  // Appeler l'Edge Function directement avec fetch pour capturer le body d'erreur
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+  
+  // #region agent log
+  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:34',message:'Before fetch Edge Function',data:{supabaseUrl,hasAnonKey:!!supabaseAnonKey},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C2'})}).catch(()=>{});
+  // #endregion
+  
+  const functionUrl = `${supabaseUrl}/functions/v1/create-checkout-session`
+  
+  // #region agent log
+  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:40',message:'Fetching Edge Function',data:{functionUrl,planName,billingPeriod},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+  // #endregion
+  
+  const response = await fetch(functionUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${session.access_token}`,
+      'apikey': supabaseAnonKey
+    },
+    body: JSON.stringify({ planName, billingPeriod })
+  })
+  
+  // #region agent log
+  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:52',message:'Response received',data:{status:response.status,statusText:response.statusText,ok:response.ok,headers:Object.fromEntries(response.headers.entries())},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D2'})}).catch(()=>{});
+  // #endregion
+  
+  // Lire le body de la réponse (même en cas d'erreur)
+  const responseText = await response.text()
   let responseBody: any = null
   
   try {
-    const response = await supabase.functions.invoke('create-checkout-session', {
-      body: { planName, billingPeriod }
+    responseBody = JSON.parse(responseText)
+  } catch (parseError) {
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:62',message:'Failed to parse response',data:{responseText,parseError:parseError instanceof Error ? parseError.message : String(parseError)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+    // #endregion
+    throw new Error(`Réponse invalide de l'Edge Function: ${responseText}`)
+  }
+  
+  // #region agent log
+  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:68',message:'Response body parsed',data:{status:response.status,responseBody,hasError:!!responseBody.error,hasUrl:!!responseBody.url},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D3'})}).catch(()=>{});
+  // #endregion
+  
+  // Vérifier si la réponse contient une erreur
+  if (!response.ok || responseBody.error) {
+    const errorMessage = responseBody.error || `Erreur ${response.status}: ${response.statusText}`
+    
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:76',message:'Error in response',data:{status:response.status,statusText:response.statusText,errorMessage,responseBody,responseText},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+    // #endregion
+    
+    console.error('Edge Function error:', {
+      status: response.status,
+      statusText: response.statusText,
+      body: responseBody
     })
     
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:35',message:'Raw response from invoke',data:{hasData:!!response.data,hasError:!!response.error,dataKeys:response.data?Object.keys(response.data):null,errorKeys:response.error?Object.keys(response.error):null,errorMessage:response.error?.message,errorName:response.error?.name},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-    // #endregion
-    
-    rawResponse = response
-    const { data, error } = response
-
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:45',message:'After invoke Edge Function',data:{hasError:!!error,errorMessage:error?.message,errorContext:error?.context,hasData:!!data,dataKeys:data?Object.keys(data):null,fullErrorString:error?JSON.stringify(error):null},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D2'})}).catch(()=>{});
-    // #endregion
-
-    if (error) {
-      console.error('Checkout error:', error)
-      
-      // Essayer de récupérer le body de la réponse d'erreur
-      // Supabase peut mettre le body dans error.context ou error.data
-      let errorBody: any = null
-      if (error.context) {
-        errorBody = error.context
-      } else if ((error as any).data) {
-        errorBody = (error as any).data
-      }
-      
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:58',message:'Error details with body',data:{errorMessage:error.message,errorName:error.name,errorStack:error.stack,errorContext:error.context,errorBody:errorBody,fullErrorString:JSON.stringify(error)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
-      // #endregion
-      
-      // Essayer de récupérer le message d'erreur détaillé depuis la réponse
-      let errorMessage = error.message || 'Erreur lors de la création de la session de paiement'
-      
-      // Si l'erreur contient un body avec un champ error, l'utiliser
-      if (errorBody && typeof errorBody === 'object') {
-        if (errorBody.error) {
-          errorMessage = errorBody.error
-        } else if (errorBody.message) {
-          errorMessage = errorBody.message
-        }
-      } else if (error.context && typeof error.context === 'object') {
-        const contextError = error.context as any
-        if (contextError.error) {
-          errorMessage = contextError.error
-        } else if (contextError.message) {
-          errorMessage = contextError.message
-        }
-      }
-      
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:78',message:'Final error message extracted',data:{finalErrorMessage:errorMessage,errorBody,errorContext:error.context},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E2'})}).catch(()=>{});
-      // #endregion
-      
-      throw new Error(errorMessage)
-    }
-    
-    // Si pas d'erreur, utiliser data
-    responseBody = data
-  } catch (invokeError) {
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:87',message:'Exception during invoke',data:{errorMessage:invokeError instanceof Error ? invokeError.message : String(invokeError),errorName:invokeError instanceof Error ? invokeError.name : 'Unknown',errorStack:invokeError instanceof Error ? invokeError.stack : undefined},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E3'})}).catch(()=>{});
-    // #endregion
-    throw invokeError
+    throw new Error(errorMessage)
   }
-
+  
   if (!responseBody?.url) {
     // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:93',message:'No URL in response',data:{responseBody,rawResponse},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'F'})}).catch(()=>{});
-    // #endregion
-    throw new Error('URL de paiement non reçue')
-  }
-
-  if (!data?.url) {
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:38',message:'No URL in response',data:{data},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'F'})}).catch(()=>{});
+    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:90',message:'No URL in response',data:{responseBody},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'F'})}).catch(()=>{});
     // #endregion
     throw new Error('URL de paiement non reçue')
   }
 
   // #region agent log
-  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:99',message:'Redirecting to Stripe',data:{url:responseBody.url},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'G'})}).catch(()=>{});
+  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:95',message:'Redirecting to Stripe',data:{url:responseBody.url},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'G'})}).catch(()=>{});
   // #endregion
 
   // Rediriger vers Stripe Checkout
