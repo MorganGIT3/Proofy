@@ -653,14 +653,17 @@ const PricingSection = React.memo(({ onOpenVideo }: { onOpenVideo: () => void })
       // #endregion
     } catch (error) {
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:handleActivatePlan',message:'Error in createCheckoutSession',data:{planName,errorMessage:error instanceof Error ? error.message : String(error),errorName:error instanceof Error ? error.name : 'Unknown',errorStack:error instanceof Error ? error.stack : undefined},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:handleActivatePlan',message:'Error in createCheckoutSession',data:{planName,errorMessage:error instanceof Error ? error.message : String(error),errorName:error instanceof Error ? error.name : 'Unknown',errorStack:error instanceof Error ? error.stack : undefined,fullError:JSON.stringify(error)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
       // #endregion
       
       console.error('Subscription error:', error);
+      console.error('Full error object:', JSON.stringify(error, null, 2));
       
-      // Afficher l'erreur à l'utilisateur
+      // Afficher l'erreur à l'utilisateur avec le message détaillé
       const errorMessage = error instanceof Error ? error.message : 'Erreur lors de la création de la session de paiement';
-      alert(`Erreur: ${errorMessage}\n\nVérifiez les logs Supabase pour plus de détails.`);
+      console.error('Error message to display:', errorMessage);
+      
+      alert(`Erreur lors de la création de la session de paiement:\n\n${errorMessage}\n\nVérifiez la console et les logs Supabase pour plus de détails.`);
       
       // Rediriger vers la page de billing en cas d'erreur
       navigate('/dashboard/billing');
