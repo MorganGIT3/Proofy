@@ -57,8 +57,16 @@ export const WelcomePage: React.FC = () => {
       className="flex min-h-screen items-center justify-center px-6 relative overflow-hidden"
       style={{
         background: "linear-gradient(180deg, #0A0500 0%, #1A0F00 50%, #2A1500 100%)",
+        fontFamily: "'Poppins', sans-serif",
       }}
     >
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        * {
+          font-family: 'Poppins', sans-serif;
+        }
+      `}</style>
       {/* Radial Glow Background */}
       <div className="absolute inset-0 pointer-events-none z-0" aria-hidden="true">
         <div
@@ -210,23 +218,6 @@ export const WelcomePage: React.FC = () => {
               />
             </div>
           </div>
-        </div>
-
-        <div
-          className="flex items-center gap-3 transition-all duration-500"
-          style={{
-            opacity: isClicked ? 0 : 1,
-            transform: isClicked ? "translateY(-20px)" : "translateY(0)",
-            pointerEvents: isClicked ? "none" : "auto",
-          }}
-        >
-          <span className="relative flex size-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-500 opacity-75" />
-            <span className="relative inline-flex size-2 rounded-full bg-orange-500" />
-          </span>
-          <span className="text-sm font-medium tracking-widest uppercase text-orange-400/60">
-            Prêt à créer
-          </span>
         </div>
 
         <div

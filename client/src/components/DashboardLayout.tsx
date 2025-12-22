@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useSubscription } from '@/hooks/useSubscription';
 import { 
   Home,
   Puzzle,
@@ -150,17 +151,25 @@ export const DashboardLayout: React.FC = () => {
     return name.length > 0 ? name[0].toUpperCase() : 'U';
   };
 
-  // Subscription tier - default to "LIVE" for now (as requested)
-  const subscriptionTier = 'LIVE'; // TODO: Get from user subscription data
+  // Utiliser le hook pour obtenir le VRAI plan
+  const { planName, isLoading: subscriptionLoading } = useSubscription();
 
   const getSubscriptionBadge = () => {
-    if (subscriptionTier === 'LIVE') {
+    if (subscriptionLoading) {
+      return (
+        <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-700 text-gray-300 border border-gray-600">
+          Chargement...
+        </span>
+      );
+    }
+    
+    if (planName === 'LIVE') {
       return (
         <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/50 border border-orange-400">
           Proofy Live
         </span>
       );
-    } else if (subscriptionTier === 'BASIC') {
+    } else if (planName === 'BASIC') {
       return (
         <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-white/10 text-white border border-white/20">
           Proofy Basic

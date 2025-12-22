@@ -13,6 +13,7 @@ import { ExtensionConnectionsPage } from "@/components/dashboard/ExtensionConnec
 import { SettingsPage } from "@/components/dashboard/SettingsPage";
 import { BillingPage } from "@/components/dashboard/BillingPage";
 import { SalesNotificationsPage } from "@/components/dashboard/SalesNotificationsPage";
+import { PrivacyPolicyPage } from "@/components/PrivacyPolicyPage";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/confidentialpolitique" element={<PrivacyPolicyPage />} />
         <Route path="/auth/extension-callback" element={<ExtensionCallback />} />
         <Route 
           path="/welcome"

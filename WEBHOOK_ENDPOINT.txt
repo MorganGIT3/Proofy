@@ -1,0 +1,30 @@
+================================================================================
+                    ENDPOINT WEBHOOK STRIPE
+================================================================================
+
+URL à configurer dans Stripe Dashboard :
+
+https://bmjpnnjsokamnxhwfdjn.supabase.co/functions/v1/stripe-webhook
+
+================================================================================
+                    INSTRUCTIONS
+================================================================================
+
+1. Allez dans Stripe Dashboard > Developers > Webhooks
+2. Cliquez sur "Add endpoint"
+3. Collez l'URL ci-dessus dans "Endpoint URL"
+4. Sélectionnez les événements suivants :
+   - checkout.session.completed
+   - customer.subscription.created
+   - customer.subscription.updated
+   - customer.subscription.deleted
+   - invoice.payment_succeeded
+   - invoice.payment_failed
+5. Cliquez sur "Add endpoint"
+6. Copiez le "Signing secret" (commence par whsec_...)
+7. Ajoutez-le dans Supabase Dashboard :
+   - Project Settings > Edge Functions > Secrets
+   - Nom : STRIPE_WEBHOOK_SECRET
+   - Valeur : le secret copié depuis Stripe
+
+================================================================================
