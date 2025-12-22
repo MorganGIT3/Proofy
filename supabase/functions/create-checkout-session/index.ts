@@ -44,6 +44,13 @@ serve(async (req) => {
 
     // Vérifier l'authentification
     const authHeader = req.headers.get('Authorization')
+    console.log('Authorization header received:', {
+      hasHeader: !!authHeader,
+      headerLength: authHeader?.length,
+      headerPrefix: authHeader?.substring(0, 20),
+      allHeaders: Object.fromEntries(req.headers.entries())
+    })
+    
     if (!authHeader) {
       console.error('Authorization header manquant')
       throw new Error('Authorization header manquant')

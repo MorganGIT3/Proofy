@@ -14,35 +14,47 @@ export async function createCheckoutSession(
   fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:9',message:'createCheckoutSession called',data:{planName,billingPeriod},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
   // #endregion
   
-  // Vérifier que l'utilisateur est connecté
-  const { data: { session } } = await supabase.auth.getSession()
+  // Vérifier que l'utilisateur est connecté et obtenir le token d'accès
+  const { data: { session }, error: sessionError } = await supabase.auth.getSession()
   
   // #region agent log
-  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:15',message:'Session check',data:{hasSession:!!session,userId:session?.user?.id},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:18',message:'Session check',data:{hasSession:!!session,hasError:!!sessionError,sessionError:sessionError?.message,userId:session?.user?.id,hasAccessToken:!!session?.access_token,accessTokenLength:session?.access_token?.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
   // #endregion
   
   if (!session) {
     throw new Error('Vous devez être connecté pour souscrire à un abonnement')
   }
 
-  console.log('Creating checkout session:', { planName, billingPeriod })
+  if (!session.access_token) {
+    // Essayer de rafraîchir la session
+    const { data: { session: refreshedSession }, error: refreshError } = await supabase.auth.refreshSession()
+    
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:28',message:'Session refresh attempt',data:{hasRefreshedSession:!!refreshedSession,hasRefreshError:!!refreshError,refreshError:refreshError?.message,hasAccessToken:!!refreshedSession?.access_token},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B2'})}).catch(()=>{});
+    // #endregion
+    
+    if (!refreshedSession?.access_token) {
+      throw new Error('Token d\'accès manquant. Veuillez vous reconnecter.')
+    }
+    
+    // Utiliser la session rafraîchie
+    session.access_token = refreshedSession.access_token
+  }
 
-  // #region agent log
-  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:23',message:'Before invoke Edge Function',data:{functionName:'create-checkout-session',supabaseUrl:import.meta.env.VITE_SUPABASE_URL},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-  // #endregion
+  console.log('Creating checkout session:', { planName, billingPeriod })
 
   // Appeler l'Edge Function directement avec fetch pour capturer le body d'erreur
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
   const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
   
   // #region agent log
-  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:34',message:'Before fetch Edge Function',data:{supabaseUrl,hasAnonKey:!!supabaseAnonKey},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C2'})}).catch(()=>{});
+  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:42',message:'Before fetch Edge Function',data:{supabaseUrl,hasAnonKey:!!supabaseAnonKey,hasAccessToken:!!session.access_token,accessTokenLength:session.access_token?.length,accessTokenPrefix:session.access_token?.substring(0,20)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C2'})}).catch(()=>{});
   // #endregion
   
   const functionUrl = `${supabaseUrl}/functions/v1/create-checkout-session`
   
   // #region agent log
-  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:40',message:'Fetching Edge Function',data:{functionUrl,planName,billingPeriod},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:48',message:'Fetching Edge Function',data:{functionUrl,planName,billingPeriod,hasAuthHeader:!!session.access_token},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
   // #endregion
   
   const response = await fetch(functionUrl, {
@@ -50,7 +62,7 @@ export async function createCheckoutSession(
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${session.access_token}`,
-      'apikey': supabaseAnonKey
+      'apikey': supabaseAnonKey || ''
     },
     body: JSON.stringify({ planName, billingPeriod })
   })
