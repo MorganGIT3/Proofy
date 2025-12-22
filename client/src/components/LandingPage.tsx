@@ -6,8 +6,9 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { TimelineContent } from "@/components/ui/timeline-animation";
 import { VerticalCutReveal } from "@/components/ui/vertical-cut-reveal";
 import { cn } from "@/lib/utils";
-import { CheckCheck, GraduationCap, Users, Briefcase, Megaphone, Video, TrendingUp, Settings, Monitor, Zap, Upload } from "lucide-react";
+import { CheckCheck, GraduationCap, Users, Briefcase, Megaphone, Video, TrendingUp, Settings, Monitor, Zap, Upload, Loader2 } from "lucide-react";
 import { AnimatedText } from "@/components/AnimatedText";
+import { createCheckoutSession } from "@/lib/stripe";
 
 // Inline Button Component
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -564,7 +565,9 @@ const PricingSection = React.memo(({ onOpenVideo }: { onOpenVideo: () => void })
   fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:562',message:'PricingSection component initialized',data:{hasOnOpenVideo:typeof onOpenVideo!=='undefined',onOpenVideoType:typeof onOpenVideo},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
   // #endregion
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [isYearly, setIsYearly] = useState(false);
+  const [loadingPlan, setLoadingPlan] = useState<'BASIC' | 'LIVE' | null>(null);
   const pricingRef = useRef<HTMLDivElement>(null);
 
   const plans = [
@@ -621,6 +624,50 @@ const PricingSection = React.memo(({ onOpenVideo }: { onOpenVideo: () => void })
 
   const togglePricingPeriod = (value: string) =>
     setIsYearly(Number.parseInt(value) === 1);
+
+  const handleActivatePlan = async (planName: 'BASIC' | 'LIVE') => {
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:handleActivatePlan',message:'handleActivatePlan called',data:{planName,isYearly,hasUser:!!user,userId:user?.id},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
+    
+    if (!user) {
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:handleActivatePlan',message:'No user, redirecting to login',data:{planName},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+      // #endregion
+      navigate('/login');
+      return;
+    }
+
+    setLoadingPlan(planName);
+    
+    try {
+      const billingPeriod = isYearly ? 'yearly' : 'monthly';
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:handleActivatePlan',message:'Calling createCheckoutSession',data:{planName,billingPeriod},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+      // #endregion
+      
+      await createCheckoutSession(planName, billingPeriod);
+      
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:handleActivatePlan',message:'createCheckoutSession succeeded',data:{planName,billingPeriod},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+      // #endregion
+    } catch (error) {
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:handleActivatePlan',message:'Error in createCheckoutSession',data:{planName,errorMessage:error instanceof Error ? error.message : String(error),errorName:error instanceof Error ? error.name : 'Unknown',errorStack:error instanceof Error ? error.stack : undefined},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+      // #endregion
+      
+      console.error('Subscription error:', error);
+      
+      // Afficher l'erreur à l'utilisateur
+      const errorMessage = error instanceof Error ? error.message : 'Erreur lors de la création de la session de paiement';
+      alert(`Erreur: ${errorMessage}\n\nVérifiez les logs Supabase pour plus de détails.`);
+      
+      // Rediriger vers la page de billing en cas d'erreur
+      navigate('/dashboard/billing');
+    } finally {
+      setLoadingPlan(null);
+    }
+  };
 
   return (
     <div
@@ -712,22 +759,24 @@ const PricingSection = React.memo(({ onOpenVideo }: { onOpenVideo: () => void })
 
               <CardContent className="pt-0 p-2 sm:p-4 md:p-6 flex-1 flex flex-col">
                 <motion.button
-                  onClick={() => navigate('/login')}
+                  onClick={() => handleActivatePlan(plan.name as 'BASIC' | 'LIVE')}
+                  disabled={loadingPlan === plan.name}
                   className={cn(
                     "w-full mb-3 sm:mb-6 p-2 sm:p-3 md:p-4 text-xs sm:text-base md:text-lg lg:text-xl rounded-lg sm:rounded-xl relative overflow-hidden transition-all duration-300",
+                    loadingPlan === plan.name ? "opacity-50 cursor-not-allowed" : "",
                     plan.popular
                       ? "bg-gradient-to-t from-orange-500 to-orange-600 shadow-lg shadow-orange-500 border border-orange-400 text-white"
                       : plan.buttonVariant === "outline"
                         ? "bg-gradient-to-t from-gray-800 to-gray-700 shadow-lg shadow-gray-900 border border-gray-700 text-white"
                         : "bg-gradient-to-t from-gray-800 to-gray-700 shadow-lg shadow-gray-900 border border-gray-700 text-white"
                   )}
-                  whileHover={{ 
+                  whileHover={loadingPlan !== plan.name ? { 
                     scale: 1.05,
                     boxShadow: plan.popular 
                       ? "0 20px 40px -12px rgba(255, 107, 53, 0.5)" 
                       : "0 20px 40px -12px rgba(0, 0, 0, 0.5)"
-                  }}
-                  whileTap={{ scale: 0.98 }}
+                  } : {}}
+                  whileTap={loadingPlan !== plan.name ? { scale: 0.98 } : {}}
                   transition={{ 
                     type: "spring", 
                     stiffness: 400, 
@@ -735,13 +784,24 @@ const PricingSection = React.memo(({ onOpenVideo }: { onOpenVideo: () => void })
                   }}
                 >
                   {/* Shimmer effect */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                    initial={{ x: "-100%" }}
-                    whileHover={{ x: "100%" }}
-                    transition={{ duration: 0.6, ease: "easeInOut" }}
-                  />
-                  <span className="relative z-10">{plan.buttonText}</span>
+                  {loadingPlan !== plan.name && (
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                      initial={{ x: "-100%" }}
+                      whileHover={{ x: "100%" }}
+                      transition={{ duration: 0.6, ease: "easeInOut" }}
+                    />
+                  )}
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    {loadingPlan === plan.name ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>Chargement...</span>
+                      </>
+                    ) : (
+                      plan.buttonText
+                    )}
+                  </span>
                 </motion.button>
 
                 <div className="space-y-1.5 sm:space-y-3 pt-2 sm:pt-4 border-t border-gray-800 flex-1">
