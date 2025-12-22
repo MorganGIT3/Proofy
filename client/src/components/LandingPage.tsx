@@ -1162,6 +1162,8 @@ const Hero = React.memo(() => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [isVideoModalOpen, setIsVideoModalOpen] = React.useState(false);
+  const [videoError, setVideoError] = React.useState(false);
+  const [videoLoaded, setVideoLoaded] = React.useState(false);
   
   return (
     <section
@@ -1430,49 +1432,86 @@ const Hero = React.memo(() => {
         
         <div className="relative z-10">
           <div className="w-full aspect-video bg-gradient-to-br from-gray-900 via-gray-950 to-black rounded-lg shadow-2xl border border-gray-800/50 overflow-hidden relative group">
-            {/* Animated background pattern */}
-            <div className="absolute inset-0 opacity-30">
-              <div className="absolute inset-0" style={{
-                backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
-                                radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
-                                radial-gradient(circle at 40% 20%, rgba(255,255,255,0.05) 0%, transparent 50%)`,
-                animation: 'pulse 4s ease-in-out infinite'
-              }} />
-            </div>
+            {/* Video element - avec gestion d'erreur */}
+            {!videoError ? (
+              <video
+                className="w-full h-full object-cover"
+                autoPlay
+                loop
+                muted
+                playsInline
+                onLoadedData={() => setVideoLoaded(true)}
+                onError={() => {
+                  setVideoError(true);
+                  setVideoLoaded(false);
+                }}
+                style={{ 
+                  width: '100%', 
+                  height: '100%',
+                  display: videoLoaded ? 'block' : 'none'
+                }}
+              >
+                <source src="/video/Home site _ Beacons -.mp4" type="video/mp4" />
+              </video>
+            ) : null}
             
-            {/* Video placeholder content */}
-            <div className="relative z-10 h-full flex flex-col items-center justify-center gap-4 sm:gap-6 p-4 sm:p-8">
-              {/* Play icon with animation */}
-              <div className="relative">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20 group-hover:bg-white/15 transition-all duration-300 animate-pulse">
-                  <Play size={32} className="sm:w-10 sm:h-10 md:w-12 md:h-12 text-white ml-1 sm:ml-2" />
+            {/* Fallback si vidéo ne charge pas ou pendant le chargement */}
+            {(!videoLoaded || videoError) && (
+              <>
+                {/* Animated background pattern */}
+                <div className="absolute inset-0 opacity-30">
+                  <div className="absolute inset-0" style={{
+                    backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                                    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                                    radial-gradient(circle at 40% 20%, rgba(255,255,255,0.05) 0%, transparent 50%)`,
+                    animation: 'pulse 4s ease-in-out infinite'
+                  }} />
                 </div>
-                {/* Ripple effect */}
-                <div className="absolute inset-0 rounded-full border-2 border-white/20 animate-ping" style={{ animationDelay: '0.5s' }} />
-              </div>
-              
-              {/* Text */}
-              <div className="text-center space-y-2">
-                <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-white">
-                  Vidéo de démo
-                </h3>
-                <p className="text-xs sm:text-sm md:text-base text-gray-400">
-                  Disponible prochainement
-                </p>
-              </div>
-              
-              {/* Subtle grid pattern */}
-              <div className="absolute inset-0 opacity-10" style={{
-                backgroundImage: `
-                  linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                  linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
-                `,
-                backgroundSize: '50px 50px'
-              }} />
-            </div>
+                
+                {/* Video placeholder content */}
+                <div className="relative z-10 h-full flex flex-col items-center justify-center gap-4 sm:gap-6 p-4 sm:p-8">
+                  {/* Play icon with animation */}
+                  <div className="relative">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20 group-hover:bg-white/15 transition-all duration-300 animate-pulse">
+                      <Play size={32} className="sm:w-10 sm:h-10 md:w-12 md:h-12 text-white ml-1 sm:ml-2" />
+                    </div>
+                    {/* Ripple effect */}
+                    <div className="absolute inset-0 rounded-full border-2 border-white/20 animate-ping" style={{ animationDelay: '0.5s' }} />
+                  </div>
+                  
+                  {/* Text */}
+                  <div className="text-center space-y-2">
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-white">
+                      Vidéo de démo
+                    </h3>
+                    <p className="text-xs sm:text-sm md:text-base text-gray-400">
+                      {videoError ? 'Chargement de la vidéo...' : 'Disponible prochainement'}
+                    </p>
+                  </div>
+                  
+                  {/* Subtle grid pattern */}
+                  <div className="absolute inset-0 opacity-10" style={{
+                    backgroundImage: `
+                      linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+                    `,
+                    backgroundSize: '50px 50px'
+                  }} />
+                </div>
+              </>
+            )}
+            
+            {/* Subtle grid pattern overlay (toujours visible sur la vidéo) */}
+            <div className="absolute inset-0 opacity-10 pointer-events-none" style={{
+              backgroundImage: `
+                linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+              `,
+              backgroundSize: '50px 50px'
+            }} />
             
             {/* Hover overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
           </div>
         </div>
       </div>
