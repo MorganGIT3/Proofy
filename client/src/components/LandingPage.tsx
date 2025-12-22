@@ -123,6 +123,30 @@ const X = ({ className = "", size = 24 }: { className?: string; size?: number })
 
 // Video Demo Modal Component
 const VideoDemoModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  const [videoError, setVideoError] = React.useState(false);
+  const [videoLoaded, setVideoLoaded] = React.useState(false);
+  const videoRef = React.useRef<HTMLVideoElement>(null);
+  
+  // URL de la vidéo depuis Supabase Storage
+  const videoUrl = import.meta.env.VITE_VIDEO_URL || 
+    'https://bmjpnnjsokamnxhwfdjn.supabase.co/storage/v1/object/public/videos/Home%20Site%20%20%20Beacons%20-%20FINISH.mp4';
+
+  // Réinitialiser l'état quand la modal s'ouvre
+  React.useEffect(() => {
+    if (isOpen) {
+      setVideoError(false);
+      setVideoLoaded(false);
+      // Forcer la lecture de la vidéo quand la modal s'ouvre
+      if (videoRef.current) {
+        videoRef.current.currentTime = 0;
+        const playPromise = videoRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {});
+        }
+      }
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
@@ -135,7 +159,7 @@ const VideoDemoModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
       
       {/* Modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-scaleIn">
-        <div className="relative w-full max-w-4xl bg-black border border-gray-800 rounded-lg shadow-2xl overflow-hidden">
+        <div className="relative w-full max-w-5xl bg-black border border-gray-800 rounded-lg shadow-2xl overflow-hidden">
           {/* Close Button */}
           <button
             onClick={onClose}
@@ -146,47 +170,48 @@ const VideoDemoModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
           </button>
 
           {/* Content */}
-          <div className="p-8 md:p-12">
-            <div className="flex flex-col items-center justify-center text-center space-y-6">
-              {/* Video Placeholder */}
-              <div className="w-full aspect-video bg-gradient-to-br from-gray-900 to-black rounded-lg border border-gray-800 flex items-center justify-center relative overflow-hidden">
-                {/* Animated background pattern */}
-                <div className="absolute inset-0 opacity-20">
-                  <div className="absolute inset-0" style={{
-                    backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
-                                    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
-                                    radial-gradient(circle at 40% 20%, rgba(255,255,255,0.05) 0%, transparent 50%)`,
-                  }} />
-                </div>
-                
-                {/* Play icon animation */}
-                <div className="relative z-10 flex flex-col items-center gap-4">
-                  <div className="w-20 h-20 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center animate-pulse">
-                    <Play size={40} className="text-white ml-1" />
+          <div className="p-4 md:p-8">
+            <div className="w-full aspect-video bg-gradient-to-br from-gray-900 to-black rounded-lg border border-gray-800 relative overflow-hidden">
+              {!videoError ? (
+                <video
+                  ref={videoRef}
+                  className="w-full h-full object-contain"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                  crossOrigin="anonymous"
+                  onLoadedData={() => setVideoLoaded(true)}
+                  onError={() => setVideoError(true)}
+                >
+                  <source src={videoUrl} type="video/mp4" />
+                </video>
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center">
+                    <p className="text-white/60 text-sm mb-4">Erreur de chargement de la vidéo</p>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={onClose}
+                    >
+                      Fermer
+                    </Button>
                   </div>
-                  <div className="text-white/60 text-sm font-medium animate-pulse">
-                    Vidéo en création...
+                </div>
+              )}
+              
+              {!videoLoaded && !videoError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                  <div className="text-center">
+                    <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center mx-auto mb-4 animate-pulse">
+                      <Play size={32} className="text-white ml-1" />
+                    </div>
+                    <p className="text-white/60 text-sm">Chargement de la vidéo...</p>
                   </div>
                 </div>
-              </div>
-
-              {/* Message */}
-              <div className="space-y-2">
-                <h3 className="text-2xl md:text-3xl font-bold text-white">
-                  Démo vidéo à venir
-                </h3>
-              </div>
-
-              {/* CTA Button */}
-              <Button
-                type="button"
-                variant="gradient"
-                size="lg"
-                onClick={onClose}
-                className="mt-4"
-              >
-                Compris
-              </Button>
+              )}
             </div>
           </div>
         </div>
@@ -534,7 +559,10 @@ const AnimatedPrice = ({ price, isYearly }: { price: number; isYearly: boolean }
 };
 
 // Pricing Section Component
-const PricingSection = React.memo(() => {
+const PricingSection = React.memo(({ onOpenVideo }: { onOpenVideo: () => void }) => {
+  // #region agent log
+  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:562',message:'PricingSection component initialized',data:{hasOnOpenVideo:typeof onOpenVideo!=='undefined',onOpenVideoType:typeof onOpenVideo},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+  // #endregion
   const navigate = useNavigate();
   const [isYearly, setIsYearly] = useState(false);
   const pricingRef = useRef<HTMLDivElement>(null);
@@ -798,15 +826,20 @@ const PricingSection = React.memo(() => {
               image: "/tik-tok image.jpg",
               description: "Génère un dashboard TikTok de présentation affichant des revenus de monétisation et la progression de tes gains, pour prouver que TikTok peut vraiment devenir une source de revenus."
             },
-          ].map((platform, index) => (
+          ].map((platform, index) => {
+            // #region agent log
+            fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:835',message:'Platform card render',data:{platformName:platform.name,platformStatus:platform.status,hasOnOpenVideo:typeof onOpenVideo!=='undefined',onOpenVideoType:typeof onOpenVideo},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+            // #endregion
+            return (
             <Card
               key={index}
               className={cn(
                 "relative overflow-hidden border",
                 platform.status === "active"
-                  ? "bg-gray-900/50 border-orange-500/50"
+                  ? "bg-gray-900/50 border-orange-500/50 cursor-pointer hover:border-orange-500 transition-colors"
                   : "bg-gray-900/30 border-gray-800/50 opacity-60"
               )}
+              onClick={platform.status === "active" ? onOpenVideo : undefined}
             >
               <CardContent className="p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-4">
@@ -846,7 +879,8 @@ const PricingSection = React.memo(() => {
                 <p className="text-xs sm:text-sm text-white break-words">{platform.description}</p>
               </CardContent>
             </Card>
-          ))}
+            );
+          })}
           
           {/* Card Airbnb centrée en bas */}
           <div className="md:col-span-2 flex justify-center">
@@ -1158,12 +1192,44 @@ export const Timeline = ({ data }: { data: TimelineEntryNew[] }) => {
 };
 
 // Hero Component
-const Hero = React.memo(() => {
+const Hero = React.memo(({ onOpenVideo }: { onOpenVideo: () => void }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [isVideoModalOpen, setIsVideoModalOpen] = React.useState(false);
   const [videoError, setVideoError] = React.useState(false);
   const [videoLoaded, setVideoLoaded] = React.useState(false);
+  
+  // URL de la vidéo depuis Supabase Storage
+  const videoUrl = import.meta.env.VITE_VIDEO_URL || 
+    'https://bmjpnnjsokamnxhwfdjn.supabase.co/storage/v1/object/public/videos/Home%20Site%20%20%20Beacons%20-%20FINISH.mp4';
+  
+  // #region agent log
+  const videoRef = React.useRef<HTMLVideoElement>(null);
+  
+  React.useEffect(() => {
+    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:1170',message:'videoUrl initialized',data:{videoUrl,hasEnvVar:!!import.meta.env.VITE_VIDEO_URL},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+  }, [videoUrl]);
+  
+  React.useEffect(() => {
+    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:1175',message:'video state changed',data:{videoLoaded,videoError},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+  }, [videoLoaded, videoError]);
+  
+  // Forcer la lecture de la vidéo une fois chargée
+  React.useEffect(() => {
+    if (videoLoaded && videoRef.current && !videoError) {
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:1182',message:'Attempting to play video',data:{paused:videoRef.current.paused,readyState:videoRef.current.readyState},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+      // #endregion
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          // #region agent log
+          fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:1187',message:'Play promise rejected',data:{errorMessage:error.message},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+          // #endregion
+        });
+      }
+    }
+  }, [videoLoaded, videoError]);
+  // #endregion
   
   return (
     <section
@@ -1399,18 +1465,12 @@ const Hero = React.memo(() => {
           size="lg"
           className="rounded-lg border border-gray-700 text-white hover:bg-gray-800/50 flex items-center justify-center"
           aria-label="Voir la démo"
-          onClick={() => setIsVideoModalOpen(true)}
+          onClick={onOpenVideo}
         >
           <Play size={20} />
           Voir la démo
         </Button>
       </div>
-
-      {/* Video Demo Modal */}
-      <VideoDemoModal 
-        isOpen={isVideoModalOpen} 
-        onClose={() => setIsVideoModalOpen(false)} 
-      />
 
       {/* Video Demo Preview */}
       <div className="w-full max-w-5xl relative pb-12 sm:pb-16 md:pb-20">
@@ -1435,23 +1495,63 @@ const Hero = React.memo(() => {
             {/* Video element - avec gestion d'erreur */}
             {!videoError ? (
               <video
+                ref={(videoEl) => {
+                  if (videoEl) {
+                    videoRef.current = videoEl;
+                    // #region agent log
+                    const sourceEl = videoEl.querySelector('source');
+                    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:1441',message:'video element ref',data:{src:videoEl.src,sourceSrc:sourceEl?.src,currentSrc:videoEl.currentSrc,readyState:videoEl.readyState,autoplay:videoEl.autoplay,muted:videoEl.muted,videoUrl},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'F'})}).catch(()=>{});
+                    // #endregion
+                  }
+                }}
                 className="w-full h-full object-cover"
                 autoPlay
                 loop
                 muted
                 playsInline
-                onLoadedData={() => setVideoLoaded(true)}
-                onError={() => {
+                preload="auto"
+                crossOrigin="anonymous"
+                onLoadedData={() => {
+                  // #region agent log
+                  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:1447',message:'onLoadedData triggered',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+                  // #endregion
+                  setVideoLoaded(true);
+                }}
+                onCanPlay={() => {
+                  // #region agent log
+                  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:1452',message:'onCanPlay triggered',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+                  // #endregion
+                }}
+                onPlay={() => {
+                  // #region agent log
+                  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:1458',message:'onPlay triggered - video started',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+                  // #endregion
+                }}
+                onError={(e) => {
+                  const target = e.target as HTMLVideoElement;
+                  const error = target.error;
+                  // #region agent log
+                  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:1464',message:'onError triggered',data:{errorCode:error?.code,errorMessage:error?.message,networkState:target.networkState,readyState:target.readyState,currentSrc:target.currentSrc},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+                  // #endregion
                   setVideoError(true);
                   setVideoLoaded(false);
+                }}
+                onLoadStart={() => {
+                  // #region agent log
+                  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:1473',message:'onLoadStart triggered',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+                  // #endregion
                 }}
                 style={{ 
                   width: '100%', 
                   height: '100%',
-                  display: videoLoaded ? 'block' : 'none'
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  zIndex: videoLoaded ? 10 : 1,
+                  opacity: videoLoaded ? 1 : 0
                 }}
               >
-                <source src="/video/Home site _ Beacons -.mp4" type="video/mp4" />
+                <source src={videoUrl} type="video/mp4" />
               </video>
             ) : null}
             
@@ -1706,7 +1806,7 @@ const Hero = React.memo(() => {
       </div>
 
       {/* Section Tarification */}
-      <PricingSection />
+      <PricingSection onOpenVideo={onOpenVideo} />
     </section>
   );
 });
@@ -1845,10 +1945,16 @@ const TimelineDemo = () => {
 
 // Main Component
 export default function LandingPage() {
+  const [isVideoModalOpen, setIsVideoModalOpen] = React.useState(false);
+
   return (
     <main className="min-h-screen bg-black text-white overflow-x-hidden">
       <Navigation />
-      <Hero />
+      <Hero onOpenVideo={() => setIsVideoModalOpen(true)} />
+      <VideoDemoModal 
+        isOpen={isVideoModalOpen} 
+        onClose={() => setIsVideoModalOpen(false)} 
+      />
       <footer className="w-full py-8 px-4 md:px-8">
         <div className="max-w-7xl mx-auto">
           <p className="text-xs text-gray-500 text-center">
