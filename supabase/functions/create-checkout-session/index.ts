@@ -47,8 +47,7 @@ serve(async (req) => {
     console.log('Authorization header received:', {
       hasHeader: !!authHeader,
       headerLength: authHeader?.length,
-      headerPrefix: authHeader?.substring(0, 20),
-      allHeaders: Object.fromEntries(req.headers.entries())
+      headerPrefix: authHeader?.substring(0, 30),
     })
     
     if (!authHeader) {
@@ -56,25 +55,46 @@ serve(async (req) => {
       throw new Error('Authorization header manquant')
     }
 
-    // Créer client Supabase avec le token de l'utilisateur
+    // Vérifier l'authentification via l'API REST de Supabase (plus fiable dans Edge Functions)
+    const authResponse = await fetch(`${supabaseUrl}/auth/v1/user`, {
+      headers: {
+        'Authorization': authHeader,
+        'apikey': supabaseAnonKey,
+      }
+    })
+
+    if (!authResponse.ok) {
+      const errorData = await authResponse.json().catch(() => ({}))
+      console.error('Auth API error:', {
+        status: authResponse.status,
+        statusText: authResponse.statusText,
+        errorData
+      })
+      throw new Error(`Utilisateur non authentifié: ${errorData.message || 'Token invalide'}`)
+    }
+
+    const user = await authResponse.json()
+    
+    if (!user || !user.id) {
+      console.error('Invalid user data from auth API:', user)
+      throw new Error('Utilisateur non authentifié: Données utilisateur invalides')
+    }
+
+    console.log('User authenticated:', user.id, user.email)
+
+    // Créer client Supabase pour les requêtes suivantes (avec service role pour certaines opérations)
     const supabaseClient = createClient(
       supabaseUrl,
       supabaseAnonKey,
       {
         global: {
-          headers: { Authorization: authHeader }
+          headers: { 
+            Authorization: authHeader,
+            apikey: supabaseAnonKey
+          }
         }
       }
     )
-
-    // Récupérer l'utilisateur authentifié
-    const { data: { user }, error: userError } = await supabaseClient.auth.getUser()
-    if (userError || !user) {
-      console.error('Auth error:', userError)
-      throw new Error(`Utilisateur non authentifié: ${userError?.message || 'Aucun utilisateur'}`)
-    }
-
-    console.log('User authenticated:', user.id, user.email)
 
     // Récupérer les paramètres avec gestion d'erreur pour le parsing JSON
     let requestBody
