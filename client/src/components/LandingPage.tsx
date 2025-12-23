@@ -192,15 +192,15 @@ const VideoDemoModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <p className="text-white/60 text-sm mb-4">Erreur de chargement de la vidéo</p>
-                    <Button
-                      type="button"
+              <Button
+                type="button"
                       variant="outline"
-                      onClick={onClose}
-                    >
+                onClick={onClose}
+              >
                       Fermer
-                    </Button>
-                  </div>
-                </div>
+              </Button>
+            </div>
+          </div>
               )}
               
               {!videoLoaded && !videoError && (
@@ -788,12 +788,12 @@ const PricingSection = React.memo(({ onOpenVideo }: { onOpenVideo: () => void })
                 >
                   {/* Shimmer effect */}
                   {loadingPlan !== plan.name && (
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                      initial={{ x: "-100%" }}
-                      whileHover={{ x: "100%" }}
-                      transition={{ duration: 0.6, ease: "easeInOut" }}
-                    />
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                    initial={{ x: "-100%" }}
+                    whileHover={{ x: "100%" }}
+                    transition={{ duration: 0.6, ease: "easeInOut" }}
+                  />
                   )}
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     {loadingPlan === plan.name ? (
@@ -1621,46 +1621,46 @@ const Hero = React.memo(({ onOpenVideo }: { onOpenVideo: () => void }) => {
             {/* Fallback si vidéo ne charge pas ou pendant le chargement */}
             {(!videoLoaded || videoError) && (
               <>
-                {/* Animated background pattern */}
-                <div className="absolute inset-0 opacity-30">
-                  <div className="absolute inset-0" style={{
-                    backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
-                                    radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
-                                    radial-gradient(circle at 40% 20%, rgba(255,255,255,0.05) 0%, transparent 50%)`,
-                    animation: 'pulse 4s ease-in-out infinite'
-                  }} />
+            {/* Animated background pattern */}
+            <div className="absolute inset-0 opacity-30">
+              <div className="absolute inset-0" style={{
+                backgroundImage: `radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                                radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                                radial-gradient(circle at 40% 20%, rgba(255,255,255,0.05) 0%, transparent 50%)`,
+                animation: 'pulse 4s ease-in-out infinite'
+              }} />
+            </div>
+            
+            {/* Video placeholder content */}
+            <div className="relative z-10 h-full flex flex-col items-center justify-center gap-4 sm:gap-6 p-4 sm:p-8">
+              {/* Play icon with animation */}
+              <div className="relative">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20 group-hover:bg-white/15 transition-all duration-300 animate-pulse">
+                  <Play size={32} className="sm:w-10 sm:h-10 md:w-12 md:h-12 text-white ml-1 sm:ml-2" />
                 </div>
-                
-                {/* Video placeholder content */}
-                <div className="relative z-10 h-full flex flex-col items-center justify-center gap-4 sm:gap-6 p-4 sm:p-8">
-                  {/* Play icon with animation */}
-                  <div className="relative">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20 group-hover:bg-white/15 transition-all duration-300 animate-pulse">
-                      <Play size={32} className="sm:w-10 sm:h-10 md:w-12 md:h-12 text-white ml-1 sm:ml-2" />
-                    </div>
-                    {/* Ripple effect */}
-                    <div className="absolute inset-0 rounded-full border-2 border-white/20 animate-ping" style={{ animationDelay: '0.5s' }} />
-                  </div>
-                  
-                  {/* Text */}
-                  <div className="text-center space-y-2">
-                    <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-white">
-                      Vidéo de démo
-                    </h3>
-                    <p className="text-xs sm:text-sm md:text-base text-gray-400">
+                {/* Ripple effect */}
+                <div className="absolute inset-0 rounded-full border-2 border-white/20 animate-ping" style={{ animationDelay: '0.5s' }} />
+              </div>
+              
+              {/* Text */}
+              <div className="text-center space-y-2">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-white">
+                  Vidéo de démo
+                </h3>
+                <p className="text-xs sm:text-sm md:text-base text-gray-400">
                       {videoError ? 'Chargement de la vidéo...' : 'Disponible prochainement'}
-                    </p>
-                  </div>
-                  
-                  {/* Subtle grid pattern */}
-                  <div className="absolute inset-0 opacity-10" style={{
-                    backgroundImage: `
-                      linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                      linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
-                    `,
-                    backgroundSize: '50px 50px'
-                  }} />
-                </div>
+                </p>
+              </div>
+              
+              {/* Subtle grid pattern */}
+              <div className="absolute inset-0 opacity-10" style={{
+                backgroundImage: `
+                  linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+                `,
+                backgroundSize: '50px 50px'
+              }} />
+            </div>
               </>
             )}
             

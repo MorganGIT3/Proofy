@@ -59,7 +59,9 @@ export function useSubscription(): UseSubscriptionReturn {
         .from('subscriptions')
         .select('*')
         .eq('user_id', user.id)
-        .maybeSingle() // Utiliser maybeSingle au lieu de single pour éviter l'erreur si pas de résultat
+        .in('status', ['active', 'trialing', 'past_due'])
+        .order('created_at', { ascending: false })
+        .maybeSingle() // Retourne null si 0 résultat, le premier actif si >=1
 
       if (fetchError) {
         console.error('Error fetching subscription:', fetchError)

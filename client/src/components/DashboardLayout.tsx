@@ -324,13 +324,13 @@ export const DashboardLayout: React.FC = () => {
           </ul>
 
           {/* Account Section */}
-          {!isCollapsed && (
+                    {!isCollapsed && (
             <div className="px-3 py-2 mb-2">
               <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                 Compte
               </div>
-            </div>
-          )}
+                      </div>
+                    )}
           <ul className="space-y-0.5">
             {accountNavigationItems.map(renderNavItem)}
           </ul>
@@ -338,33 +338,33 @@ export const DashboardLayout: React.FC = () => {
 
         {/* Bottom section with logout */}
         <div className="mt-auto border-t border-orange-500/20 p-3">
-          <button
-            onClick={handleSignOut}
-            className={`
-              w-full flex items-center rounded-lg text-left transition-all duration-200 group
-              text-red-400 hover:bg-red-500/10 hover:text-red-300 border border-transparent hover:border-red-500/20
-              ${isCollapsed ? "justify-center p-2.5" : "space-x-2.5 px-3 py-2.5"}
-            `}
-            title={isCollapsed ? "Se déconnecter" : undefined}
-          >
-            <div className="flex items-center justify-center min-w-[24px]">
-              <LogOut className="h-5 w-5 flex-shrink-0 text-red-400 group-hover:text-red-300" />
-            </div>
-            
-            {!isCollapsed && (
-              <span className="text-sm">Se déconnecter</span>
-            )}
-            
-            {/* Tooltip for collapsed state */}
-            {isCollapsed && (
-              <div className="absolute left-full ml-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 border border-gray-700">
-                Se déconnecter
-                <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-1.5 h-1.5 bg-gray-800 rotate-45 border-l border-b border-gray-700" />
+            <button
+              onClick={handleSignOut}
+              className={`
+                w-full flex items-center rounded-lg text-left transition-all duration-200 group
+                text-red-400 hover:bg-red-500/10 hover:text-red-300 border border-transparent hover:border-red-500/20
+                ${isCollapsed ? "justify-center p-2.5" : "space-x-2.5 px-3 py-2.5"}
+              `}
+              title={isCollapsed ? "Se déconnecter" : undefined}
+            >
+              <div className="flex items-center justify-center min-w-[24px]">
+                <LogOut className="h-5 w-5 flex-shrink-0 text-red-400 group-hover:text-red-300" />
               </div>
-            )}
-          </button>
+              
+              {!isCollapsed && (
+                <span className="text-sm">Se déconnecter</span>
+              )}
+              
+              {/* Tooltip for collapsed state */}
+              {isCollapsed && (
+                <div className="absolute left-full ml-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap z-50 border border-gray-700">
+                  Se déconnecter
+                  <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-1.5 h-1.5 bg-gray-800 rotate-45 border-l border-b border-gray-700" />
+                </div>
+              )}
+            </button>
+          </div>
         </div>
-      </div>
 
       {/* Header with Profile */}
       <header 
@@ -420,7 +420,7 @@ export const DashboardLayout: React.FC = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-        </div>
+      </div>
       </header>
 
       {/* Main Content Area */}

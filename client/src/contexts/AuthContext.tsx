@@ -127,8 +127,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error: any) {
       // If it's not an "Auth session missing" error, log it
       if (!error?.message?.includes('Auth session missing')) {
-        console.error('Error signing out:', error);
-        throw error;
+      console.error('Error signing out:', error);
+      throw error;
       }
       // For "Auth session missing" errors, just clear local state
       setSession(null);

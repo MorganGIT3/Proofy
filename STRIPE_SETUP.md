@@ -108,6 +108,7 @@ supabase functions deploy stripe-webhook
    - `customer.subscription.created`
    - `customer.subscription.updated`
    - `customer.subscription.deleted`
+   - `invoice.paid` ⭐ (ajouté pour meilleure fiabilité)
    - `invoice.payment_succeeded`
    - `invoice.payment_failed`
 
@@ -164,12 +165,77 @@ supabase functions deploy stripe-webhook
 - Vérifiez que les politiques RLS permettent à l'utilisateur de voir ses abonnements
 - Vérifiez les logs du hook `useSubscription`
 
+## ✅ Vérifications Finales
+
+### Checklist de déploiement
+
+- [ ] Toutes les Edge Functions utilisent la même version Stripe API (`2024-06-20`)
+- [ ] `stripe-webhook` utilise `constructEventAsync` avec `cryptoProvider` (corrigé)
+- [ ] `upsertSubscription` utilise `onConflict: 'stripe_subscription_id'` (corrigé)
+- [ ] La table `subscriptions` a les champs `stripe_price_id` et `canceled_at` (migration 002)
+- [ ] Le hook `useSubscription` filtre par status actif (`active`, `trialing`, `past_due`)
+- [ ] Les secrets sont configurés : `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`
+- [ ] Le webhook Stripe Dashboard pointe vers la bonne URL
+- [ ] Tous les événements webhook sont sélectionnés dans Stripe Dashboard
+
+### Migrations SQL à exécuter
+
+1. **Migration 002** : Ajouter les champs manquants
+   - Exécuter `supabase/migrations/002_add_missing_subscription_fields.sql`
+   - Ajoute `stripe_price_id` et `canceled_at` à la table `subscriptions`
+
+2. **Migration 003** (Optionnel) : Installer Stripe Wrapper (FDW)
+   - ⚠️ Nécessite d'abord d'ajouter la clé API dans Vault :
+     ```sql
+     INSERT INTO vault.secrets (name, secret) VALUES ('stripe_api_key', 'sk_live_xxx');
+     ```
+   - Exécuter `supabase/migrations/003_install_stripe_fdw.sql`
+   - Permet de lire les données Stripe via SQL (lecture seule)
+
+### Tests avec Stripe CLI
+
+```bash
+# Installer Stripe CLI
+brew install stripe/stripe-cli/stripe  # macOS
+# ou télécharger depuis https://stripe.com/docs/stripe-cli
+
+# Se connecter
+stripe login
+
+# Écouter les webhooks vers Supabase
+stripe listen --forward-to https://<project-ref>.supabase.co/functions/v1/stripe-webhook
+
+# Déclencher des événements de test
+stripe trigger checkout.session.completed
+stripe trigger customer.subscription.updated
+stripe trigger invoice.paid
+```
+
+### Améliorations apportées
+
+1. **Webhook amélioré** :
+   - Utilise `constructEventAsync` avec `cryptoProvider` pour meilleure performance
+   - Gère l'événement `invoice.paid` en plus de `invoice.payment_succeeded`
+   - Utilise `stripe_subscription_id` pour `onConflict` (plus sûr)
+   - Ajoute `stripe_price_id` et `canceled_at` dans les données
+
+2. **Hook useSubscription optimisé** :
+   - Filtre uniquement les subscriptions actives (`active`, `trialing`, `past_due`)
+   - Trie par `created_at` pour récupérer la plus récente
+   - Utilise `maybeSingle()` sans `limit(1)` (optimisé)
+
+3. **Schéma amélioré** :
+   - Ajout de `stripe_price_id` pour tracker le price exact
+   - Ajout de `canceled_at` pour tracker l'annulation
+
 ## 📝 Notes Importantes
 
 - ⚠️ **Ne jamais** exposer `STRIPE_SECRET_KEY` ou `SUPABASE_SERVICE_ROLE_KEY` côté client
 - 🔒 Les clés secrètes doivent être uniquement dans Supabase Secrets
 - 🌐 L'URL du webhook doit être en HTTPS en production
 - 🔄 Les webhooks peuvent prendre quelques secondes pour être traités
+- 📊 Le Stripe Wrapper (FDW) est optionnel et peut ne pas être disponible sur tous les plans Supabase
+- 🎯 Utiliser le FDW uniquement pour vérifications ponctuelles, pas pour la logique métier temps réel
 
 ## 🎯 Endpoint Webhook
 

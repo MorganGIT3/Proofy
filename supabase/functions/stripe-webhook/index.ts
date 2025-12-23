@@ -1,10 +1,12 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import Stripe from "https://esm.sh/stripe@14.21.0?target=deno"
+import Stripe from "https://esm.sh/stripe@14.21.0"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.38.4"
 
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
-  apiVersion: '2024-11-20.acacia',
+  apiVersion: '2024-06-20',
 })
+
+const cryptoProvider = Stripe.createSubtleCryptoProvider()
 
 // Client Supabase avec SERVICE_ROLE pour bypass RLS
 const supabase = createClient(
@@ -24,10 +26,16 @@ serve(async (req) => {
     const body = await req.text()
     const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET')!
     
-    // Vérifier la signature Stripe
+    // Vérifier la signature Stripe avec constructEventAsync
     let event: Stripe.Event
     try {
-      event = stripe.webhooks.constructEvent(body, signature, webhookSecret)
+      event = await stripe.webhooks.constructEventAsync(
+        body,
+        signature!,
+        webhookSecret,
+        undefined,
+        cryptoProvider
+      )
     } catch (err) {
       console.error('Webhook signature verification failed:', err.message)
       return new Response(`Webhook Error: ${err.message}`, { status: 400 })
@@ -70,6 +78,16 @@ serve(async (req) => {
 
       case 'invoice.payment_succeeded': {
         console.log('Processing invoice.payment_succeeded')
+        const invoice = event.data.object as Stripe.Invoice
+        if (invoice.subscription) {
+          const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string)
+          await upsertSubscription(subscription)
+        }
+        break
+      }
+
+      case 'invoice.paid': {
+        console.log('Processing invoice.paid')
         const invoice = event.data.object as Stripe.Invoice
         if (invoice.subscription) {
           const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string)
@@ -156,17 +174,24 @@ async function upsertSubscription(
     const interval = subscription.items.data[0]?.price?.recurring?.interval
     const billingPeriod = interval === 'year' ? 'yearly' : 'monthly'
 
+    // Récupérer le price_id
+    const priceId = subscription.items.data[0]?.price.id
+
     const subscriptionData = {
       user_id: userId,
       stripe_customer_id: subscription.customer as string,
       stripe_subscription_id: subscription.id,
       stripe_product_id: productId,
+      stripe_price_id: priceId || null,
       plan_name: planName,
       billing_period: billingPeriod,
       status: subscription.status,
       current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
       current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
       cancel_at_period_end: subscription.cancel_at_period_end,
+      canceled_at: subscription.canceled_at 
+        ? new Date(subscription.canceled_at * 1000).toISOString() 
+        : null,
       updated_at: new Date().toISOString()
     }
 
@@ -175,7 +200,7 @@ async function upsertSubscription(
     const { error } = await supabase
       .from('subscriptions')
       .upsert(subscriptionData, {
-        onConflict: 'user_id'
+        onConflict: 'stripe_subscription_id'
       })
 
     if (error) {
@@ -202,6 +227,9 @@ async function markSubscriptionCanceled(subscription: Stripe.Subscription) {
       .update({ 
         status: 'canceled',
         cancel_at_period_end: true,
+        canceled_at: subscription.canceled_at 
+          ? new Date(subscription.canceled_at * 1000).toISOString() 
+          : new Date().toISOString(),
         updated_at: new Date().toISOString()
       })
       .eq('stripe_subscription_id', subscription.id)
