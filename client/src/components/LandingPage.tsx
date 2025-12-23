@@ -627,16 +627,20 @@ const PricingSection = React.memo(({ onOpenVideo }: { onOpenVideo: () => void })
 
   const handleActivatePlan = async (planName: 'BASIC' | 'LIVE') => {
     // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:handleActivatePlan',message:'handleActivatePlan called',data:{planName,isYearly,hasUser:!!user,userId:user?.id},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:handleActivatePlan',message:'handleActivatePlan called',data:{planName,isYearly,hasUser:!!user,userId:user?.id,userEmail:user?.email,currentPath:window.location.pathname},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
     // #endregion
     
     if (!user) {
       // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:handleActivatePlan',message:'No user, redirecting to login',data:{planName},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:handleActivatePlan',message:'No user, redirecting to login',data:{planName,currentPath:window.location.pathname},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
       // #endregion
       navigate('/login');
       return;
     }
+    
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:handleActivatePlan',message:'User authenticated, proceeding with checkout',data:{planName,userId:user.id,userEmail:user.email},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+    // #endregion
 
     setLoadingPlan(planName);
     
@@ -762,7 +766,14 @@ const PricingSection = React.memo(({ onOpenVideo }: { onOpenVideo: () => void })
 
               <CardContent className="pt-0 p-2 sm:p-4 md:p-6 flex-1 flex flex-col">
                 <motion.button
-                  onClick={() => handleActivatePlan(plan.name as 'BASIC' | 'LIVE')}
+                  onClick={(e) => {
+                    // #region agent log
+                    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'LandingPage.tsx:button-onClick',message:'Button clicked',data:{planName:plan.name,loadingPlan,disabled:loadingPlan === plan.name,currentPath:window.location.pathname},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+                    // #endregion
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleActivatePlan(plan.name as 'BASIC' | 'LIVE');
+                  }}
                   disabled={loadingPlan === plan.name}
                   className={cn(
                     "w-full mb-3 sm:mb-6 p-2 sm:p-3 md:p-4 text-xs sm:text-base md:text-lg lg:text-xl rounded-lg sm:rounded-xl relative overflow-hidden transition-all duration-300",

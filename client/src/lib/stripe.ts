@@ -11,7 +11,7 @@ export async function createCheckoutSession(
   billingPeriod: BillingPeriod
 ): Promise<void> {
   // #region agent log
-  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:9',message:'createCheckoutSession called',data:{planName,billingPeriod},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:9',message:'createCheckoutSession called',data:{planName,billingPeriod,currentPath:window.location.pathname},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
   // #endregion
   
   // Vérifier que l'utilisateur est connecté et obtenir le token d'accès
@@ -116,6 +116,10 @@ export async function createCheckoutSession(
   fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:95',message:'Redirecting to Stripe',data:{url:responseBody.url},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'G'})}).catch(()=>{});
   // #endregion
 
+  // #region agent log
+  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'stripe.ts:redirect',message:'About to redirect to Stripe',data:{stripeUrl:responseBody.url,currentPath:window.location.pathname},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'G'})}).catch(()=>{});
+  // #endregion
+  
   // Rediriger vers Stripe Checkout
   window.location.href = responseBody.url
 }
