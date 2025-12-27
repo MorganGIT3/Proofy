@@ -73,6 +73,10 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
   setIsYearly,
   loadingPlan
 }) => {
+  // #region agent log
+  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ExtensionSubscriptionModal:render',message:'Modal component rendered',data:{isOpen,willReturn:!isOpen},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+  // #endregion
+  
   if (!isOpen) return null;
 
   const plans = [
@@ -344,10 +348,22 @@ export const DashboardLayout: React.FC = () => {
   const toggleCollapse = () => setIsCollapsed(!isCollapsed);
 
   const handleItemClick = (item: NavigationItem) => {
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:handleItemClick',message:'handleItemClick called',data:{itemId:item.id,itemName:item.name,itemExternal:item.external,itemHref:item.href},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+    // #endregion
+    
     // Si c'est un lien externe (Extension)
     if (item.external) {
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:handleItemClick:external',message:'item.external is true',data:{isPro,subscriptionLoading,condition:!isPro && !subscriptionLoading},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,E'})}).catch(()=>{});
+      // #endregion
+      
       // Vérifier si l'utilisateur a un abonnement actif
       if (!isPro && !subscriptionLoading) {
+        // #region agent log
+        fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:handleItemClick:showModal',message:'Showing extension modal',data:{showExtensionModalBefore:showExtensionModal},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+        // #endregion
+        
         // Pas d'abonnement, afficher le modal
         setShowExtensionModal(true);
         if (window.innerWidth < 768) {
@@ -355,6 +371,10 @@ export const DashboardLayout: React.FC = () => {
         }
         return;
       }
+      
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:handleItemClick:openExternal',message:'Opening external link (user has subscription)',data:{isPro,subscriptionLoading},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B'})}).catch(()=>{});
+      // #endregion
       
       // L'utilisateur a un abonnement, ouvrir dans un nouvel onglet
       window.open(item.href, '_blank', 'noopener,noreferrer');
