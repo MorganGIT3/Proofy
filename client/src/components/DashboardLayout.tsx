@@ -31,11 +31,15 @@ interface NavigationItem {
   icon: React.ComponentType<{ className?: string; size?: number }>;
   href: string;
   section?: 'main' | 'account';
+  external?: boolean;
 }
+
+// Chrome Web Store URL for the Proofy Beacons Modifier extension
+const CHROME_EXTENSION_URL = 'https://chromewebstore.google.com/detail/proofy-beacons-modifier/aidejglgojblhcicagillpkiciipfjha';
 
 const mainNavigationItems: NavigationItem[] = [
   { id: "dashboard", name: "Tableau de bord", icon: Home, href: "/dashboard", section: 'main' },
-  { id: "extension", name: "Extension", icon: Puzzle, href: "/dashboard/extension", section: 'main' },
+  { id: "extension", name: "Extension", icon: Puzzle, href: CHROME_EXTENSION_URL, section: 'main', external: true },
   { id: "connections", name: "Connexions d'extension", icon: Link2, href: "/dashboard/connections", section: 'main' },
   { id: "sales-notifications", name: "Sales Notifications", icon: Bell, href: "/dashboard/sales-notifications", section: 'main' },
 ];
@@ -98,6 +102,15 @@ export const DashboardLayout: React.FC = () => {
   const toggleCollapse = () => setIsCollapsed(!isCollapsed);
 
   const handleItemClick = (item: NavigationItem) => {
+    // Si c'est un lien externe, ouvrir dans un nouvel onglet
+    if (item.external) {
+      window.open(item.href, '_blank', 'noopener,noreferrer');
+      if (window.innerWidth < 768) {
+        setIsOpen(false);
+      }
+      return;
+    }
+    
     setActiveItem(item.id);
     navigate(item.href);
     if (window.innerWidth < 768) {

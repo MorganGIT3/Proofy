@@ -4,7 +4,111 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { TimelineContent } from '@/components/ui/timeline-animation';
 import { cn } from '@/lib/utils';
-import { CheckCheck } from 'lucide-react';
+import { CheckCheck, X } from 'lucide-react';
+
+// Video Demo Modal Component
+const VideoDemoModal = ({ isOpen, onClose, videoUrl }: { isOpen: boolean; onClose: () => void; videoUrl: string }) => {
+  const [videoError, setVideoError] = React.useState(false);
+  const [videoLoaded, setVideoLoaded] = React.useState(false);
+  const videoRef = React.useRef<HTMLVideoElement>(null);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setVideoError(false);
+      setVideoLoaded(false);
+      if (videoRef.current) {
+        videoRef.current.currentTime = 0;
+        const playPromise = videoRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {});
+        }
+      }
+    }
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
+        onClick={onClose}
+        style={{ animation: 'fadeIn 0.2s ease-out' }}
+      />
+      
+      {/* Modal */}
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ animation: 'scaleIn 0.2s ease-out' }}>
+        <div className="relative w-full max-w-5xl bg-black border border-gray-800 rounded-lg shadow-2xl overflow-hidden">
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 z-10 text-white hover:text-gray-300 transition-colors p-2 hover:bg-white/10 rounded-full"
+            aria-label="Fermer"
+          >
+            <X size={24} />
+          </button>
+
+          {/* Content */}
+          <div className="p-4 md:p-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-6 text-center">
+              Démo Beacons
+            </h2>
+            
+            <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden border border-gray-800">
+              {!videoLoaded && !videoError && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
+                </div>
+              )}
+              
+              {videoError ? (
+                <div className="absolute inset-0 flex items-center justify-center flex-col gap-4">
+                  <p className="text-gray-400">Impossible de charger la vidéo</p>
+                  <button 
+                    onClick={() => {
+                      setVideoError(false);
+                      setVideoLoaded(false);
+                    }}
+                    className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
+                  >
+                    Réessayer
+                  </button>
+                </div>
+              ) : (
+                <video
+                  ref={videoRef}
+                  src={videoUrl}
+                  controls
+                  autoPlay
+                  muted
+                  playsInline
+                  className={cn(
+                    "w-full h-full object-contain transition-opacity duration-300",
+                    videoLoaded ? "opacity-100" : "opacity-0"
+                  )}
+                  onLoadedData={() => setVideoLoaded(true)}
+                  onError={() => setVideoError(true)}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
+        }
+      `}</style>
+    </>
+  );
+};
 
 // Pricing Switch Component
 const PricingSwitch = ({
@@ -164,9 +268,13 @@ const platforms: PlatformCard[] = [
   { name: 'Airbnb', status: 'soon', icon: <AirbnbIcon />, image: '/new_airbnb image.jpg', position: { x: '90%', y: '18%' } },
 ];
 
+// Video URL for Beacons demo
+const BEACONS_VIDEO_URL = 'https://bmjpnnjsokamnxhwfdjn.supabase.co/storage/v1/object/public/videos/Home%20Site%20%20%20Beacons%20-%20FINISH.mp4';
+
 export const DashboardHome: React.FC = () => {
   const navigate = useNavigate();
   const [isYearly, setIsYearly] = useState(false);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const pricingRef = useRef<HTMLDivElement>(null);
 
   const plans = [
@@ -332,9 +440,10 @@ export const DashboardHome: React.FC = () => {
                   className={cn(
                     "relative overflow-hidden border h-full",
                     platform.status === "active"
-                      ? "bg-gray-900/50 border-orange-500/50"
+                      ? "bg-gray-900/50 border-orange-500/50 cursor-pointer hover:border-orange-500 transition-colors"
                       : "bg-gray-900/30 border-gray-800/50 opacity-60"
                   )}
+                  onClick={platform.status === "active" ? () => setIsVideoModalOpen(true) : undefined}
                 >
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between mb-4">
@@ -523,6 +632,13 @@ export const DashboardHome: React.FC = () => {
           </div>
         </div>
       </div>
+      
+      {/* Video Demo Modal */}
+      <VideoDemoModal 
+        isOpen={isVideoModalOpen} 
+        onClose={() => setIsVideoModalOpen(false)}
+        videoUrl={BEACONS_VIDEO_URL}
+      />
     </div>
   );
 };
