@@ -364,10 +364,10 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
             >
               <button
                 onClick={onInstallAnyway}
-                className="w-full py-2 rounded-md font-medium text-white/50 hover:text-white transition-all text-xs"
+                className="w-full py-2 rounded-md font-medium text-white transition-all text-xs hover:opacity-90"
                 style={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  background: 'linear-gradient(135deg, #f97316, #ea580c)',
+                  boxShadow: '0 4px 15px rgba(249, 115, 22, 0.3)',
                 }}
               >
                 Installer l'extension quand même
