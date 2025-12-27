@@ -56,7 +56,7 @@ const accountNavigationItems: NavigationItem[] = [
 ];
 
 // Animated Price Component
-const AnimatedPrice = ({ price, className }: { price: number; className?: string }) => {
+const AnimatedPrice = ({ price, isYearly, className }: { price: number; isYearly?: boolean; className?: string }) => {
   const [displayPrice, setDisplayPrice] = React.useState(price);
 
   React.useEffect(() => {
@@ -84,7 +84,7 @@ const AnimatedPrice = ({ price, className }: { price: number; className?: string
   }, [price, displayPrice]);
 
   return (
-    <span className={className}>
+    <span className={className || "text-3xl sm:text-4xl font-semibold text-white inline-block"}>
       {displayPrice}€
     </span>
   );
@@ -123,7 +123,7 @@ const PricingSwitch = ({
               transition={{ type: "spring", stiffness: 500, damping: 30 }}
             />
           )}
-          Facturation mensuelle
+          <span className="relative whitespace-nowrap">Facturation mensuelle</span>
         </button>
         <button
           onClick={() => handleSwitch(true)}
@@ -141,9 +141,11 @@ const PricingSwitch = ({
               transition={{ type: "spring", stiffness: 500, damping: 30 }}
             />
           )}
-          Facturation annuelle
-          <span className="bg-green-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">
-            -20%
+          <span className="relative flex items-center gap-1 sm:gap-1.5 md:gap-2">
+            <span className="whitespace-nowrap">Facturation annuelle</span>
+            <span className="rounded-full bg-orange-500/20 px-1 sm:px-1.5 md:px-2 py-0.5 text-[8px] sm:text-[10px] md:text-xs font-medium text-white border border-orange-500/50 whitespace-nowrap">
+              Économisez 20%
+            </span>
           </span>
         </button>
       </div>
