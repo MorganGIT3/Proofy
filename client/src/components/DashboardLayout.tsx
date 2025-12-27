@@ -315,19 +315,30 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                 />
               </div>
 
-              {/* Plans Grid with glassmorphism background - only behind cards */}
-              <div 
-                className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 py-6 px-4 rounded-xl relative z-10"
-                style={{
-                  background: 'rgba(20, 20, 25, 0.4)',
-                  backdropFilter: 'blur(20px)',
-                  WebkitBackdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255, 107, 53, 0.15)',
-                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
-                }}
-              >
-                {plans.map((plan) => (
-                  <Card
+              {/* Plans Grid - cards are independent, glassmorphism background is separate */}
+              <div className="relative">
+                {/* Glassmorphism background - positioned behind cards but separate */}
+                <div 
+                  className="absolute inset-0 rounded-xl"
+                  style={{
+                    background: 'rgba(20, 20, 25, 0.4)',
+                    backdropFilter: 'blur(20px)',
+                    WebkitBackdropFilter: 'blur(20px)',
+                    border: '1px solid rgba(255, 107, 53, 0.15)',
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+                    zIndex: 0
+                  }}
+                />
+                
+                {/* Cards Grid - transparent, cards are independent */}
+                <div 
+                  className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 py-6 px-4 relative z-10"
+                  style={{
+                    background: 'transparent'
+                  }}
+                >
+                  {plans.map((plan) => (
+                    <Card
                     key={plan.name}
                     className={cn(
                       "relative border h-full flex flex-col",
@@ -425,7 +436,8 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                       </div>
                     </CardContent>
                   </Card>
-                ))}
+                  ))}
+                </div>
               </div>
 
             {/* Install Anyway Button */}
