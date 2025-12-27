@@ -239,11 +239,18 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
       {/* Modal */}
       <div 
         className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
-        style={{ animation: 'scaleIn 0.3s ease-out' }}
+        style={{ 
+          animation: 'scaleIn 0.3s ease-out',
+          background: 'transparent',
+          pointerEvents: 'auto'
+        }}
         onClick={onClose}
       >
         <div 
           className="relative w-full max-w-5xl my-8 overflow-visible"
+          style={{
+            background: 'transparent'
+          }}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Close Button */}
@@ -256,7 +263,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           </button>
 
           {/* Content */}
-          <div className="relative">
+          <div className="relative" style={{ background: 'transparent' }}>
             {/* Icon/Message */}
             {title && (
               <>
@@ -283,7 +290,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             )}
 
             {/* Pricing Section */}
-            <div className="relative">
+            <div className="relative" style={{ background: 'transparent' }}>
               <h3 
                 className="text-2xl md:text-3xl font-medium text-center mb-4"
                 style={{
