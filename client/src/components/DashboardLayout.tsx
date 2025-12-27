@@ -1,10 +1,4 @@
-// #region agent log
-fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:imports-start',message:'Starting imports',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,C'})}).catch(()=>{});
-// #endregion
 import React, { useState, useEffect } from 'react';
-// #region agent log
-fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:import-React',message:'React imported',data:{hasReact:!!React},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-// #endregion
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscription } from '@/hooks/useSubscription';
@@ -26,13 +20,7 @@ import {
   CheckCheck,
   Loader2
 } from 'lucide-react';
-// #region agent log
-fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:import-lucide',message:'Lucide icons imported',data:{hasX:!!X},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-// #endregion
 import { motion } from 'framer-motion';
-// #region agent log
-fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:import-motion',message:'Motion imported',data:{hasMotion:!!motion,hasMotionSpan:!!motion?.span},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-// #endregion
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,14 +29,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-// #region agent log
-fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:import-Card',message:'Card components imported',data:{hasCard:!!Card,hasCardHeader:!!CardHeader,hasCardContent:!!CardContent},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-// #endregion
 import { cn } from '@/lib/utils';
 import { AnimatedPrice, PricingSwitch } from '@/components/shared/PricingComponents';
-// #region agent log
-fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:imports-complete',message:'All imports completed',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,C,D'})}).catch(()=>{});
-// #endregion
 
 interface NavigationItem {
   id: string;
@@ -101,10 +83,6 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   description = "L'extension Chrome Proofy nécessite un abonnement Basic ou Live pour fonctionner.",
   showInstallAnyway = true
 }) => {
-  // #region agent log
-  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SubscriptionModal:render',message:'Modal component rendered',data:{isOpen,willReturn:!isOpen},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-  // #endregion
-  
   if (!isOpen) return null;
 
   const plans = [
@@ -447,10 +425,6 @@ export const DashboardLayout: React.FC = () => {
   const toggleCollapse = () => setIsCollapsed(!isCollapsed);
 
   const handleItemClick = (item: NavigationItem) => {
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:handleItemClick',message:'handleItemClick called',data:{itemId:item.id,itemName:item.name,itemExternal:item.external,itemHref:item.href},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-    // #endregion
-    
     // Si c'est un lien externe (Extension)
     if (item.external) {
       // Ouvrir directement le Chrome Web Store
@@ -503,25 +477,10 @@ export const DashboardLayout: React.FC = () => {
   };
 
   const handleSignOut = async () => {
-    // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:107',message:'handleSignOut called',data:{userExists:!!user},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
-    // #endregion
     try {
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:110',message:'Before signOut call',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-      // #endregion
       await signOut();
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:113',message:'After signOut call, before navigate',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-      // #endregion
       navigate('/');
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:115',message:'After navigate call',data:{},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-      // #endregion
     } catch (error) {
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:117',message:'Error in handleSignOut catch',data:{errorMessage:error instanceof Error?error.message:String(error)},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
-      // #endregion
       console.error('Error signing out:', error);
     }
   };
