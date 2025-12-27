@@ -112,41 +112,65 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
 
   return (
     <>
-      {/* Backdrop */}
+      {/* Backdrop with strong blur */}
       <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+        className="fixed inset-0 bg-black/40 backdrop-blur-xl z-50"
         onClick={onClose}
-        style={{ animation: 'fadeIn 0.2s ease-out' }}
+        style={{ animation: 'fadeIn 0.3s ease-out' }}
       />
       
       {/* Modal */}
       <div 
         className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
-        style={{ animation: 'scaleIn 0.2s ease-out' }}
+        style={{ animation: 'scaleIn 0.3s ease-out' }}
       >
-        <div className="relative w-full max-w-4xl bg-gray-900/95 backdrop-blur-md border border-orange-500/30 rounded-2xl shadow-2xl shadow-orange-500/10 my-8">
+        <div 
+          className="relative w-full max-w-4xl rounded-2xl shadow-2xl my-8 overflow-hidden"
+          style={{
+            background: 'rgba(20, 20, 25, 0.4)',
+            backdropFilter: 'blur(40px)',
+            WebkitBackdropFilter: 'blur(40px)',
+            border: '1px solid rgba(255, 107, 53, 0.2)',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 100px rgba(255, 107, 53, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
+          }}
+        >
+          {/* Gradient overlay for depth */}
+          <div 
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'radial-gradient(ellipse at top, rgba(255, 107, 53, 0.08) 0%, transparent 60%)',
+            }}
+          />
+          
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-10 text-gray-400 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full"
+            className="absolute top-4 right-4 z-10 text-white/60 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full backdrop-blur-sm"
             aria-label="Fermer"
           >
             <X size={24} />
           </button>
 
           {/* Content */}
-          <div className="p-6 md:p-8">
+          <div className="relative p-6 md:p-8">
             {/* Warning Message */}
             <div className="flex items-center justify-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-full bg-orange-500/20 border border-orange-500/50 flex items-center justify-center">
-                <AlertTriangle className="w-6 h-6 text-orange-500" />
+              <div 
+                className="w-14 h-14 rounded-full flex items-center justify-center"
+                style={{
+                  background: 'rgba(255, 107, 53, 0.15)',
+                  border: '1px solid rgba(255, 107, 53, 0.3)',
+                  boxShadow: '0 0 30px rgba(255, 107, 53, 0.2)'
+                }}
+              >
+                <AlertTriangle className="w-7 h-7 text-orange-400" />
               </div>
             </div>
             
             <h2 className="text-xl md:text-2xl font-bold text-white text-center mb-2">
               L'extension ne fonctionnera pas
             </h2>
-            <p className="text-gray-400 text-center mb-8 max-w-lg mx-auto">
+            <p className="text-white/50 text-center mb-8 max-w-lg mx-auto">
               L'extension Chrome Proofy nécessite un abonnement <span className="text-orange-400 font-semibold">Basic</span> ou <span className="text-orange-400 font-semibold">Live</span> pour fonctionner.
             </p>
 
@@ -155,7 +179,7 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
               <h3 
                 className="text-2xl md:text-3xl font-medium text-center mb-4"
                 style={{
-                  background: "linear-gradient(to bottom, #ffffff, rgba(255, 255, 255, 0.7))",
+                  background: "linear-gradient(to bottom, #ffffff, rgba(255, 255, 255, 0.6))",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
@@ -163,49 +187,74 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
               >
                 Passe à l'action
               </h3>
-              <p className="text-gray-400 text-center text-sm mb-6">
+              <p className="text-white/40 text-center text-sm mb-6">
                 Choisis l'offre qui te permet de montrer tes résultats et d'accélérer tes ventes.
               </p>
 
-              {/* Billing Toggle */}
+              {/* Billing Toggle - Glassmorphism */}
               <div className="flex justify-center mb-6">
-                <div className="relative z-10 flex w-fit rounded-xl bg-gray-800 border border-gray-700 p-1">
+                <div 
+                  className="relative z-10 flex w-fit rounded-xl p-1"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                  }}
+                >
                   <button
                     onClick={() => setIsYearly(false)}
-                    className={`relative z-10 w-fit cursor-pointer h-10 rounded-lg px-4 py-2 font-medium transition-colors text-sm ${
-                      !isYearly ? "bg-orange-500 text-white shadow-lg" : "text-gray-400 hover:text-white"
+                    className={`relative z-10 w-fit cursor-pointer h-10 rounded-lg px-4 py-2 font-medium transition-all text-sm ${
+                      !isYearly 
+                        ? "bg-orange-500 text-white shadow-lg shadow-orange-500/30" 
+                        : "text-white/50 hover:text-white hover:bg-white/5"
                     }`}
                   >
                     Facturation mensuelle
                   </button>
                   <button
                     onClick={() => setIsYearly(true)}
-                    className={`relative z-10 w-fit cursor-pointer h-10 rounded-lg px-4 py-2 font-medium transition-colors text-sm flex items-center gap-2 ${
-                      isYearly ? "bg-orange-500 text-white shadow-lg" : "text-gray-400 hover:text-white"
+                    className={`relative z-10 w-fit cursor-pointer h-10 rounded-lg px-4 py-2 font-medium transition-all text-sm flex items-center gap-2 ${
+                      isYearly 
+                        ? "bg-orange-500 text-white shadow-lg shadow-orange-500/30" 
+                        : "text-white/50 hover:text-white hover:bg-white/5"
                     }`}
                   >
                     Facturation annuelle
-                    <span className="bg-green-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">
+                    <span className="bg-emerald-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">
                       -20%
                     </span>
                   </button>
                 </div>
               </div>
 
-              {/* Plans Grid */}
+              {/* Plans Grid - Glassmorphism Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 {plans.map((plan) => (
                   <div
                     key={plan.name}
-                    className={`relative border rounded-xl p-5 transition-all ${
-                      plan.popular
-                        ? "ring-2 ring-orange-500 bg-gray-800/50 border-orange-500/30"
-                        : "bg-gray-800/30 border-gray-700"
-                    }`}
+                    className="relative rounded-xl p-5 transition-all"
+                    style={{
+                      background: plan.popular 
+                        ? 'rgba(255, 107, 53, 0.08)' 
+                        : 'rgba(255, 255, 255, 0.03)',
+                      backdropFilter: 'blur(20px)',
+                      border: plan.popular 
+                        ? '1px solid rgba(255, 107, 53, 0.3)' 
+                        : '1px solid rgba(255, 255, 255, 0.08)',
+                      boxShadow: plan.popular 
+                        ? '0 0 40px rgba(255, 107, 53, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)' 
+                        : 'inset 0 1px 0 rgba(255, 255, 255, 0.03)'
+                    }}
                   >
                     {plan.popular && (
                       <div className="absolute top-3 right-3">
-                        <span className="bg-orange-500 text-white px-2 py-0.5 rounded-full text-xs font-medium">
+                        <span 
+                          className="text-white px-2.5 py-1 rounded-full text-xs font-semibold"
+                          style={{
+                            background: 'linear-gradient(135deg, #f97316, #ea580c)',
+                            boxShadow: '0 4px 15px rgba(249, 115, 22, 0.4)'
+                          }}
+                        >
                           Populaire
                         </span>
                       </div>
@@ -216,7 +265,7 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
                       <span className="text-3xl font-bold text-white">
                         {isYearly ? plan.yearlyPrice : plan.price}€
                       </span>
-                      <span className="text-gray-400 ml-1 text-sm">
+                      <span className="text-white/40 ml-1 text-sm">
                         /{isYearly ? "an" : "mois"}
                       </span>
                     </div>
@@ -226,11 +275,16 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
                       disabled={loadingPlan === plan.name}
                       className={`w-full py-3 rounded-lg font-medium transition-all mb-4 flex items-center justify-center gap-2 ${
                         loadingPlan === plan.name ? "opacity-50 cursor-not-allowed" : ""
-                      } ${
-                        plan.popular
-                          ? "bg-gradient-to-t from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50"
-                          : "bg-gray-700 text-white hover:bg-gray-600"
                       }`}
+                      style={plan.popular ? {
+                        background: 'linear-gradient(135deg, #f97316, #ea580c)',
+                        boxShadow: '0 8px 25px rgba(249, 115, 22, 0.35)',
+                        color: 'white'
+                      } : {
+                        background: 'rgba(255, 255, 255, 0.08)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        color: 'white'
+                      }}
                     >
                       {loadingPlan === plan.name ? (
                         <>
@@ -243,14 +297,20 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
                     </button>
 
                     <div className="space-y-2">
-                      <p className="text-xs text-gray-400 font-medium">{plan.includes[0]}</p>
+                      <p className="text-xs text-white/40 font-medium">{plan.includes[0]}</p>
                       <ul className="space-y-1.5">
                         {plan.includes.slice(1).map((feature, idx) => (
                           <li key={idx} className="flex items-start text-sm">
-                            <span className="h-4 w-4 bg-gray-700 border border-orange-500 rounded-full grid place-content-center mt-0.5 mr-2 flex-shrink-0">
-                              <CheckCheck className="h-2.5 w-2.5 text-orange-500" />
+                            <span 
+                              className="h-4 w-4 rounded-full grid place-content-center mt-0.5 mr-2 flex-shrink-0"
+                              style={{
+                                background: 'rgba(255, 107, 53, 0.15)',
+                                border: '1px solid rgba(255, 107, 53, 0.4)'
+                              }}
+                            >
+                              <CheckCheck className="h-2.5 w-2.5 text-orange-400" />
                             </span>
-                            <span className="text-gray-300 text-xs">{feature}</span>
+                            <span className="text-white/60 text-xs">{feature}</span>
                           </li>
                         ))}
                       </ul>
@@ -260,15 +320,24 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
               </div>
             </div>
 
-            {/* Install Anyway Button */}
-            <div className="border-t border-gray-700 pt-6">
+            {/* Install Anyway Button - Glassmorphism */}
+            <div 
+              className="pt-6"
+              style={{
+                borderTop: '1px solid rgba(255, 255, 255, 0.08)'
+              }}
+            >
               <button
                 onClick={onInstallAnyway}
-                className="w-full py-3 rounded-lg font-medium text-gray-400 hover:text-white bg-gray-800/50 hover:bg-gray-800 border border-gray-700 hover:border-gray-600 transition-all"
+                className="w-full py-3 rounded-lg font-medium text-white/50 hover:text-white transition-all"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                }}
               >
                 Installer l'extension quand même
               </button>
-              <p className="text-center text-xs text-gray-500 mt-2">
+              <p className="text-center text-xs text-white/30 mt-2">
                 L'extension ne fonctionnera pas sans abonnement actif
               </p>
             </div>
@@ -282,8 +351,8 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
           to { opacity: 1; }
         }
         @keyframes scaleIn {
-          from { opacity: 0; transform: scale(0.95); }
-          to { opacity: 1; transform: scale(1); }
+          from { opacity: 0; transform: scale(0.95) translateY(10px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
         }
       `}</style>
     </>
