@@ -121,63 +121,63 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
       
       {/* Modal */}
       <div 
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
+        className="fixed inset-0 z-50 flex items-center justify-center p-2 overflow-y-auto"
         style={{ animation: 'scaleIn 0.3s ease-out' }}
       >
         <div 
-          className="relative w-full max-w-4xl rounded-2xl shadow-2xl my-8 overflow-hidden"
+          className="relative w-full max-w-xl rounded-xl shadow-2xl my-4 overflow-hidden"
           style={{
-            background: 'rgba(20, 20, 25, 0.4)',
+            background: 'rgba(20, 20, 25, 0.5)',
             backdropFilter: 'blur(40px)',
             WebkitBackdropFilter: 'blur(40px)',
             border: '1px solid rgba(255, 107, 53, 0.2)',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 100px rgba(255, 107, 53, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 60px rgba(255, 107, 53, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
           }}
         >
           {/* Gradient overlay for depth */}
           <div 
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: 'radial-gradient(ellipse at top, rgba(255, 107, 53, 0.08) 0%, transparent 60%)',
+              background: 'radial-gradient(ellipse at top, rgba(255, 107, 53, 0.06) 0%, transparent 60%)',
             }}
           />
           
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-10 text-white/60 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full backdrop-blur-sm"
+            className="absolute top-2 right-2 z-10 text-white/60 hover:text-white transition-colors p-1.5 hover:bg-white/10 rounded-full backdrop-blur-sm"
             aria-label="Fermer"
           >
-            <X size={24} />
+            <X size={18} />
           </button>
 
           {/* Content */}
-          <div className="relative p-6 md:p-8">
+          <div className="relative p-4 md:p-5">
             {/* Warning Message */}
-            <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="flex items-center justify-center gap-2 mb-3">
               <div 
-                className="w-14 h-14 rounded-full flex items-center justify-center"
+                className="w-10 h-10 rounded-full flex items-center justify-center"
                 style={{
                   background: 'rgba(255, 107, 53, 0.15)',
                   border: '1px solid rgba(255, 107, 53, 0.3)',
-                  boxShadow: '0 0 30px rgba(255, 107, 53, 0.2)'
+                  boxShadow: '0 0 20px rgba(255, 107, 53, 0.15)'
                 }}
               >
-                <AlertTriangle className="w-7 h-7 text-orange-400" />
+                <AlertTriangle className="w-5 h-5 text-orange-400" />
               </div>
             </div>
             
-            <h2 className="text-xl md:text-2xl font-bold text-white text-center mb-2">
+            <h2 className="text-base md:text-lg font-bold text-white text-center mb-1">
               L'extension ne fonctionnera pas
             </h2>
-            <p className="text-white/50 text-center mb-8 max-w-lg mx-auto">
+            <p className="text-white/50 text-center text-xs mb-4 max-w-sm mx-auto">
               L'extension Chrome Proofy nécessite un abonnement <span className="text-orange-400 font-semibold">Basic</span> ou <span className="text-orange-400 font-semibold">Live</span> pour fonctionner.
             </p>
 
             {/* Pricing Section */}
             <div className="relative">
               <h3 
-                className="text-2xl md:text-3xl font-medium text-center mb-4"
+                className="text-lg md:text-xl font-medium text-center mb-2"
                 style={{
                   background: "linear-gradient(to bottom, #ffffff, rgba(255, 255, 255, 0.6))",
                   WebkitBackgroundClip: "text",
@@ -187,14 +187,14 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
               >
                 Passe à l'action
               </h3>
-              <p className="text-white/40 text-center text-sm mb-6">
-                Choisis l'offre qui te permet de montrer tes résultats et d'accélérer tes ventes.
+              <p className="text-white/40 text-center text-xs mb-3">
+                Choisis l'offre qui te permet de montrer tes résultats.
               </p>
 
               {/* Billing Toggle - Glassmorphism */}
-              <div className="flex justify-center mb-6">
+              <div className="flex justify-center mb-4">
                 <div 
-                  className="relative z-10 flex w-fit rounded-xl p-1"
+                  className="relative z-10 flex w-fit rounded-lg p-0.5"
                   style={{
                     background: 'rgba(255, 255, 255, 0.05)',
                     backdropFilter: 'blur(10px)',
@@ -203,24 +203,24 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
                 >
                   <button
                     onClick={() => setIsYearly(false)}
-                    className={`relative z-10 w-fit cursor-pointer h-10 rounded-lg px-4 py-2 font-medium transition-all text-sm ${
+                    className={`relative z-10 w-fit cursor-pointer h-8 rounded-md px-3 py-1 font-medium transition-all text-xs ${
                       !isYearly 
                         ? "bg-orange-500 text-white shadow-lg shadow-orange-500/30" 
                         : "text-white/50 hover:text-white hover:bg-white/5"
                     }`}
                   >
-                    Facturation mensuelle
+                    Mensuel
                   </button>
                   <button
                     onClick={() => setIsYearly(true)}
-                    className={`relative z-10 w-fit cursor-pointer h-10 rounded-lg px-4 py-2 font-medium transition-all text-sm flex items-center gap-2 ${
+                    className={`relative z-10 w-fit cursor-pointer h-8 rounded-md px-3 py-1 font-medium transition-all text-xs flex items-center gap-1.5 ${
                       isYearly 
                         ? "bg-orange-500 text-white shadow-lg shadow-orange-500/30" 
                         : "text-white/50 hover:text-white hover:bg-white/5"
                     }`}
                   >
-                    Facturation annuelle
-                    <span className="bg-emerald-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">
+                    Annuel
+                    <span className="bg-emerald-500 text-white text-[9px] px-1 py-0.5 rounded-full font-bold">
                       -20%
                     </span>
                   </button>
@@ -228,11 +228,11 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
               </div>
 
               {/* Plans Grid - Glassmorphism Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div className="grid grid-cols-2 gap-2 mb-4">
                 {plans.map((plan) => (
                   <div
                     key={plan.name}
-                    className="relative rounded-xl p-5 transition-all"
+                    className="relative rounded-lg p-3 transition-all"
                     style={{
                       background: plan.popular 
                         ? 'rgba(255, 107, 53, 0.08)' 
@@ -242,17 +242,17 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
                         ? '1px solid rgba(255, 107, 53, 0.3)' 
                         : '1px solid rgba(255, 255, 255, 0.08)',
                       boxShadow: plan.popular 
-                        ? '0 0 40px rgba(255, 107, 53, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05)' 
+                        ? '0 0 30px rgba(255, 107, 53, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05)' 
                         : 'inset 0 1px 0 rgba(255, 255, 255, 0.03)'
                     }}
                   >
                     {plan.popular && (
-                      <div className="absolute top-3 right-3">
+                      <div className="absolute top-2 right-2">
                         <span 
-                          className="text-white px-2.5 py-1 rounded-full text-xs font-semibold"
+                          className="text-white px-1.5 py-0.5 rounded-full text-[9px] font-semibold"
                           style={{
                             background: 'linear-gradient(135deg, #f97316, #ea580c)',
-                            boxShadow: '0 4px 15px rgba(249, 115, 22, 0.4)'
+                            boxShadow: '0 2px 10px rgba(249, 115, 22, 0.3)'
                           }}
                         >
                           Populaire
@@ -260,12 +260,12 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
                       </div>
                     )}
                     
-                    <h4 className="text-lg font-semibold text-white mb-1">PROOFY {plan.name}</h4>
-                    <div className="flex items-baseline mb-4">
-                      <span className="text-3xl font-bold text-white">
+                    <h4 className="text-sm font-semibold text-white mb-0.5">PROOFY {plan.name}</h4>
+                    <div className="flex items-baseline mb-2">
+                      <span className="text-xl font-bold text-white">
                         {isYearly ? plan.yearlyPrice : plan.price}€
                       </span>
-                      <span className="text-white/40 ml-1 text-sm">
+                      <span className="text-white/40 ml-1 text-xs">
                         /{isYearly ? "an" : "mois"}
                       </span>
                     </div>
@@ -273,12 +273,12 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
                     <button
                       onClick={() => onSubscribe(plan.name)}
                       disabled={loadingPlan === plan.name}
-                      className={`w-full py-3 rounded-lg font-medium transition-all mb-4 flex items-center justify-center gap-2 ${
+                      className={`w-full py-2 rounded-md font-medium transition-all mb-2 flex items-center justify-center gap-1.5 text-xs ${
                         loadingPlan === plan.name ? "opacity-50 cursor-not-allowed" : ""
                       }`}
                       style={plan.popular ? {
                         background: 'linear-gradient(135deg, #f97316, #ea580c)',
-                        boxShadow: '0 8px 25px rgba(249, 115, 22, 0.35)',
+                        boxShadow: '0 4px 15px rgba(249, 115, 22, 0.3)',
                         color: 'white'
                       } : {
                         background: 'rgba(255, 255, 255, 0.08)',
@@ -288,29 +288,28 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
                     >
                       {loadingPlan === plan.name ? (
                         <>
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                          Chargement...
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                          <span>...</span>
                         </>
                       ) : (
                         plan.buttonText
                       )}
                     </button>
 
-                    <div className="space-y-2">
-                      <p className="text-xs text-white/40 font-medium">{plan.includes[0]}</p>
-                      <ul className="space-y-1.5">
-                        {plan.includes.slice(1).map((feature, idx) => (
-                          <li key={idx} className="flex items-start text-sm">
+                    <div className="space-y-1">
+                      <ul className="space-y-0.5">
+                        {plan.includes.slice(1, 4).map((feature, idx) => (
+                          <li key={idx} className="flex items-start">
                             <span 
-                              className="h-4 w-4 rounded-full grid place-content-center mt-0.5 mr-2 flex-shrink-0"
+                              className="h-3 w-3 rounded-full grid place-content-center mt-0.5 mr-1.5 flex-shrink-0"
                               style={{
                                 background: 'rgba(255, 107, 53, 0.15)',
                                 border: '1px solid rgba(255, 107, 53, 0.4)'
                               }}
                             >
-                              <CheckCheck className="h-2.5 w-2.5 text-orange-400" />
+                              <CheckCheck className="h-2 w-2 text-orange-400" />
                             </span>
-                            <span className="text-white/60 text-xs">{feature}</span>
+                            <span className="text-white/60 text-[10px] leading-tight">{feature}</span>
                           </li>
                         ))}
                       </ul>
@@ -322,14 +321,14 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
 
             {/* Install Anyway Button - Glassmorphism */}
             <div 
-              className="pt-6"
+              className="pt-3"
               style={{
                 borderTop: '1px solid rgba(255, 255, 255, 0.08)'
               }}
             >
               <button
                 onClick={onInstallAnyway}
-                className="w-full py-3 rounded-lg font-medium text-white/50 hover:text-white transition-all"
+                className="w-full py-2 rounded-md font-medium text-white/50 hover:text-white transition-all text-xs"
                 style={{
                   background: 'rgba(255, 255, 255, 0.03)',
                   border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -337,8 +336,8 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
               >
                 Installer l'extension quand même
               </button>
-              <p className="text-center text-xs text-white/30 mt-2">
-                L'extension ne fonctionnera pas sans abonnement actif
+              <p className="text-center text-[10px] text-white/30 mt-1">
+                L'extension ne fonctionnera pas sans abonnement
               </p>
             </div>
           </div>
