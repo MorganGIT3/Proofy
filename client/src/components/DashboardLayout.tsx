@@ -30,7 +30,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { AnimatedPrice, PricingSwitch } from '@/components/shared/PricingComponents';
 
 interface NavigationItem {
   id: string;
@@ -56,6 +55,123 @@ const accountNavigationItems: NavigationItem[] = [
   { id: "settings", name: "Paramètres", icon: Settings, href: "/dashboard/settings", section: 'account' },
 ];
 
+// Animated Price Component
+const AnimatedPrice = ({ price, className }: { price: number; className?: string }) => {
+  const [displayPrice, setDisplayPrice] = React.useState(price);
+
+  React.useEffect(() => {
+    if (displayPrice !== price) {
+      const startPrice = displayPrice;
+      const endPrice = price;
+      const difference = endPrice - startPrice;
+      const steps = Math.min(40, Math.abs(difference) * 2);
+      const stepValue = difference / steps;
+      let currentStep = 0;
+
+      const interval = setInterval(() => {
+        currentStep++;
+        const newPrice = Math.round(startPrice + stepValue * currentStep);
+        setDisplayPrice(newPrice);
+
+        if (currentStep >= steps) {
+          setDisplayPrice(endPrice);
+          clearInterval(interval);
+        }
+      }, 15);
+
+      return () => clearInterval(interval);
+    }
+  }, [price, displayPrice]);
+
+  return (
+    <span className={className}>
+      {displayPrice}€
+    </span>
+  );
+};
+
+// Pricing Switch Component
+const PricingSwitch = ({
+  onSwitch,
+  isYearly,
+  className,
+}: {
+  onSwitch: (value: boolean) => void;
+  isYearly: boolean;
+  className?: string;
+}) => {
+  const handleSwitch = (value: boolean) => {
+    onSwitch(value);
+  };
+
+  return (
+    <div className={cn("flex justify-center", className)}>
+      <div className="relative z-10 mx-auto flex w-fit rounded-lg sm:rounded-xl bg-gray-800 border border-gray-700 p-0.5 sm:p-1">
+        <button
+          onClick={() => handleSwitch(false)}
+          className={cn(
+            "relative z-10 w-fit cursor-pointer h-8 sm:h-10 md:h-12 rounded-lg sm:rounded-xl px-2 sm:px-4 md:px-6 py-1 sm:py-2 font-medium transition-colors text-[10px] sm:text-xs md:text-sm lg:text-base",
+            !isYearly
+              ? "text-white"
+              : "text-gray-400 hover:text-white",
+          )}
+        >
+          {!isYearly && (
+            <motion.span
+              layoutId={"switch"}
+              className="absolute top-0 left-0 h-8 sm:h-10 md:h-12 w-full rounded-lg sm:rounded-xl border-2 sm:border-4 shadow-sm shadow-orange-600 border-orange-600 bg-gradient-to-t from-orange-500 via-orange-400 to-orange-600"
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            />
+          )}
+          Facturation mensuelle
+        </button>
+        <button
+          onClick={() => handleSwitch(true)}
+          className={cn(
+            "relative z-10 w-fit cursor-pointer h-8 sm:h-10 md:h-12 rounded-lg sm:rounded-xl px-2 sm:px-4 md:px-6 py-1 sm:py-2 font-medium transition-colors text-[10px] sm:text-xs md:text-sm lg:text-base flex items-center gap-2",
+            isYearly
+              ? "text-white"
+              : "text-gray-400 hover:text-white",
+          )}
+        >
+          {isYearly && (
+            <motion.span
+              layoutId={"switch"}
+              className="absolute top-0 left-0 h-8 sm:h-10 md:h-12 w-full rounded-lg sm:rounded-xl border-2 sm:border-4 shadow-sm shadow-orange-600 border-orange-600 bg-gradient-to-t from-orange-500 via-orange-400 to-orange-600"
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            />
+          )}
+          Facturation annuelle
+          <span className="bg-green-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">
+            -20%
+          </span>
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// Extension Subscription Modal Component
+interface ExtensionSubscriptionModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onInstallAnyway: () => void;
+  onSubscribe: (plan: 'BASIC' | 'LIVE') => void;
+  isYearly: boolean;
+  setIsYearly: (value: boolean) => void;
+  loadingPlan: 'BASIC' | 'LIVE' | null;
+}
+
+const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = (props) => {
+  return (
+    <SubscriptionModal
+      {...props}
+      title="L'extension ne fonctionnera pas"
+      description="L'extension Chrome Proofy nécessite un abonnement Basic ou Live pour fonctionner."
+      showInstallAnyway={true}
+    />
+  );
+};
 
 // Subscription Modal Component (reusable for extension and welcome)
 interface SubscriptionModalProps {
@@ -207,7 +323,6 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                   onSwitch={setIsYearly} 
                   isYearly={isYearly}
                   className="w-fit mx-auto"
-                  layoutId="dashboard-pricing-switch"
                 />
               </div>
 
@@ -363,10 +478,10 @@ export const DashboardLayout: React.FC = () => {
   const [activeItem, setActiveItem] = useState("dashboard");
   const [isMobile, setIsMobile] = useState(false);
   
-  // First-time user welcome modal state
-  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
-  const [welcomeModalIsYearly, setWelcomeModalIsYearly] = useState(false);
-  const [welcomeModalLoadingPlan, setWelcomeModalLoadingPlan] = useState<'BASIC' | 'LIVE' | null>(null);
+  // Extension subscription modal state
+  const [showExtensionModal, setShowExtensionModal] = useState(false);
+  const [extensionModalIsYearly, setExtensionModalIsYearly] = useState(false);
+  const [extensionModalLoadingPlan, setExtensionModalLoadingPlan] = useState<'BASIC' | 'LIVE' | null>(null);
 
   // Auto-open sidebar on desktop
   useEffect(() => {
@@ -408,26 +523,23 @@ export const DashboardLayout: React.FC = () => {
     }
   }, [location.pathname]);
 
-  // Check if user is first-time visitor without subscription
-  useEffect(() => {
-    if (!user || subscriptionLoading) return;
-    
-    // Check if user has already seen the welcome modal
-    const hasSeenWelcomeModal = localStorage.getItem(`welcome_modal_seen_${user.id}`);
-    
-    // Show modal if user has no subscription and hasn't seen it before, and is on dashboard home
-    if (!isPro && !hasSeenWelcomeModal && (location.pathname === '/dashboard' || location.pathname === '/dashboard/')) {
-      setShowWelcomeModal(true);
-    }
-  }, [user, subscriptionLoading, isPro, location.pathname]);
-
   const toggleSidebar = () => setIsOpen(!isOpen);
   const toggleCollapse = () => setIsCollapsed(!isCollapsed);
 
   const handleItemClick = (item: NavigationItem) => {
     // Si c'est un lien externe (Extension)
     if (item.external) {
-      // Ouvrir directement le Chrome Web Store
+      // Vérifier si l'utilisateur a un abonnement actif
+      if (!isPro && !subscriptionLoading) {
+        // Pas d'abonnement, afficher le modal
+        setShowExtensionModal(true);
+        if (window.innerWidth < 768) {
+          setIsOpen(false);
+        }
+        return;
+      }
+      
+      // L'utilisateur a un abonnement, ouvrir dans un nouvel onglet
       window.open(item.href, '_blank', 'noopener,noreferrer');
       if (window.innerWidth < 768) {
         setIsOpen(false);
@@ -442,38 +554,31 @@ export const DashboardLayout: React.FC = () => {
     }
   };
 
-  // Handler pour souscrire depuis le modal de bienvenue
-  const handleWelcomeSubscribe = async (plan: 'BASIC' | 'LIVE') => {
+  // Handler pour souscrire depuis le modal extension
+  const handleExtensionSubscribe = async (plan: 'BASIC' | 'LIVE') => {
     if (!user) {
       navigate('/login');
       return;
     }
     
-    setWelcomeModalLoadingPlan(plan);
+    setExtensionModalLoadingPlan(plan);
     
     try {
-      const billingPeriod = welcomeModalIsYearly ? 'yearly' : 'monthly';
+      const billingPeriod = extensionModalIsYearly ? 'yearly' : 'monthly';
       await createCheckoutSession(plan, billingPeriod);
-      // Mark modal as seen after successful subscription attempt
-      if (user) {
-        localStorage.setItem(`welcome_modal_seen_${user.id}`, 'true');
-      }
     } catch (error) {
       console.error('Subscription error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Erreur lors de la création de la session de paiement';
       alert(`Erreur: ${errorMessage}`);
     } finally {
-      setWelcomeModalLoadingPlan(null);
+      setExtensionModalLoadingPlan(null);
     }
   };
 
-  // Handler pour fermer le modal de bienvenue
-  const handleWelcomeClose = () => {
-    if (user) {
-      // Mark modal as seen when user closes it
-      localStorage.setItem(`welcome_modal_seen_${user.id}`, 'true');
-    }
-    setShowWelcomeModal(false);
+  // Handler pour installer l'extension quand même (sans abonnement)
+  const handleInstallExtensionAnyway = () => {
+    setShowExtensionModal(false);
+    window.open(CHROME_EXTENSION_URL, '_blank', 'noopener,noreferrer');
   };
 
   const handleSignOut = async () => {
@@ -790,17 +895,15 @@ export const DashboardLayout: React.FC = () => {
         <Outlet />
       </div>
 
-      {/* Welcome Modal for first-time users */}
-      <SubscriptionModal
-        isOpen={showWelcomeModal}
-        onClose={handleWelcomeClose}
-        onSubscribe={handleWelcomeSubscribe}
-        isYearly={welcomeModalIsYearly}
-        setIsYearly={setWelcomeModalIsYearly}
-        loadingPlan={welcomeModalLoadingPlan}
-        title="Bienvenue sur Proofy !"
-        description="Choisis un plan pour commencer à créer des dashboards ultra-réalistes et accélérer tes ventes."
-        showInstallAnyway={false}
+      {/* Extension Subscription Modal */}
+      <ExtensionSubscriptionModal
+        isOpen={showExtensionModal}
+        onClose={() => setShowExtensionModal(false)}
+        onInstallAnyway={handleInstallExtensionAnyway}
+        onSubscribe={handleExtensionSubscribe}
+        isYearly={extensionModalIsYearly}
+        setIsYearly={setExtensionModalIsYearly}
+        loadingPlan={extensionModalLoadingPlan}
       />
     </div>
   );
