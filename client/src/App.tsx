@@ -13,6 +13,7 @@ import { ExtensionConnectionsPage } from "@/components/dashboard/ExtensionConnec
 import { SettingsPage } from "@/components/dashboard/SettingsPage";
 import { BillingPage } from "@/components/dashboard/BillingPage";
 import { SalesNotificationsPage } from "@/components/dashboard/SalesNotificationsPage";
+import { SubscribePage } from "@/components/dashboard/SubscribePage";
 import { PrivacyPolicyPage } from "@/components/PrivacyPolicyPage";
 
 function App() {
@@ -44,6 +45,8 @@ function App() {
           <Route path="connections" element={<ExtensionConnectionsPage />} />
           <Route path="sales-notifications" element={<SalesNotificationsPage />} />
           <Route path="billing" element={<BillingPage />} />
+          <Route path="billing/subscribe" element={<SubscribePage />} />
+          <Route path="subscribe" element={<SubscribePage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
         <Route path="*" element={<NotFound />} />

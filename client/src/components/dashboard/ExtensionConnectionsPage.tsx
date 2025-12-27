@@ -5,6 +5,7 @@ import { Edit, RefreshCw, X, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
+import { useSubscription } from '@/hooks/useSubscription';
 
 interface Connection {
   id: string;
@@ -31,11 +32,28 @@ const formatDate = (dateString: string): string => {
 
 export const ExtensionConnectionsPage: React.FC = () => {
   const { user } = useAuth();
+  const { planName, isLoading: subscriptionLoading } = useSubscription();
   const [connections, setConnections] = useState<Connection[]>([]);
+  const [totalUniqueConnections, setTotalUniqueConnections] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const maxConnections = 2; // Based on subscription tier
+  
+  // Get connection limit based on subscription tier
+  const getMaxConnections = (): number => {
+    switch (planName) {
+      case 'FREE':
+        return 0; // No connections allowed for free users
+      case 'BASIC':
+        return 2;
+      case 'LIVE':
+        return 5;
+      default:
+        return 0;
+    }
+  };
+  
+  const maxConnections = getMaxConnections();
 
   // Fonction pour récupérer les connexions depuis Supabase
   const fetchConnections = useCallback(async () => {
@@ -92,7 +110,13 @@ export const ExtensionConnectionsPage: React.FC = () => {
         return acc;
       }, []);
       
-      setConnections(uniqueConnections);
+      // Store total unique connections count for display
+      setTotalUniqueConnections(uniqueConnections.length);
+      
+      // Apply connection limit after deduplication
+      const limitedConnections = uniqueConnections.slice(0, maxConnections);
+      
+      setConnections(limitedConnections);
     } catch (err: any) {
       // #region agent log
       fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ExtensionConnectionsPage.tsx:68',message:'Catch block executed',data:{errorType:err?.constructor?.name,errorMessage:err?.message,errorCode:err?.code},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
@@ -183,7 +207,7 @@ export const ExtensionConnectionsPage: React.FC = () => {
             Connexions d'extension
           </h1>
           <p className="text-gray-400 text-lg">
-            Gérez vos sessions actives de l'extension Chrome. Maximum {maxConnections} connexions autorisées.
+            Gérez vos sessions actives de l'extension Chrome. {maxConnections > 0 ? `Maximum ${maxConnections} connexion${maxConnections > 1 ? 's' : ''} autorisée${maxConnections > 1 ? 's' : ''}.` : 'Aucune connexion autorisée avec votre plan actuel.'}
           </p>
         </div>
 
@@ -289,10 +313,19 @@ export const ExtensionConnectionsPage: React.FC = () => {
         )}
 
         {/* Limit Warning */}
-        {!loading && connections.length >= maxConnections && (
-          <div className="mt-4 p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg text-orange-400 text-sm">
-            Vous avez atteint la limite de {maxConnections} connexions autorisées.
-          </div>
+        {!loading && !subscriptionLoading && (
+          <>
+            {totalUniqueConnections >= maxConnections && maxConnections > 0 && (
+              <div className="mt-4 p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg text-orange-400 text-sm">
+                Vous avez atteint la limite de {maxConnections} connexions autorisées ({totalUniqueConnections} / {maxConnections} utilisées).
+              </div>
+            )}
+            {maxConnections === 0 && (
+              <div className="mt-4 p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">
+                Aucune connexion autorisée avec votre plan actuel. Veuillez souscrire à un plan Basic ou Live pour utiliser l'extension.
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

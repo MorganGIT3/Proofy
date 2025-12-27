@@ -28,6 +28,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 interface NavigationItem {
   id: string;
@@ -54,7 +56,7 @@ const accountNavigationItems: NavigationItem[] = [
 ];
 
 // Animated Price Component
-const AnimatedPrice = ({ price, className }: { price: number; className?: string }) => {
+const AnimatedPrice = ({ price, isYearly, className }: { price: number; isYearly?: boolean; className?: string }) => {
   const [displayPrice, setDisplayPrice] = React.useState(price);
 
   React.useEffect(() => {
@@ -82,34 +84,101 @@ const AnimatedPrice = ({ price, className }: { price: number; className?: string
   }, [price, displayPrice]);
 
   return (
-    <span className={className}>
+    <span className={className || "text-3xl sm:text-4xl font-semibold text-white inline-block"}>
       {displayPrice}€
     </span>
   );
 };
 
-// Extension Subscription Modal Component
-interface ExtensionSubscriptionModalProps {
+// Pricing Switch Component (from LandingPage)
+const PricingSwitch = ({
+  onSwitch,
+  isYearly,
+  className,
+}: {
+  onSwitch: (value: boolean) => void;
+  isYearly: boolean;
+  className?: string;
+}) => {
+  const handleSwitch = (value: boolean) => {
+    onSwitch(value);
+  };
+
+  return (
+    <div className={cn("flex justify-center", className)}>
+      <div className="relative z-10 mx-auto flex w-fit rounded-lg sm:rounded-xl bg-gray-800 border border-gray-700 p-0.5 sm:p-1">
+        <button
+          onClick={() => handleSwitch(false)}
+          className={cn(
+            "relative z-10 w-fit cursor-pointer h-8 sm:h-10 md:h-12 rounded-lg sm:rounded-xl px-2 sm:px-4 md:px-6 py-1 sm:py-2 font-medium transition-colors text-[10px] sm:text-xs md:text-sm lg:text-base",
+            !isYearly
+              ? "text-white"
+              : "text-gray-400 hover:text-white",
+          )}
+        >
+          {!isYearly && (
+            <motion.span
+              layoutId={"switch"}
+              className="absolute top-0 left-0 h-8 sm:h-10 md:h-12 w-full rounded-lg sm:rounded-xl border-2 sm:border-4 shadow-sm shadow-orange-600 border-orange-600 bg-gradient-to-t from-orange-500 via-orange-400 to-orange-600"
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            />
+          )}
+          Facturation mensuelle
+        </button>
+        <button
+          onClick={() => handleSwitch(true)}
+          className={cn(
+            "relative z-10 w-fit cursor-pointer h-8 sm:h-10 md:h-12 rounded-lg sm:rounded-xl px-2 sm:px-4 md:px-6 py-1 sm:py-2 font-medium transition-colors text-[10px] sm:text-xs md:text-sm lg:text-base flex items-center gap-2",
+            isYearly
+              ? "text-white"
+              : "text-gray-400 hover:text-white",
+          )}
+        >
+          {isYearly && (
+            <motion.span
+              layoutId={"switch"}
+              className="absolute top-0 left-0 h-8 sm:h-10 md:h-12 w-full rounded-lg sm:rounded-xl border-2 sm:border-4 shadow-sm shadow-orange-600 border-orange-600 bg-gradient-to-t from-orange-500 via-orange-400 to-orange-600"
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            />
+          )}
+          Facturation annuelle
+          <span className="bg-green-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">
+            -20%
+          </span>
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// Subscription Modal Component (reusable for extension and welcome)
+interface SubscriptionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onInstallAnyway: () => void;
+  onInstallAnyway?: () => void;
   onSubscribe: (plan: 'BASIC' | 'LIVE') => void;
   isYearly: boolean;
   setIsYearly: (value: boolean) => void;
   loadingPlan: 'BASIC' | 'LIVE' | null;
+  title?: string;
+  description?: string;
+  showInstallAnyway?: boolean;
 }
 
-const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
+const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   isOpen,
   onClose,
   onInstallAnyway,
   onSubscribe,
   isYearly,
   setIsYearly,
-  loadingPlan
+  loadingPlan,
+  title = "L'extension ne fonctionnera pas",
+  description = "L'extension Chrome Proofy nécessite un abonnement Basic ou Live pour fonctionner.",
+  showInstallAnyway = true
 }) => {
   // #region agent log
-  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ExtensionSubscriptionModal:render',message:'Modal component rendered',data:{isOpen,willReturn:!isOpen},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SubscriptionModal:render',message:'Modal component rendered',data:{isOpen,willReturn:!isOpen},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
   // #endregion
   
   if (!isOpen) return null;
@@ -156,11 +225,11 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
       
       {/* Modal */}
       <div 
-        className="fixed inset-0 z-50 flex items-center justify-center p-2 overflow-y-auto"
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
         style={{ animation: 'scaleIn 0.3s ease-out' }}
       >
         <div 
-          className="relative w-full max-w-xl rounded-xl shadow-2xl my-4 overflow-hidden"
+          className="relative w-full max-w-6xl rounded-xl shadow-2xl my-8 overflow-hidden"
           style={{
             background: 'rgba(20, 20, 25, 0.5)',
             backdropFilter: 'blur(40px)',
@@ -180,39 +249,43 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-2 right-2 z-10 text-white/60 hover:text-white transition-colors p-1.5 hover:bg-white/10 rounded-full backdrop-blur-sm"
+            className="absolute top-4 right-4 z-10 text-white/60 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full backdrop-blur-sm"
             aria-label="Fermer"
           >
-            <X size={18} />
+            <X size={24} />
           </button>
 
           {/* Content */}
-          <div className="relative p-4 md:p-5">
-            {/* Warning Message */}
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <div 
-                className="w-10 h-10 rounded-full flex items-center justify-center"
-                style={{
-                  background: 'rgba(255, 107, 53, 0.15)',
-                  border: '1px solid rgba(255, 107, 53, 0.3)',
-                  boxShadow: '0 0 20px rgba(255, 107, 53, 0.15)'
-                }}
-              >
-                <AlertTriangle className="w-5 h-5 text-orange-400" />
-              </div>
-            </div>
-            
-            <h2 className="text-base md:text-lg font-bold text-white text-center mb-1">
-              L'extension ne fonctionnera pas
-            </h2>
-            <p className="text-white/50 text-center text-xs mb-4 max-w-sm mx-auto">
-              L'extension Chrome Proofy nécessite un abonnement <span className="text-orange-400 font-semibold">Basic</span> ou <span className="text-orange-400 font-semibold">Live</span> pour fonctionner.
-            </p>
+          <div className="relative p-6 md:p-8">
+            {/* Icon/Message */}
+            {title && (
+              <>
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  <div 
+                    className="w-12 h-12 rounded-full flex items-center justify-center"
+                    style={{
+                      background: 'rgba(255, 107, 53, 0.15)',
+                      border: '1px solid rgba(255, 107, 53, 0.3)',
+                      boxShadow: '0 0 20px rgba(255, 107, 53, 0.15)'
+                    }}
+                  >
+                    <AlertTriangle className="w-6 h-6 text-orange-400" />
+                  </div>
+                </div>
+                
+                <h2 className="text-xl md:text-2xl font-bold text-white text-center mb-2">
+                  {title}
+                </h2>
+                <p className="text-white/50 text-center text-sm mb-6 max-w-lg mx-auto">
+                  {description}
+                </p>
+              </>
+            )}
 
             {/* Pricing Section */}
             <div className="relative">
               <h3 
-                className="text-lg md:text-xl font-medium text-center mb-2"
+                className="text-2xl md:text-3xl font-medium text-center mb-4"
                 style={{
                   background: "linear-gradient(to bottom, #ffffff, rgba(255, 255, 255, 0.6))",
                   WebkitBackgroundClip: "text",
@@ -222,160 +295,144 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
               >
                 Passe à l'action
               </h3>
-              <p className="text-white/40 text-center text-xs mb-3">
-                Choisis l'offre qui te permet de montrer tes résultats.
+              <p className="text-gray-400 text-center text-sm mb-6">
+                Choisis l'offre qui te permet de montrer tes résultats et d'accélérer tes ventes.
               </p>
 
-              {/* Billing Toggle - Glassmorphism */}
-              <div className="flex justify-center mb-4">
-                <div 
-                  className="relative z-10 flex w-fit rounded-lg p-0.5"
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                  }}
-                >
-                  <button
-                    onClick={() => setIsYearly(false)}
-                    className={`relative z-10 w-fit cursor-pointer h-8 rounded-md px-3 py-1 font-medium transition-all text-xs ${
-                      !isYearly 
-                        ? "bg-orange-500 text-white shadow-lg shadow-orange-500/30" 
-                        : "text-white/50 hover:text-white hover:bg-white/5"
-                    }`}
-                  >
-                    Mensuel
-                  </button>
-                  <button
-                    onClick={() => setIsYearly(true)}
-                    className={`relative z-10 w-fit cursor-pointer h-8 rounded-md px-3 py-1 font-medium transition-all text-xs flex items-center gap-1.5 ${
-                      isYearly 
-                        ? "bg-orange-500 text-white shadow-lg shadow-orange-500/30" 
-                        : "text-white/50 hover:text-white hover:bg-white/5"
-                    }`}
-                  >
-                    Annuel
-                    <span className="bg-emerald-500 text-white text-[9px] px-1 py-0.5 rounded-full font-bold">
-                      -20%
-                    </span>
-                  </button>
-                </div>
+              {/* Billing Toggle - Same as Landing Page */}
+              <div className="flex justify-center mb-6">
+                <PricingSwitch 
+                  onSwitch={setIsYearly} 
+                  isYearly={isYearly}
+                  className="w-fit mx-auto" 
+                />
               </div>
 
-              {/* Plans Grid - Glassmorphism Cards */}
-              <div className="grid grid-cols-2 gap-2 mb-4">
+              {/* Plans Grid - Same design as Landing Page */}
+              <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 py-6 relative z-10">
                 {plans.map((plan) => (
-                  <div
+                  <Card
                     key={plan.name}
-                    className="relative rounded-lg p-3 transition-all"
-                    style={{
-                      background: plan.popular 
-                        ? 'rgba(255, 107, 53, 0.08)' 
-                        : 'rgba(255, 255, 255, 0.03)',
-                      backdropFilter: 'blur(20px)',
-                      border: plan.popular 
-                        ? '1px solid rgba(255, 107, 53, 0.3)' 
-                        : '1px solid rgba(255, 255, 255, 0.08)',
-                      boxShadow: plan.popular 
-                        ? '0 0 30px rgba(255, 107, 53, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05)' 
-                        : 'inset 0 1px 0 rgba(255, 255, 255, 0.03)'
-                    }}
+                    className={cn(
+                      "relative border h-full flex flex-col",
+                      plan.popular
+                        ? "ring-2 ring-orange-500 bg-gray-900/50 border-orange-500/30"
+                        : "bg-gray-900/50 border-gray-800"
+                    )}
                   >
                     {plan.popular && (
-                      <div className="absolute top-2 right-2">
-                        <span 
-                          className="text-white px-1.5 py-0.5 rounded-full text-[9px] font-semibold"
-                          style={{
-                            background: 'linear-gradient(135deg, #f97316, #ea580c)',
-                            boxShadow: '0 2px 10px rgba(249, 115, 22, 0.3)'
-                          }}
-                        >
+                      <div className="absolute top-2 right-2 sm:top-3 sm:right-3 z-10">
+                        <span className="bg-orange-500 text-white px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs md:text-sm font-medium">
                           Populaire
                         </span>
                       </div>
                     )}
-                    
-                    <h4 className="text-sm font-semibold text-white mb-0.5">PROOFY {plan.name}</h4>
-                    <div className="flex items-baseline mb-2">
-                      <AnimatedPrice 
-                        price={isYearly ? plan.yearlyPrice : plan.price} 
-                        className="text-xl font-bold text-white"
-                      />
-                      <span className="text-white/40 ml-1 text-xs">
-                        /{isYearly ? "an" : "mois"}
-                      </span>
-                    </div>
+                    <CardHeader className="text-left p-2 sm:p-4 md:p-6">
+                      <div>
+                        <h3 className="text-xs sm:text-lg md:text-2xl xl:text-3xl font-semibold text-white mb-1 sm:mb-2 leading-tight">
+                          PROOFY {plan.name}
+                        </h3>
+                      </div>
+                      <div className="flex items-baseline">
+                        <AnimatedPrice 
+                          price={isYearly ? plan.yearlyPrice : plan.price} 
+                          isYearly={isYearly}
+                        />
+                        <span className="text-gray-400 ml-1 text-[10px] sm:text-sm md:text-base">
+                          /{isYearly ? "an" : "mois"}
+                        </span>
+                      </div>
+                    </CardHeader>
 
-                    <button
-                      onClick={() => onSubscribe(plan.name)}
-                      disabled={loadingPlan === plan.name}
-                      className={`w-full py-2 rounded-md font-medium transition-all mb-2 flex items-center justify-center gap-1.5 text-xs ${
-                        loadingPlan === plan.name ? "opacity-50 cursor-not-allowed" : ""
-                      }`}
-                      style={plan.popular ? {
-                        background: 'linear-gradient(135deg, #f97316, #ea580c)',
-                        boxShadow: '0 4px 15px rgba(249, 115, 22, 0.3)',
-                        color: 'white'
-                      } : {
-                        background: 'rgba(255, 255, 255, 0.08)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                        color: 'white'
-                      }}
-                    >
-                      {loadingPlan === plan.name ? (
-                        <>
-                          <Loader2 className="h-3 w-3 animate-spin" />
-                          <span>...</span>
-                        </>
-                      ) : (
-                        plan.buttonText
-                      )}
-                    </button>
+                    <CardContent className="pt-0 p-2 sm:p-4 md:p-6 flex-1 flex flex-col">
+                      <motion.button
+                        onClick={() => onSubscribe(plan.name)}
+                        disabled={loadingPlan === plan.name}
+                        className={cn(
+                          "w-full mb-3 sm:mb-6 p-2 sm:p-3 md:p-4 text-xs sm:text-base md:text-lg lg:text-xl rounded-lg sm:rounded-xl relative overflow-hidden transition-all duration-300",
+                          loadingPlan === plan.name ? "opacity-50 cursor-not-allowed" : "",
+                          plan.popular
+                            ? "bg-gradient-to-t from-orange-500 to-orange-600 shadow-lg shadow-orange-500 border border-orange-400 text-white"
+                            : "bg-gradient-to-t from-gray-800 to-gray-700 shadow-lg shadow-gray-900 border border-gray-700 text-white"
+                        )}
+                        whileHover={loadingPlan !== plan.name ? { 
+                          scale: 1.05,
+                          boxShadow: plan.popular 
+                            ? "0 20px 40px -12px rgba(255, 107, 53, 0.5)" 
+                            : "0 20px 40px -12px rgba(0, 0, 0, 0.5)"
+                        } : {}}
+                        whileTap={loadingPlan !== plan.name ? { scale: 0.98 } : {}}
+                        transition={{ 
+                          type: "spring", 
+                          stiffness: 400, 
+                          damping: 17 
+                        }}
+                      >
+                        {/* Shimmer effect */}
+                        {loadingPlan !== plan.name && (
+                          <motion.div
+                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                            initial={{ x: "-100%" }}
+                            whileHover={{ x: "100%" }}
+                            transition={{ duration: 0.6, ease: "easeInOut" }}
+                          />
+                        )}
+                        <span className="relative z-10 flex items-center justify-center gap-2">
+                          {loadingPlan === plan.name ? (
+                            <>
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                              <span>Chargement...</span>
+                            </>
+                          ) : (
+                            plan.buttonText
+                          )}
+                        </span>
+                      </motion.button>
 
-                    <div className="space-y-1">
-                      <ul className="space-y-0.5">
-                        {plan.includes.slice(1, 4).map((feature, idx) => (
-                          <li key={idx} className="flex items-start">
-                            <span 
-                              className="h-3 w-3 rounded-full grid place-content-center mt-0.5 mr-1.5 flex-shrink-0"
-                              style={{
-                                background: 'rgba(255, 107, 53, 0.15)',
-                                border: '1px solid rgba(255, 107, 53, 0.4)'
-                              }}
-                            >
-                              <CheckCheck className="h-2 w-2 text-orange-400" />
-                            </span>
-                            <span className="text-white/60 text-[10px] leading-tight">{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
+                      <div className="space-y-1.5 sm:space-y-3 pt-2 sm:pt-4 border-t border-gray-800 flex-1">
+                        <h2 className="text-[10px] sm:text-sm md:text-lg lg:text-xl font-semibold uppercase text-white mb-1 sm:mb-3">
+                          Fonctionnalités
+                        </h2>
+                        <h4 className="font-medium text-[10px] sm:text-xs md:text-sm lg:text-base text-gray-300 mb-1 sm:mb-3">
+                          {plan.includes[0]}
+                        </h4>
+                        <ul className="space-y-1 sm:space-y-2 font-semibold">
+                          {plan.includes.slice(1).map((feature, featureIndex) => (
+                            <li key={featureIndex} className="flex items-start">
+                              <span className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 bg-gray-800 border border-orange-500 rounded-full grid place-content-center mt-0.5 mr-1.5 sm:mr-2 md:mr-3 flex-shrink-0">
+                                <CheckCheck className="h-2.5 w-2.5 sm:h-3 sm:w-3 md:h-4 md:w-4 text-orange-500" />
+                              </span>
+                              <span className="text-[9px] sm:text-xs md:text-sm text-gray-300 leading-tight">{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </CardContent>
+                  </Card>
                 ))}
               </div>
             </div>
 
             {/* Install Anyway Button - Glassmorphism */}
-            <div 
-              className="pt-3"
-              style={{
-                borderTop: '1px solid rgba(255, 255, 255, 0.08)'
-              }}
-            >
-              <button
-                onClick={onInstallAnyway}
-                className="w-full py-2 rounded-md font-medium text-white transition-all text-xs hover:opacity-90"
-                style={{
-                  background: 'linear-gradient(135deg, #f97316, #ea580c)',
-                  boxShadow: '0 4px 15px rgba(249, 115, 22, 0.3)',
-                }}
+            {showInstallAnyway && onInstallAnyway && (
+              <div 
+                className="pt-6 border-t border-gray-700"
               >
-                Installer l'extension quand même
-              </button>
-              <p className="text-center text-[10px] text-white/30 mt-1">
-                L'extension ne fonctionnera pas sans abonnement
-              </p>
-            </div>
+                <button
+                  onClick={onInstallAnyway}
+                  className="w-full py-3 rounded-lg font-medium text-white transition-all text-sm hover:opacity-90"
+                  style={{
+                    background: 'linear-gradient(135deg, #f97316, #ea580c)',
+                    boxShadow: '0 4px 15px rgba(249, 115, 22, 0.3)',
+                  }}
+                >
+                  Installer l'extension quand même
+                </button>
+                <p className="text-center text-xs text-white/30 mt-2">
+                  L'extension ne fonctionnera pas sans abonnement
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -403,10 +460,10 @@ export const DashboardLayout: React.FC = () => {
   const [activeItem, setActiveItem] = useState("dashboard");
   const [isMobile, setIsMobile] = useState(false);
   
-  // Extension subscription modal state
-  const [showExtensionModal, setShowExtensionModal] = useState(false);
-  const [extensionModalIsYearly, setExtensionModalIsYearly] = useState(false);
-  const [extensionModalLoadingPlan, setExtensionModalLoadingPlan] = useState<'BASIC' | 'LIVE' | null>(null);
+  // First-time user welcome modal state
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+  const [welcomeModalIsYearly, setWelcomeModalIsYearly] = useState(false);
+  const [welcomeModalLoadingPlan, setWelcomeModalLoadingPlan] = useState<'BASIC' | 'LIVE' | null>(null);
 
   // Auto-open sidebar on desktop
   useEffect(() => {
@@ -448,6 +505,19 @@ export const DashboardLayout: React.FC = () => {
     }
   }, [location.pathname]);
 
+  // Check if user is first-time visitor without subscription
+  useEffect(() => {
+    if (!user || subscriptionLoading) return;
+    
+    // Check if user has already seen the welcome modal
+    const hasSeenWelcomeModal = localStorage.getItem(`welcome_modal_seen_${user.id}`);
+    
+    // Show modal if user has no subscription and hasn't seen it before, and is on dashboard home
+    if (!isPro && !hasSeenWelcomeModal && (location.pathname === '/dashboard' || location.pathname === '/dashboard/')) {
+      setShowWelcomeModal(true);
+    }
+  }, [user, subscriptionLoading, isPro, location.pathname]);
+
   const toggleSidebar = () => setIsOpen(!isOpen);
   const toggleCollapse = () => setIsCollapsed(!isCollapsed);
 
@@ -458,29 +528,7 @@ export const DashboardLayout: React.FC = () => {
     
     // Si c'est un lien externe (Extension)
     if (item.external) {
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:handleItemClick:external',message:'item.external is true',data:{isPro,subscriptionLoading,condition:!isPro && !subscriptionLoading},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,E'})}).catch(()=>{});
-      // #endregion
-      
-      // Vérifier si l'utilisateur a un abonnement actif
-      if (!isPro && !subscriptionLoading) {
-        // #region agent log
-        fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:handleItemClick:showModal',message:'Showing extension modal',data:{showExtensionModalBefore:showExtensionModal},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-        // #endregion
-        
-        // Pas d'abonnement, afficher le modal
-        setShowExtensionModal(true);
-        if (window.innerWidth < 768) {
-          setIsOpen(false);
-        }
-        return;
-      }
-      
-      // #region agent log
-      fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:handleItemClick:openExternal',message:'Opening external link (user has subscription)',data:{isPro,subscriptionLoading},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B'})}).catch(()=>{});
-      // #endregion
-      
-      // L'utilisateur a un abonnement, ouvrir dans un nouvel onglet
+      // Ouvrir directement le Chrome Web Store
       window.open(item.href, '_blank', 'noopener,noreferrer');
       if (window.innerWidth < 768) {
         setIsOpen(false);
@@ -495,31 +543,38 @@ export const DashboardLayout: React.FC = () => {
     }
   };
 
-  // Handler pour souscrire depuis le modal extension
-  const handleExtensionSubscribe = async (plan: 'BASIC' | 'LIVE') => {
+  // Handler pour souscrire depuis le modal de bienvenue
+  const handleWelcomeSubscribe = async (plan: 'BASIC' | 'LIVE') => {
     if (!user) {
       navigate('/login');
       return;
     }
     
-    setExtensionModalLoadingPlan(plan);
+    setWelcomeModalLoadingPlan(plan);
     
     try {
-      const billingPeriod = extensionModalIsYearly ? 'yearly' : 'monthly';
+      const billingPeriod = welcomeModalIsYearly ? 'yearly' : 'monthly';
       await createCheckoutSession(plan, billingPeriod);
+      // Mark modal as seen after successful subscription attempt
+      if (user) {
+        localStorage.setItem(`welcome_modal_seen_${user.id}`, 'true');
+      }
     } catch (error) {
       console.error('Subscription error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Erreur lors de la création de la session de paiement';
       alert(`Erreur: ${errorMessage}`);
     } finally {
-      setExtensionModalLoadingPlan(null);
+      setWelcomeModalLoadingPlan(null);
     }
   };
 
-  // Handler pour installer l'extension quand même (sans abonnement)
-  const handleInstallExtensionAnyway = () => {
-    setShowExtensionModal(false);
-    window.open(CHROME_EXTENSION_URL, '_blank', 'noopener,noreferrer');
+  // Handler pour fermer le modal de bienvenue
+  const handleWelcomeClose = () => {
+    if (user) {
+      // Mark modal as seen when user closes it
+      localStorage.setItem(`welcome_modal_seen_${user.id}`, 'true');
+    }
+    setShowWelcomeModal(false);
   };
 
   const handleSignOut = async () => {
@@ -851,15 +906,17 @@ export const DashboardLayout: React.FC = () => {
         <Outlet />
       </div>
 
-      {/* Extension Subscription Modal */}
-      <ExtensionSubscriptionModal
-        isOpen={showExtensionModal}
-        onClose={() => setShowExtensionModal(false)}
-        onInstallAnyway={handleInstallExtensionAnyway}
-        onSubscribe={handleExtensionSubscribe}
-        isYearly={extensionModalIsYearly}
-        setIsYearly={setExtensionModalIsYearly}
-        loadingPlan={extensionModalLoadingPlan}
+      {/* Welcome Modal for first-time users */}
+      <SubscriptionModal
+        isOpen={showWelcomeModal}
+        onClose={handleWelcomeClose}
+        onSubscribe={handleWelcomeSubscribe}
+        isYearly={welcomeModalIsYearly}
+        setIsYearly={setWelcomeModalIsYearly}
+        loadingPlan={welcomeModalLoadingPlan}
+        title="Bienvenue sur Proofy !"
+        description="Choisis un plan pour commencer à créer des dashboards ultra-réalistes et accélérer tes ventes."
+        showInstallAnyway={false}
       />
     </div>
   );
