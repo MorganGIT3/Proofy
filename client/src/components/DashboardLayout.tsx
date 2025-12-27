@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscription } from '@/hooks/useSubscription';
+import { createCheckoutSession } from '@/lib/stripe';
 import { 
   Home,
   Puzzle,
@@ -14,7 +15,10 @@ import {
   ChevronLeft, 
   ChevronRight,
   LogOut,
-  ChevronDown
+  ChevronDown,
+  AlertTriangle,
+  CheckCheck,
+  Loader2
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import {
@@ -49,6 +53,239 @@ const accountNavigationItems: NavigationItem[] = [
   { id: "settings", name: "Paramètres", icon: Settings, href: "/dashboard/settings", section: 'account' },
 ];
 
+// Extension Subscription Modal Component
+interface ExtensionSubscriptionModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onInstallAnyway: () => void;
+  onSubscribe: (plan: 'BASIC' | 'LIVE') => void;
+  isYearly: boolean;
+  setIsYearly: (value: boolean) => void;
+  loadingPlan: 'BASIC' | 'LIVE' | null;
+}
+
+const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
+  isOpen,
+  onClose,
+  onInstallAnyway,
+  onSubscribe,
+  isYearly,
+  setIsYearly,
+  loadingPlan
+}) => {
+  if (!isOpen) return null;
+
+  const plans = [
+    {
+      name: "BASIC" as const,
+      price: 49,
+      yearlyPrice: 470,
+      buttonText: "Activer Basic",
+      includes: [
+        "Inclus dans ce plan:",
+        "Création de dashboards illimitée",
+        "Exports HD sans watermark",
+        "1 template de plateforme au choix",
+        "Génération instantanée",
+        "Sans code, sans installation",
+      ],
+    },
+    {
+      name: "LIVE" as const,
+      price: 79,
+      yearlyPrice: 758,
+      buttonText: "Activer Live",
+      popular: true,
+      includes: [
+        "Inclus dans ce plan:",
+        "Plan Proofy Basic inclus",
+        "Notifications de ventes en direct sur écran verrouillé",
+        "Accès à tous les templates de plateformes",
+        "Support prioritaire",
+      ],
+    },
+  ];
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+        onClick={onClose}
+        style={{ animation: 'fadeIn 0.2s ease-out' }}
+      />
+      
+      {/* Modal */}
+      <div 
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
+        style={{ animation: 'scaleIn 0.2s ease-out' }}
+      >
+        <div className="relative w-full max-w-4xl bg-gray-900/95 backdrop-blur-md border border-orange-500/30 rounded-2xl shadow-2xl shadow-orange-500/10 my-8">
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 z-10 text-gray-400 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full"
+            aria-label="Fermer"
+          >
+            <X size={24} />
+          </button>
+
+          {/* Content */}
+          <div className="p-6 md:p-8">
+            {/* Warning Message */}
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-full bg-orange-500/20 border border-orange-500/50 flex items-center justify-center">
+                <AlertTriangle className="w-6 h-6 text-orange-500" />
+              </div>
+            </div>
+            
+            <h2 className="text-xl md:text-2xl font-bold text-white text-center mb-2">
+              L'extension ne fonctionnera pas
+            </h2>
+            <p className="text-gray-400 text-center mb-8 max-w-lg mx-auto">
+              L'extension Chrome Proofy nécessite un abonnement <span className="text-orange-400 font-semibold">Basic</span> ou <span className="text-orange-400 font-semibold">Live</span> pour fonctionner.
+            </p>
+
+            {/* Pricing Section */}
+            <div className="relative">
+              <h3 
+                className="text-2xl md:text-3xl font-medium text-center mb-4"
+                style={{
+                  background: "linear-gradient(to bottom, #ffffff, rgba(255, 255, 255, 0.7))",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
+                Passe à l'action
+              </h3>
+              <p className="text-gray-400 text-center text-sm mb-6">
+                Choisis l'offre qui te permet de montrer tes résultats et d'accélérer tes ventes.
+              </p>
+
+              {/* Billing Toggle */}
+              <div className="flex justify-center mb-6">
+                <div className="relative z-10 flex w-fit rounded-xl bg-gray-800 border border-gray-700 p-1">
+                  <button
+                    onClick={() => setIsYearly(false)}
+                    className={`relative z-10 w-fit cursor-pointer h-10 rounded-lg px-4 py-2 font-medium transition-colors text-sm ${
+                      !isYearly ? "bg-orange-500 text-white shadow-lg" : "text-gray-400 hover:text-white"
+                    }`}
+                  >
+                    Facturation mensuelle
+                  </button>
+                  <button
+                    onClick={() => setIsYearly(true)}
+                    className={`relative z-10 w-fit cursor-pointer h-10 rounded-lg px-4 py-2 font-medium transition-colors text-sm flex items-center gap-2 ${
+                      isYearly ? "bg-orange-500 text-white shadow-lg" : "text-gray-400 hover:text-white"
+                    }`}
+                  >
+                    Facturation annuelle
+                    <span className="bg-green-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">
+                      -20%
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Plans Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                {plans.map((plan) => (
+                  <div
+                    key={plan.name}
+                    className={`relative border rounded-xl p-5 transition-all ${
+                      plan.popular
+                        ? "ring-2 ring-orange-500 bg-gray-800/50 border-orange-500/30"
+                        : "bg-gray-800/30 border-gray-700"
+                    }`}
+                  >
+                    {plan.popular && (
+                      <div className="absolute top-3 right-3">
+                        <span className="bg-orange-500 text-white px-2 py-0.5 rounded-full text-xs font-medium">
+                          Populaire
+                        </span>
+                      </div>
+                    )}
+                    
+                    <h4 className="text-lg font-semibold text-white mb-1">PROOFY {plan.name}</h4>
+                    <div className="flex items-baseline mb-4">
+                      <span className="text-3xl font-bold text-white">
+                        {isYearly ? plan.yearlyPrice : plan.price}€
+                      </span>
+                      <span className="text-gray-400 ml-1 text-sm">
+                        /{isYearly ? "an" : "mois"}
+                      </span>
+                    </div>
+
+                    <button
+                      onClick={() => onSubscribe(plan.name)}
+                      disabled={loadingPlan === plan.name}
+                      className={`w-full py-3 rounded-lg font-medium transition-all mb-4 flex items-center justify-center gap-2 ${
+                        loadingPlan === plan.name ? "opacity-50 cursor-not-allowed" : ""
+                      } ${
+                        plan.popular
+                          ? "bg-gradient-to-t from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50"
+                          : "bg-gray-700 text-white hover:bg-gray-600"
+                      }`}
+                    >
+                      {loadingPlan === plan.name ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Chargement...
+                        </>
+                      ) : (
+                        plan.buttonText
+                      )}
+                    </button>
+
+                    <div className="space-y-2">
+                      <p className="text-xs text-gray-400 font-medium">{plan.includes[0]}</p>
+                      <ul className="space-y-1.5">
+                        {plan.includes.slice(1).map((feature, idx) => (
+                          <li key={idx} className="flex items-start text-sm">
+                            <span className="h-4 w-4 bg-gray-700 border border-orange-500 rounded-full grid place-content-center mt-0.5 mr-2 flex-shrink-0">
+                              <CheckCheck className="h-2.5 w-2.5 text-orange-500" />
+                            </span>
+                            <span className="text-gray-300 text-xs">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Install Anyway Button */}
+            <div className="border-t border-gray-700 pt-6">
+              <button
+                onClick={onInstallAnyway}
+                className="w-full py-3 rounded-lg font-medium text-gray-400 hover:text-white bg-gray-800/50 hover:bg-gray-800 border border-gray-700 hover:border-gray-600 transition-all"
+              >
+                Installer l'extension quand même
+              </button>
+              <p className="text-center text-xs text-gray-500 mt-2">
+                L'extension ne fonctionnera pas sans abonnement actif
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes scaleIn {
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
+        }
+      `}</style>
+    </>
+  );
+};
+
 export const DashboardLayout: React.FC = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
@@ -57,6 +294,11 @@ export const DashboardLayout: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeItem, setActiveItem] = useState("dashboard");
   const [isMobile, setIsMobile] = useState(false);
+  
+  // Extension subscription modal state
+  const [showExtensionModal, setShowExtensionModal] = useState(false);
+  const [extensionModalIsYearly, setExtensionModalIsYearly] = useState(false);
+  const [extensionModalLoadingPlan, setExtensionModalLoadingPlan] = useState<'BASIC' | 'LIVE' | null>(null);
 
   // Auto-open sidebar on desktop
   useEffect(() => {
@@ -102,8 +344,19 @@ export const DashboardLayout: React.FC = () => {
   const toggleCollapse = () => setIsCollapsed(!isCollapsed);
 
   const handleItemClick = (item: NavigationItem) => {
-    // Si c'est un lien externe, ouvrir dans un nouvel onglet
+    // Si c'est un lien externe (Extension)
     if (item.external) {
+      // Vérifier si l'utilisateur a un abonnement actif
+      if (!isPro && !subscriptionLoading) {
+        // Pas d'abonnement, afficher le modal
+        setShowExtensionModal(true);
+        if (window.innerWidth < 768) {
+          setIsOpen(false);
+        }
+        return;
+      }
+      
+      // L'utilisateur a un abonnement, ouvrir dans un nouvel onglet
       window.open(item.href, '_blank', 'noopener,noreferrer');
       if (window.innerWidth < 768) {
         setIsOpen(false);
@@ -116,6 +369,33 @@ export const DashboardLayout: React.FC = () => {
     if (window.innerWidth < 768) {
       setIsOpen(false);
     }
+  };
+
+  // Handler pour souscrire depuis le modal extension
+  const handleExtensionSubscribe = async (plan: 'BASIC' | 'LIVE') => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    
+    setExtensionModalLoadingPlan(plan);
+    
+    try {
+      const billingPeriod = extensionModalIsYearly ? 'yearly' : 'monthly';
+      await createCheckoutSession(plan, billingPeriod);
+    } catch (error) {
+      console.error('Subscription error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Erreur lors de la création de la session de paiement';
+      alert(`Erreur: ${errorMessage}`);
+    } finally {
+      setExtensionModalLoadingPlan(null);
+    }
+  };
+
+  // Handler pour installer l'extension quand même (sans abonnement)
+  const handleInstallExtensionAnyway = () => {
+    setShowExtensionModal(false);
+    window.open(CHROME_EXTENSION_URL, '_blank', 'noopener,noreferrer');
   };
 
   const handleSignOut = async () => {
@@ -165,7 +445,7 @@ export const DashboardLayout: React.FC = () => {
   };
 
   // Utiliser le hook pour obtenir le VRAI plan
-  const { planName, isLoading: subscriptionLoading } = useSubscription();
+  const { planName, isLoading: subscriptionLoading, isPro } = useSubscription();
 
   const getSubscriptionBadge = () => {
     if (subscriptionLoading) {
@@ -446,6 +726,17 @@ export const DashboardLayout: React.FC = () => {
       >
         <Outlet />
       </div>
+
+      {/* Extension Subscription Modal */}
+      <ExtensionSubscriptionModal
+        isOpen={showExtensionModal}
+        onClose={() => setShowExtensionModal(false)}
+        onInstallAnyway={handleInstallExtensionAnyway}
+        onSubscribe={handleExtensionSubscribe}
+        isYearly={extensionModalIsYearly}
+        setIsYearly={setExtensionModalIsYearly}
+        loadingPlan={extensionModalLoadingPlan}
+      />
     </div>
   );
 };
