@@ -257,18 +257,9 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
 
           {/* Content */}
           <div className="relative">
-            {/* Icon/Message with glassmorphism background */}
+            {/* Icon/Message */}
             {title && (
-              <div 
-                className="relative mb-6 rounded-xl p-4 md:p-5"
-                style={{
-                  background: 'rgba(20, 20, 25, 0.4)',
-                  backdropFilter: 'blur(20px)',
-                  WebkitBackdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255, 107, 53, 0.15)',
-                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
-                }}
-              >
+              <>
                 <div className="flex items-center justify-center gap-3 mb-4">
                   <div 
                     className="w-12 h-12 rounded-full flex items-center justify-center"
@@ -285,50 +276,39 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                 <h2 className="text-xl md:text-2xl font-bold text-white text-center mb-2">
                   {title}
                 </h2>
-                <p className="text-white/50 text-center text-sm max-w-lg mx-auto">
+                <p className="text-white/50 text-center text-sm mb-6 max-w-lg mx-auto">
                   {description}
                 </p>
-              </div>
+              </>
             )}
 
             {/* Pricing Section */}
             <div className="relative">
-              <div 
-                className="relative mb-6 rounded-xl p-4 md:p-5"
+              <h3 
+                className="text-2xl md:text-3xl font-medium text-center mb-4"
                 style={{
-                  background: 'rgba(20, 20, 25, 0.4)',
-                  backdropFilter: 'blur(20px)',
-                  WebkitBackdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255, 107, 53, 0.15)',
-                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
+                  background: "linear-gradient(to bottom, #ffffff, rgba(255, 255, 255, 0.6))",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
                 }}
               >
-                <h3 
-                  className="text-2xl md:text-3xl font-medium text-center mb-4"
-                  style={{
-                    background: "linear-gradient(to bottom, #ffffff, rgba(255, 255, 255, 0.6))",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}
-                >
-                  Passe à l'action
-                </h3>
-                <p className="text-gray-400 text-center text-sm mb-6">
-                  Choisis l'offre qui te permet de montrer tes résultats et d'accélérer tes ventes.
-                </p>
+                Passe à l'action
+              </h3>
+              <p className="text-gray-400 text-center text-sm mb-6">
+                Choisis l'offre qui te permet de montrer tes résultats et d'accélérer tes ventes.
+              </p>
 
-                {/* Billing Toggle - Same as Landing Page */}
-                <div className="flex justify-center">
-                  <PricingSwitch 
-                    onSwitch={setIsYearly} 
-                    isYearly={isYearly}
-                    className="w-fit mx-auto"
-                  />
-                </div>
+              {/* Billing Toggle - Same as Landing Page */}
+              <div className="flex justify-center mb-6">
+                <PricingSwitch 
+                  onSwitch={setIsYearly} 
+                  isYearly={isYearly}
+                  className="w-fit mx-auto"
+                />
               </div>
 
-              {/* Plans Grid with glassmorphism background */}
+              {/* Plans Grid with glassmorphism background - only behind cards */}
               <div 
                 className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 py-6 px-4 rounded-xl relative z-10"
                 style={{
