@@ -53,6 +53,41 @@ const accountNavigationItems: NavigationItem[] = [
   { id: "settings", name: "Paramètres", icon: Settings, href: "/dashboard/settings", section: 'account' },
 ];
 
+// Animated Price Component
+const AnimatedPrice = ({ price, className }: { price: number; className?: string }) => {
+  const [displayPrice, setDisplayPrice] = React.useState(price);
+
+  React.useEffect(() => {
+    if (displayPrice !== price) {
+      const startPrice = displayPrice;
+      const endPrice = price;
+      const difference = endPrice - startPrice;
+      const steps = Math.min(40, Math.abs(difference) * 2);
+      const stepValue = difference / steps;
+      let currentStep = 0;
+
+      const interval = setInterval(() => {
+        currentStep++;
+        const newPrice = Math.round(startPrice + stepValue * currentStep);
+        setDisplayPrice(newPrice);
+
+        if (currentStep >= steps) {
+          setDisplayPrice(endPrice);
+          clearInterval(interval);
+        }
+      }, 15);
+
+      return () => clearInterval(interval);
+    }
+  }, [price, displayPrice]);
+
+  return (
+    <span className={className}>
+      {displayPrice}€
+    </span>
+  );
+};
+
 // Extension Subscription Modal Component
 interface ExtensionSubscriptionModalProps {
   isOpen: boolean;
@@ -262,9 +297,10 @@ const ExtensionSubscriptionModal: React.FC<ExtensionSubscriptionModalProps> = ({
                     
                     <h4 className="text-sm font-semibold text-white mb-0.5">PROOFY {plan.name}</h4>
                     <div className="flex items-baseline mb-2">
-                      <span className="text-xl font-bold text-white">
-                        {isYearly ? plan.yearlyPrice : plan.price}€
-                      </span>
+                      <AnimatedPrice 
+                        price={isYearly ? plan.yearlyPrice : plan.price} 
+                        className="text-xl font-bold text-white"
+                      />
                       <span className="text-white/40 ml-1 text-xs">
                         /{isYearly ? "an" : "mois"}
                       </span>
