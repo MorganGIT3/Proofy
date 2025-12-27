@@ -75,7 +75,24 @@ export const ExtensionConnectionsPage: React.FC = () => {
       // #region agent log
       fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ExtensionConnectionsPage.tsx:65',message:'Setting connections',data:{connectionsCount:data?.length||0,firstConnection:data?.[0]?{id:data[0].id,browser:data[0].browser}:null},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
       // #endregion
-      setConnections(data || []);
+      
+      // Filter to keep only unique IP addresses (most recent first since already sorted)
+      const uniqueConnections = (data || []).reduce((acc: Connection[], connection) => {
+        // Skip if IP is null or empty
+        if (!connection.ip_address) {
+          acc.push(connection);
+          return acc;
+        }
+        
+        // Check if this IP already exists in the accumulator
+        const ipExists = acc.some(c => c.ip_address === connection.ip_address);
+        if (!ipExists) {
+          acc.push(connection);
+        }
+        return acc;
+      }, []);
+      
+      setConnections(uniqueConnections);
     } catch (err: any) {
       // #region agent log
       fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ExtensionConnectionsPage.tsx:68',message:'Catch block executed',data:{errorType:err?.constructor?.name,errorMessage:err?.message,errorCode:err?.code},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
