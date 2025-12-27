@@ -236,23 +236,15 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
 
   return (
     <>
-      {/* Backdrop with transparent blur */}
-      <div
-        className="fixed inset-0 bg-transparent backdrop-blur-xl z-50"
-        onClick={onClose}
-        style={{ animation: 'fadeIn 0.3s ease-out' }}
-      />
-      
       {/* Modal */}
       <div 
         className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
         style={{ animation: 'scaleIn 0.3s ease-out' }}
+        onClick={onClose}
       >
         <div 
-          className="relative w-full max-w-5xl rounded-xl shadow-2xl my-8 overflow-visible"
-          style={{
-            background: 'transparent',
-          }}
+          className="relative w-full max-w-5xl my-8 overflow-visible"
+          onClick={(e) => e.stopPropagation()}
         >
           {/* Close Button */}
           <button
@@ -264,7 +256,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           </button>
 
           {/* Content */}
-          <div className="relative p-5 md:p-6">
+          <div className="relative">
             {/* Icon/Message with glassmorphism background */}
             {title && (
               <div 
