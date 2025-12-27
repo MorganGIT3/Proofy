@@ -1,4 +1,10 @@
+// #region agent log
+fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:imports-start',message:'Starting imports',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,C'})}).catch(()=>{});
+// #endregion
 import React, { useState, useEffect } from 'react';
+// #region agent log
+fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:import-React',message:'React imported',data:{hasReact:!!React},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+// #endregion
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscription } from '@/hooks/useSubscription';
@@ -20,7 +26,13 @@ import {
   CheckCheck,
   Loader2
 } from 'lucide-react';
+// #region agent log
+fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:import-lucide',message:'Lucide icons imported',data:{hasX:!!X},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+// #endregion
 import { motion } from 'framer-motion';
+// #region agent log
+fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:import-motion',message:'Motion imported',data:{hasMotion:!!motion,hasMotionSpan:!!motion?.span},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+// #endregion
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,7 +41,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+// #region agent log
+fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:import-Card',message:'Card components imported',data:{hasCard:!!Card,hasCardHeader:!!CardHeader,hasCardContent:!!CardContent},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+// #endregion
 import { cn } from '@/lib/utils';
+// #region agent log
+fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:imports-complete',message:'All imports completed',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,C,D'})}).catch(()=>{});
+// #endregion
 
 interface NavigationItem {
   id: string;
@@ -57,6 +75,9 @@ const accountNavigationItems: NavigationItem[] = [
 
 // Animated Price Component
 const AnimatedPrice = ({ price, isYearly, className }: { price: number; isYearly?: boolean; className?: string }) => {
+  // #region agent log
+  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:AnimatedPrice:entry',message:'AnimatedPrice component initializing',data:{price,isYearly,hasReact:!!React},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+  // #endregion
   const [displayPrice, setDisplayPrice] = React.useState(price);
 
   React.useEffect(() => {
@@ -100,6 +121,9 @@ const PricingSwitch = ({
   isYearly: boolean;
   className?: string;
 }) => {
+  // #region agent log
+  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'DashboardLayout.tsx:PricingSwitch:entry',message:'PricingSwitch component initializing',data:{isYearly,hasMotion:!!motion,hasMotionSpan:!!motion?.span},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+  // #endregion
   const handleSwitch = (value: boolean) => {
     onSwitch(value);
   };

@@ -1,15 +1,33 @@
+// #region agent log
+fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SubscribePage.tsx:imports-start',message:'Starting imports',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,C'})}).catch(()=>{});
+// #endregion
 import React, { useState, useEffect } from 'react';
+// #region agent log
+fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SubscribePage.tsx:import-React',message:'React imported',data:{hasReact:!!React},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+// #endregion
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscription } from '@/hooks/useSubscription';
 import { createCheckoutSession } from '@/lib/stripe';
 import { X, AlertTriangle, CheckCheck, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+// #region agent log
+fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SubscribePage.tsx:import-motion',message:'Motion imported',data:{hasMotion:!!motion,hasMotionSpan:!!motion?.span},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+// #endregion
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+// #region agent log
+fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SubscribePage.tsx:import-Card',message:'Card components imported',data:{hasCard:!!Card,hasCardHeader:!!CardHeader,hasCardContent:!!CardContent},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+// #endregion
 import { cn } from '@/lib/utils';
+// #region agent log
+fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SubscribePage.tsx:imports-complete',message:'All imports completed',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,C,D'})}).catch(()=>{});
+// #endregion
 
 // Animated Price Component
 const AnimatedPrice = ({ price, isYearly }: { price: number; isYearly: boolean }) => {
+  // #region agent log
+  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SubscribePage.tsx:AnimatedPrice:entry',message:'AnimatedPrice component initializing',data:{price,isYearly,hasReact:!!React},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+  // #endregion
   const [displayPrice, setDisplayPrice] = React.useState(price);
 
   React.useEffect(() => {
@@ -53,6 +71,9 @@ const PricingSwitch = ({
   isYearly: boolean;
   className?: string;
 }) => {
+  // #region agent log
+  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SubscribePage.tsx:PricingSwitch:entry',message:'PricingSwitch component initializing',data:{isYearly,hasMotion:!!motion,hasMotionSpan:!!motion?.span},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{});
+  // #endregion
   const handleSwitch = (value: boolean) => {
     onSwitch(value);
   };
@@ -108,6 +129,9 @@ const PricingSwitch = ({
 };
 
 export const SubscribePage: React.FC = () => {
+  // #region agent log
+  fetch('http://127.0.0.1:7243/ingest/1cf9d3a6-dd04-4ef4-b7e4-f06ce268b4f9',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'SubscribePage.tsx:SubscribePage:entry',message:'SubscribePage component initializing',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A'})}).catch(()=>{});
+  // #endregion
   const { user } = useAuth();
   const navigate = useNavigate();
   const { isPro, isLoading: subscriptionLoading } = useSubscription();
