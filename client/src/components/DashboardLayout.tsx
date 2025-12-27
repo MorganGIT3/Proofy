@@ -421,18 +421,9 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                 ))}
               </div>
 
-            {/* Install Anyway Button - Glassmorphism */}
+            {/* Install Anyway Button */}
             {showInstallAnyway && onInstallAnyway && (
-              <div 
-                className="pt-6 mt-6 rounded-xl p-4"
-                style={{
-                  background: 'rgba(20, 20, 25, 0.4)',
-                  backdropFilter: 'blur(20px)',
-                  WebkitBackdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255, 107, 53, 0.15)',
-                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
-                }}
-              >
+              <div className="pt-6 mt-6">
                 <button
                   onClick={onInstallAnyway}
                   className="w-full py-3 rounded-lg font-medium text-white transition-all text-sm hover:opacity-90"
